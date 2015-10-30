@@ -1,0 +1,37 @@
+﻿
+
+* {
+margin: 0;
+}
+html, body {
+height: 100%;
+}
+.wrapper {
+min-height: 100%;
+height: auto !important;
+height: 100%;
+margin: 0 auto -35px;
+}
+.footer, .push {
+height: 35px;
+
+}
+#header{
+    height:35px;
+    background-color:black;
+
+}
+
+#content{
+    height:632px;
+}
+
+#contentTable{
+    
+}
+#contentRequest{
+    height:200px;
+}
+form{
+    height:100%;
+}

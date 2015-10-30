@@ -1,0 +1,100 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <!-- Css -->
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="Content/Masterpage.css" rel="stylesheet" />
+    <!-- SideBar-->
+    <!--  <link href="Content/normalize.css" rel="stylesheet" /> -->
+    <link href="Content/component.css" rel="stylesheet" />
+
+</head>
+<body>
+    <form id="masterform" runat="server">
+        <div class="wrapper">
+
+
+            <div id="header" class="st-container">
+                <nav class="navbar navbar-default navbar-fixed-top">
+                    <div class="container-fluid">
+
+                        <div id="st-trigger-effects">
+                            <button data-effect="st-effect-1">|||</button>
+
+                        </div>
+
+
+                        <!--/.nav-collapse -->
+                    </div>
+                </nav>
+            </div>
+            <div id="st-container" class="st-container">
+                <!-- 	
+				example menus 
+				these menus will be on top of the push wrapper
+			-->
+                <nav class="st-menu st-effect-1" id="menu-1">
+                    <h2 class="icon icon-lab">Toto Cafe - Logo</h2>
+                    <ul>
+                        <li><a class="icon icon-data" href="Home.aspx">Home</a></li>
+                        <li><a class="icon icon-location" href="Menu.aspx">Menu</a></li>
+                     </ul>
+                    <ul class="end">  
+                        <li><a class="icon icon-study" href="Settings.aspx">Settings</a></li>
+                        <li><a class="icon icon-photo" href="AccountSettings.aspx">Account Settings</a></li>
+                        <li>
+                            <asp:Button Text="Logout" ID="btnLogout"  runat="server" OnClick="btnLogout_Click" />
+                            
+                        </li>
+
+                    </ul>
+                </nav>
+
+
+                <!-- content push wrapper -->
+                <div class="st-pusher">
+                    <div class="st-content" id="content">
+
+                        <!-- extra div for emulating position:fixed of the menu -->
+                        <!-- Top Navigation -->
+                        <div class="row" style="padding-top: 15px">
+                            <div class="col-md-12" id="contentTable">
+
+                                <asp:ContentPlaceHolder ID="ContentPlaceHolder2" runat="server">
+                                </asp:ContentPlaceHolder>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /st-pusher -->
+            </div>
+            <!-- /st-container -->
+
+
+            <div class="push"></div>
+        </div>
+
+        <div class="footer" style="background-color: blue">
+            <p>Copyright (c) 2008</p>
+        </div>
+
+
+    </form>
+
+    <!--
+    
+    -->
+    <!-- JS -->
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/jquery-2.1.4.min.js"></script>
+    <!-- Sidebar JS -->
+    <script src="Scripts/sidebarEffects.js"></script>
+    <script src="Scripts/classie.js"></script>
+</body>
+</html>

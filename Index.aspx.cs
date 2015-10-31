@@ -96,7 +96,7 @@ public partial class Index : System.Web.UI.Page
         string encEmail = FormsAuthentication.HashPasswordForStoringInConfigFile(companyEmail, "SHA1");
         string query = "SELECT COUNT(Email) FROM Company WHERE Email = '" + encEmail + "'";
 
-        SqlConnection conn = new SqlConnection(getConnectionString());
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString);
         SqlCommand cmd = new SqlCommand(query, conn);
 
         try

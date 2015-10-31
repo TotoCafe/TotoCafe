@@ -12,8 +12,12 @@
     <asp:Panel runat="server" ID="panelDefault" Visible="false">
         tables....
     </asp:Panel>
-    <asp:SqlDataSource ID="SqldataCheckDatabase" runat="server"></asp:SqlDataSource>
-
+    <asp:SqlDataSource ID="SqldataCheckDatabase" runat="server" ConnectionString="<%$ ConnectionStrings:TotoCafeDB %>" SelectCommand="SELECT [Table].TableID, Company.Email FROM [Table] INNER JOIN Company ON [Table].CompanyID = Company.CompanyID WHERE (Company.Email = @Email)">
+        <SelectParameters>
+            <asp:CookieParameter CookieName="authCookie" Name="Email" />
+        </SelectParameters>
+    </asp:SqlDataSource>
+    <asp:Label Text="text" ID="lblStatus" runat="server" />
 </asp:Content>
 
 

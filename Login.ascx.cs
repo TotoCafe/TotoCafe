@@ -13,7 +13,13 @@ public partial class Login : System.Web.UI.UserControl
     string selectQuery = "SELECT COUNT(*) FROM Company WHERE Email = @Email AND Password = @Password";
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (!Page.IsPostBack)
+        {
+            HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
 
+            if (authCookie != null)
+                Response.Redirect("Home.aspx");
+        }
     }
     #region Login
     protected void btnLogin_Click(object sender, EventArgs e)

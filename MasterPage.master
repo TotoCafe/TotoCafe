@@ -1,4 +1,6 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+﻿
+
+<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
 
 <!DOCTYPE html>
 
@@ -65,7 +67,7 @@
                         <!-- Top Navigation -->
                         <div class="row" style="padding-top: 15px">
                             <div class="col-md-12" id="contentTable">
-
+                                <asp:scriptmanager runat="server"></asp:scriptmanager>
                                 <asp:ContentPlaceHolder ID="ContentPlaceHolder2" runat="server">
                                 </asp:ContentPlaceHolder>
                             </div>

@@ -1,0 +1,14 @@
+﻿body {
+}
+.triggerbuttons{
+    width:16%;
+    padding-top:10px;
+    padding-left:4px;
+    position:relative;
+    float:left;
+    padding-bottom:5px;
+}
+.triggerbuttons .btn{
+    margin-left:14px;
+    width:140px;
+}

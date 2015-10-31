@@ -16,30 +16,42 @@ public partial class Menu : System.Web.UI.Page
         HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
         FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
         string encEmail = FormsAuthentication.HashPasswordForStoringInConfigFile(ticket.Name, "SHA1");
-
+        lblStatus.Text = getCompanyID().ToString();
+        lblNoTable.Visible = false;
     }
 
     #region Triggers
 
+    protected void btnTableSettings_Click(object sender, EventArgs e)
+    {
+        panelTableSettings.Visible = true;
+        panelMenuSettings.Visible = false;
+    }
+
+    protected void btnMenuSettings_Click(object sender, EventArgs e)
+    {
+        panelTableSettings.Visible = false;
+        panelMenuSettings.Visible = true;
+    }
+
     protected void btnTriggerAddTable_Click(object sender, EventArgs e)
     {
+
+        btnTriggerAddTable.Visible = false;
+        btnTriggerRemoveTable.Visible = false;
+
+
         panelAddTable.Visible = true;
         panelRemoveTable.Visible = false;
-        panelAddCategory.Visible = false;
-        panelRemoveCategory.Visible = false;
-        panelAddProduct.Visible = false;
-        panelRemoveProduct.Visible = false;
     }
 
     protected void btnTriggerRemoveTable_Click(object sender, EventArgs e)
     {
+        btnTriggerAddTable.Visible = false;
+        btnTriggerRemoveTable.Visible = false;
+
         panelAddTable.Visible = false;
         panelRemoveTable.Visible = true;
-        panelAddCategory.Visible = false;
-        panelRemoveCategory.Visible = false;
-        panelAddProduct.Visible = false;
-        panelRemoveProduct.Visible = false;
-        getCompanyID();
     }
 
     protected void btnTriggerAddCategory_Click(object sender, EventArgs e)
@@ -84,12 +96,19 @@ public partial class Menu : System.Web.UI.Page
         panelRemoveProduct.Visible = true;
     }
 
+    protected void btnCancelAdd_Click(object sender, EventArgs e)
+    {
+        btnTriggerAddTable.Visible = true; ;
+        btnTriggerRemoveTable.Visible = true;
+
+
+        panelAddTable.Visible = false;
+        panelRemoveTable.Visible = false;
+    }
     #endregion
 
-
-
     #region getCompanyID
-    protected int getCompanyID()
+    public int getCompanyID()
     {
         string query = "Select * from Company where Company.Email = @Email";
         SqlConnection conn = new SqlConnection(getConnectionString());
@@ -115,7 +134,6 @@ public partial class Menu : System.Web.UI.Page
 
             conn.Close();
         }
-        lblStatus.Text = companyID.ToString();
         return companyID;
     }
     #endregion
@@ -145,7 +163,7 @@ public partial class Menu : System.Web.UI.Page
         SqlConnection conn = new SqlConnection(getConnectionString());
         SqlCommand cmd = new SqlCommand(insertQuery, conn);
         cmd.Parameters.AddWithValue("@TableName", textBoxTableName.Text);
-        cmd.Parameters.AddWithValue("@QrCode", "safaffafaffaf");
+        cmd.Parameters.AddWithValue("@QrCode", generateQrString(getCompanyID().ToString(), textBoxTableName.Text));
         cmd.Parameters.AddWithValue("@IsReserved", 0);
         cmd.Parameters.AddWithValue("@CompanyID", getCompanyID());
 
@@ -168,7 +186,7 @@ public partial class Menu : System.Web.UI.Page
         {
             textBoxTableName.Text = "";
             conn.Close();
-            updatePanelSettings.DataBind();
+            settingUpdatePanel.DataBind();
         }
 
     }
@@ -195,7 +213,7 @@ public partial class Menu : System.Web.UI.Page
         finally
         {
             con.Close();
-            updatePanelSettings.DataBind();
+            settingUpdatePanel.DataBind();
         }
 
 
@@ -233,7 +251,7 @@ public partial class Menu : System.Web.UI.Page
         {
             textBoxCategoryName.Text = "";
             conn.Close();
-            updatePanelSettings.DataBind();
+            settingUpdatePanel.DataBind();
         }
 
     }
@@ -260,10 +278,20 @@ public partial class Menu : System.Web.UI.Page
         finally
         {
             con.Close();
-            updatePanelSettings.DataBind();
+            settingUpdatePanel.DataBind();
         }
     }
     #endregion
+    protected void btnCancelRemove_Click(object sender, EventArgs e)
+    {
+        panelRemoveTable.Visible = false;
+        panelAddTable.Visible = false;
 
-
+        btnTriggerRemoveTable.Visible = true;
+        btnTriggerAddTable.Visible = true;
+    }
+    public string generateQrString(string CompanyID, string TableName)
+    {
+        return "(" + CompanyID + ")-QR-(" + TableName + ")";
+    }
 }

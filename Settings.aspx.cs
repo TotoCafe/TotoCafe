@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -20,6 +21,8 @@ public partial class Menu : System.Web.UI.Page
             string encEmail = FormsAuthentication.HashPasswordForStoringInConfigFile(ticket.Name, "SHA1");
             lblStatus.Text = getCompanyID().ToString();
             lblNoTable.Visible = false;
+
+           
         }
     }
 
@@ -59,6 +62,9 @@ public partial class Menu : System.Web.UI.Page
 
         panelAddTable.Visible = true;
         panelRemoveTable.Visible = false;
+
+        labelGizle();
+        
     }
     protected void btnTriggerRemoveTable_Click(object sender, EventArgs e)
     {
@@ -67,6 +73,8 @@ public partial class Menu : System.Web.UI.Page
 
         panelAddTable.Visible = false;
         panelRemoveTable.Visible = true;
+        labelGizle();
+
     }
     protected void btnTriggerAddCategory_Click(object sender, EventArgs e)
     {
@@ -74,6 +82,8 @@ public partial class Menu : System.Web.UI.Page
         panelRemoveCategory.Visible = false;
         panelAddProduct.Visible = false;
         panelRemoveProduct.Visible = false;
+        labelGizle();
+
     }
     protected void btnTriggerRemoveCategory_Click(object sender, EventArgs e)
     {
@@ -81,6 +91,8 @@ public partial class Menu : System.Web.UI.Page
         panelRemoveCategory.Visible = true;
         panelAddProduct.Visible = false;
         panelRemoveProduct.Visible = false;
+        labelGizle();
+
     }
     protected void btnTriggerAddProduct_Click(object sender, EventArgs e)
     {
@@ -88,6 +100,8 @@ public partial class Menu : System.Web.UI.Page
         panelRemoveCategory.Visible = false;
         panelAddProduct.Visible = true;
         panelRemoveProduct.Visible = false;
+        labelGizle();
+
     }
     protected void btnTriggerRemoveProduct_Click(object sender, EventArgs e)
     {
@@ -95,6 +109,8 @@ public partial class Menu : System.Web.UI.Page
         panelRemoveCategory.Visible = false;
         panelAddProduct.Visible = false;
         panelRemoveProduct.Visible = true;
+        labelGizle();
+
     }
     protected void btnCancelAdd_Click(object sender, EventArgs e)
     {/*Cancels addTable.*/
@@ -104,10 +120,13 @@ public partial class Menu : System.Web.UI.Page
 
         panelAddTable.Visible = false;
         panelRemoveTable.Visible = false;
+
+
     }
     protected void btnCloseRemoveProduct_Click(object sender, EventArgs e)
     {
         panelRemoveProduct.Visible = false;
+
     }
     protected void btnCloseAddProduct_Click(object sender, EventArgs e)
     {
@@ -292,6 +311,7 @@ public partial class Menu : System.Web.UI.Page
             catch (Exception) { }
             finally
             {
+                lblSaveProduct.Visible = true;
                 con.Close();
                 refreshDropdownLists();
                 settingUpdatePanel.DataBind();
@@ -321,15 +341,34 @@ public partial class Menu : System.Web.UI.Page
             catch (Exception) { }
             finally
             {
+                lblRemoveProduct.Visible = true;
                 con.Close();
                 refreshDropdownLists();
                 settingUpdatePanel.DataBind();
+                
             }
         }
     }
     #endregion
 
     #region Methods
+    public void labelGizle()
+    {
+        /* Label visibilities 
+            Ekleme ve çıkarma buttonları arasında gezinirken
+            Önceki paneldeki ürün eklendi ya da silindi 
+            yazıları göze hoş gelmediği için her butonla
+            geçiş yapıldığında label ları gizledim.
+        */
+        lblSaveTable.Visible = false;
+        lblRemoveTable.Visible = false;
+
+        lblSaveCategory.Visible = false;
+        lblRemoveCategory.Visible = false;
+
+        lblSaveProduct.Visible = false;
+        lblRemoveProduct.Visible = false;
+    }
     public int getCompanyID()
     {
         string query = "Select * from Company where Company.Email = @Email";
@@ -387,4 +426,7 @@ public partial class Menu : System.Web.UI.Page
         dropDownListTables.Items.Add(tempItem);
     }
     #endregion
+
+
+
 }

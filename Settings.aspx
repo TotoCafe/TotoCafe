@@ -156,6 +156,7 @@
                     </div>
                 </div>
             </asp:Panel>
+            <!-- END PanelTableSettings -->
 
             <asp:Panel runat="server" ID="panelMenuSettings" Visible="false" CssClass="panel panel-primary">
                 <div class="panel-heading">Menu Settings</div>
@@ -224,14 +225,15 @@
                                                 <asp:TextBox runat="server" ID="textBoxCategoryName" class="form-control input-md" />
                                             </div>
                                         </div>
-                                        <div class="form-group" style="padding-top: 40px;">
+                                        <div class="row" style="padding-top: 40px;">
                                             <div class="col-md-2">
                                                 <asp:Button Text="Save" ID="btnSaveCategory" OnClick="btnSaveCategory_Click" CssClass="btn btn-success" Style="width: 130px;" runat="server" />
                                             </div>
-                                            <div class="col-md-2">
+
+                                            <div class="col-md-2" style="padding-left: 30px;">
                                                 <asp:Button Text="Close" ID="btnCloseCategory" CssClass="btn btn-danger" Style="width: 130px;" runat="server" OnClick="btnCloseCategory_Click" />
                                             </div>
-                                            <div class="col-md-7">
+                                            <div class="col-md-8" style="padding-left: 50px;">
                                                 <asp:Label ID="lblSaveCategory" Text="You successfully add new category!" Visible="false" runat="server" />
                                             </div>
                                         </div>
@@ -242,8 +244,8 @@
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-md-5">
-                                                <asp:DropDownList ID="dropDownListShowCategory" CssClass="form-control" runat="server" DataSourceID="SqlDataSourceGetCategories" DataTextField="CategoryName" DataValueField="CategoryID" AppendDataBoundItems="True">
-                                                    <asp:ListItem Value="0">&lt;Select Category to Remove&gt;</asp:ListItem>
+                                                    <asp:DropDownList ID="dropDownListShowCategory" CssClass="form-control" runat="server" DataSourceID="SqlDataSourceGetCategories" DataTextField="CategoryName" DataValueField="CategoryID" AppendDataBoundItems="True">
+                                                        <asp:ListItem Value="0">&lt;Select Category to Remove&gt;</asp:ListItem>
                                                     </asp:DropDownList>
                                                     <asp:SqlDataSource ID="SqlDataSourceGetCategories" runat="server" ConnectionString="<%$ ConnectionStrings:TotoCafeDB %>" SelectCommand="SELECT Category.*, Company.CompanyID FROM Category INNER JOIN Company ON Category.CompanyID = Company.CompanyID WHERE (Company.CompanyID = @CompanyID)">
                                                         <SelectParameters>
@@ -255,12 +257,12 @@
 
                                             <div class="row" style="padding-top: 20px;">
                                                 <div class="col-md-2">
-                                                    <asp:Button Text="Delete" ID="btnRemoveCategory" OnClick="btnRemoveCategory_Click" CssClass="btn btn-default" Style="width: 130px;" runat="server" />
+                                                    <asp:Button Text="Delete" ID="btnRemoveCategory" OnClick="btnRemoveCategory_Click" CssClass="btn btn-success" Style="width: 130px;" runat="server" />
                                                 </div>
-                                                <div class="col-md-2">
+                                                <div class="col-md-2" style="padding-left: 30px;">
                                                     <asp:Button Text="Close" ID="btnCloseCategoryRemove" CssClass="btn btn-danger" Style="width: 130px;" runat="server" OnClick="btnCloseCategoryRemove_Click" />
                                                 </div>
-                                                <div class="col-md-7">
+                                                <div class="col-md-8" style="padding-left: 50px;">
                                                     <asp:Label ID="lblRemoveCategory" Text="You remove this category!" CssClass="alert alert-danger" Visible="false" runat="server" />
 
                                                 </div>
@@ -306,14 +308,15 @@
                                                 </asp:DropDownList>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="col-md-5">
-                                                <div class="col-md-5">
-                                                    <asp:Button ID="btnAddProduct" Text="Add" CssClass="btn btn-success" Style="width: 130px;" runat="server" OnClick="btnAddProduct_Click" />
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <asp:Button ID="btnCloseAddProduct" Text="Close" CssClass="btn btn-danger" Style="width: 130px;" runat="server" OnClick="btnCloseAddProduct_Click" />
-                                                </div>
+                                        <div class="form-group" style="padding-top: 180px;">
+                                            <div class="col-md-2">
+                                                <asp:Button ID="btnAddProduct" Text="Add" CssClass="btn btn-success" Style="width: 130px;" runat="server" OnClick="btnAddProduct_Click" />
+                                            </div>
+                                            <div class="col-md-2" style="padding-left: 30px;">
+                                                <asp:Button ID="btnCloseAddProduct" Text="Close" CssClass="btn btn-danger" Style="width: 130px;" runat="server" OnClick="btnCloseAddProduct_Click" />
+                                            </div>
+                                            <div class="col-md-4" style="padding-left: 50px;">
+                                                <asp:Label ID="lblSaveProduct" Text="You add new product!" CssClass="alert alert-success" Visible="false" runat="server" />
                                             </div>
                                         </div>
                                     </div>
@@ -337,10 +340,13 @@
                                     <div class="panel-body">
                                         <div class="form-group">
                                             <div class="col-md-2">
-                                                <asp:Button ID="btnRemoveProduct" Text="Remove" CssClass="btn btn-danger" Style="width: 130px;" runat="server" OnClick="btnRemoveProduct_Click" />
+                                                <asp:Button ID="btnRemoveProduct" Text="Remove" CssClass="btn btn-success" Style="width: 130px;" runat="server" OnClick="btnRemoveProduct_Click" />
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-2" style="padding-left: 30px">
                                                 <asp:Button ID="btnCloseRemoveProduct" Text="Close" CssClass="btn btn-danger" Style="width: 130px;" runat="server" OnClick="btnCloseRemoveProduct_Click" />
+                                            </div>
+                                            <div class="col-md-8" style="padding-left: 50px;">
+                                                <asp:Label ID="lblRemoveProduct" Text="You remove this product!" CssClass="alert alert-danger" Visible="false" runat="server" />
                                             </div>
                                         </div>
                                     </div>
@@ -349,6 +355,7 @@
                         </asp:UpdatePanel>
                     </div>
             </asp:Panel>
+            <!-- panelMenuSettings -->
         </ContentTemplate>
         <Triggers>
             <asp:AsyncPostBackTrigger ControlID="btnTableSettings" />
@@ -357,4 +364,10 @@
             <asp:AsyncPostBackTrigger ControlID="btnCancelRemove" />
         </Triggers>
     </asp:UpdatePanel>
+
+
+
+    
+
+
 </asp:Content>

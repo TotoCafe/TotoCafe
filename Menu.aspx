@@ -5,19 +5,44 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
     <!-- Nested GridViews  products inside categories -->
     <style>
+        .panel-menu {
+            border-color: #A6CE95;
+        }
+
+            .panel-menu > .panel-heading {
+                color: #a94442;
+                background-color: #f2dede;
+                border-color: #ebccd1;
+            }
+
+                .panel-menu > .panel-heading + .panel-collapse > .panel-body {
+                    border-top-color: #ebccd1;
+                }
+
+                .panel-menu > .panel-heading .badge {
+                    color: #f2dede;
+                    background-color: #a94442;
+                }
+
+            .panel-menu > .panel-footer + .panel-collapse > .panel-body {
+                border-bottom-color: #ebccd1;
+            }
+
         .boundHeading {
             text-align: center;
-            font-size: 19px;
-            font-weight: 700;
-            padding-top: 20px;
-          
+            font-size: 18px;
+            font-weight: 500;
+            padding-top: 12px;
             border-bottom: 1px solid transparent;
             border-top-left-radius: 3px;
             border-top-right-radius: 3px;
-            color: #a94442;
-            background-color: #f2dede;
-            border-color: #ebccd1;
-         
+            color: #35794B; /* color : Dollar Bill */
+            background-color: #E0EFDD; /* color: Greenback */
+            border-color: #BAD9AD; /*color:  US MİNT */
+            /* Others 
+                A6CE95 = Legal Tender Bill
+                234214 = Bank note green 
+            */
         }
 
         #dataList {
@@ -27,11 +52,12 @@
         .dataListLabel {
             font-weight: bold;
             font-size: 15px;
+            color: #234214;
         }
     </style>
-    <h2 style="text-align: center">MENU</h2>
+    <h2 style="text-align: center; color: #234214;">MENU</h2>
     <div class="container">
-        <div class="panel panel-danger" style="width: 100%; margin: auto">
+        <div class="panel panel-menu" style="width: 100%; margin: auto">
             <!-- haydi başlayalım -->
             <asp:Label Text="text" Visible="false" ID="lblStatus" runat="server" />
             <asp:SqlDataSource ID="SqlDataSourceShowCategories" runat="server" ConnectionString="<%$ ConnectionStrings:TotoCafeDB %>" SelectCommand="SELECT Category.CategoryID, Category.CategoryName, Category.CompanyID FROM Category INNER JOIN Company ON Category.CompanyID = Company.CompanyID WHERE (Company.CompanyID = @CompanyID)">
@@ -54,45 +80,45 @@
                     <asp:BoundField DataField="CategoryID" HeaderText="" ItemStyle-Font-Size="1px" ItemStyle-CssClass="boundHeading" />
                     <asp:TemplateField>
                         <ItemTemplate>
-                               <tr>
-                                    <td>
-                            <div class="panel-body">
-                             
+                            <tr>
+                                <td>
+                                    <div class="panel-body">
+
                                         <br />
                                         <div id='<%# Eval("CategoryID") %>' style="display: inline" />
 
                                         <asp:DataList ID="datalist" AutoGenerateColumns="false" runat="server">
-                                          
-                                                <itemtemplate>
-                                                    <div class="row" id="dataList">
-                                                        <div class="col-md-3" style="width: 300px;">
-                                                            <asp:Label Text="Product Name:" CssClass="dataListLabel" runat="server" />
-                                                            <%# Eval("ProductName") %>
-                                                        </div>
-                                                        <div class="col-md-3" style="width: 300px;">
-                                                            <asp:Label Text="Price: " CssClass="dataListLabel" runat="server" />
-                                                            <%# Eval("Price") %> TL
 
-                                                        </div>
-                                                        <div class="col-md-3" style="width: 300px;">
-                                                            <asp:Label CssClass="dataListLabel" Text="Details: " runat="server" />
-                                                            <%# Eval("Detail") %>
-                                                        </div>
-                                                        <div class="col-md-3" style="width: 100px;">
-                                                            <asp:Label CssClass="dataListLabel" Text="Credit: " runat="server" />
-                                                            <%# Eval("Credit") %>
-                                                        </div>
+                                            <ItemTemplate>
+                                                <div class="row" id="dataList">
+                                                    <div class="col-md-3" style="width: 300px;">
+                                                        <asp:Label Text="Product Name:" CssClass="dataListLabel" runat="server" />
+                                                        <%# Eval("ProductName") %>
                                                     </div>
+                                                    <div class="col-md-3" style="width: 300px;">
+                                                        <asp:Label Text="Price: " CssClass="dataListLabel" runat="server" />
+                                                        <%# Eval("Price") %> TL
 
-                                                </itemtemplate>
-                                                <separatortemplate>
-                                                    <hr />
-                                                </separatortemplate>
-                                           
+                                                    </div>
+                                                    <div class="col-md-3" style="width: 300px;">
+                                                        <asp:Label CssClass="dataListLabel" Text="Details: " runat="server" />
+                                                        <%# Eval("Detail") %>
+                                                    </div>
+                                                    <div class="col-md-3" style="width: 100px;">
+                                                        <asp:Label CssClass="dataListLabel" Text="Credit: " runat="server" />
+                                                        <%# Eval("Credit") %>
+                                                    </div>
+                                                </div>
+
+                                            </ItemTemplate>
+                                            <SeparatorTemplate>
+                                                <hr />
+                                            </SeparatorTemplate>
+
                                         </asp:DataList>
-                            </div>
-                            <br />
-                            </td>
+                                    </div>
+                                    <br />
+                                </td>
                             </tr>
                         </ItemTemplate>
                     </asp:TemplateField>

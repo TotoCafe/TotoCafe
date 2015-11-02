@@ -4,17 +4,89 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
     <link href="Content/settings.css" rel="stylesheet" />
+    <style>
+        .btn-settingsPrimary {
+            color: #00540A;
+            background-color: #ffffff;
+            border-color: #2D7012;
+        }
+
+            .btn-settingsPrimary:hover,
+            .btn-settingsPrimary:focus,
+            .btn-settingsPrimary:active,
+            .btn-settingsPrimary.active,
+            .open .dropdown-toggle.btn-settingsPrimary {
+                color: white;
+                background-color: #286907;
+                border-color: #2D7012;
+            }
+
+            .btn-settingsPrimary:active,
+            .btn-settingsPrimary.active,
+            .open .dropdown-toggle.btn-settingsPrimary {
+                background-image: none;
+            }
+
+            .btn-settingsPrimary.disabled,
+            .btn-settingsPrimary[disabled],
+            fieldset[disabled] .btn-settingsPrimary,
+            .btn-settingsPrimary.disabled:hover,
+            .btn-settingsPrimary[disabled]:hover,
+            fieldset[disabled] .btn-settingsPrimary:hover,
+            .btn-settingsPrimary.disabled:focus,
+            .btn-settingsPrimary[disabled]:focus,
+            fieldset[disabled] .btn-settingsPrimary:focus,
+            .btn-settingsPrimary.disabled:active,
+            .btn-settingsPrimary[disabled]:active,
+            fieldset[disabled] .btn-settingsPrimary:active,
+            .btn-settingsPrimary.disabled.active,
+            .btn-settingsPrimary[disabled].active,
+            fieldset[disabled] .btn-settingsPrimary.active {
+                background-color: #CDEBD6;
+                border-color: #2D7012;
+            }
+
+            .btn-settingsPrimary .badge {
+                color: #CDEBD6;
+                background-color: #00540A;
+            }
+
+            /* panel Table */
+            .panel-settings {
+                border-color: #A6CE95;
+            }
+
+            .panel-settings > .panel-heading {
+                color: #234214;
+                background-color: #E0EFDD;
+                border-color: #A6CE95;
+            }
+
+                .panel-settings > .panel-heading + .panel-collapse > .panel-body {
+                    border-top-color: #ebccd1;
+                }
+
+                .panel-settings > .panel-heading .badge {
+                    color: #f2dede;
+                    background-color: #a94442;
+                }
+
+            .panel-settings > .panel-footer + .panel-collapse > .panel-body {
+                border-bottom-color: #ebccd1;
+            }
+    </style>
+
     <div id="divSettings" class="container">
         <div class="row">
             <div class="container-fluid">
                 <div class="col-md-6" style="align-items: center">
                     <div class="triggerbuttons">
-                        <asp:Button Text="Tables" runat="server" ID="btnTableSettings" CssClass="btn btn-default" Style="background-color: rebeccapurple; color: white;" OnClick="btnTableSettings_Click" />
+                        <asp:Button Text="Tables" runat="server" ID="btnTableSettings" CssClass="btn btn-settingsPrimary" OnClick="btnTableSettings_Click" />
                     </div>
                 </div>
                 <div class="col-md-6" style="align-items: center">
                     <div class="triggerbuttons" style="align-items: center">
-                        <asp:Button Text="Menu" runat="server" ID="btnMenuSettings" CssClass="btn btn-default" Style="background-color: rebeccapurple; color: white;" OnClick="btnMenuSettings_Click" />
+                        <asp:Button Text="Menu" runat="server" ID="btnMenuSettings" CssClass="btn btn-settingsPrimary" OnClick="btnMenuSettings_Click" />
                     </div>
                 </div>
             </div>
@@ -24,7 +96,7 @@
             <asp:UpdatePanel runat="server" ID="settingUpdatePanel" ChildrenAsTriggers="true">
                 <ContentTemplate>
 
-                    <asp:Panel runat="server" ID="panelTableSettings" Visible="false" CssClass="panel panel-primary">
+                    <asp:Panel runat="server" ID="panelTableSettings" Visible="false" CssClass="panel panel-settings">
                         <div class="panel-heading">Table Settings</div>
                         <div class="panel-body">
                             <div class="col-md-3">
@@ -163,7 +235,7 @@
                     </asp:Panel>
                     <!-- END PanelTableSettings -->
 
-                    <asp:Panel runat="server" ID="panelMenuSettings" Visible="false" CssClass="panel panel-primary">
+                    <asp:Panel runat="server" ID="panelMenuSettings" Visible="false" CssClass="panel panel-settings">
                         <div class="panel-heading">Menu Settings</div>
                         <div class="panel-body">
                             <div class="col-md-4">

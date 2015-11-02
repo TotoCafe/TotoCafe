@@ -19,5 +19,3 @@
     </asp:SqlDataSource>
     <asp:Label Text="text" ID="lblStatus" runat="server" />
 </asp:Content>
-
-

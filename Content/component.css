@@ -7,13 +7,13 @@ form,
     height: 100%;
 }
 
-/*.st-container {
+    /*.st-container {
     position: relative;
     overflow: hidden;
     min-height: 100%;
 }*/
 
-/*.st-pusher {
+    /*.st-pusher {
 	position: relative;
 	left: 0;
 	z-index: 99;
@@ -23,18 +23,18 @@ form,
 }*/
 
 
-.st-pusher::after {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 0;
-    height: 0;
-    background: rgba(0,0,0,0.2);
-    content: '';
-    opacity: 0;
-    -webkit-transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s;
-    transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s;
-}
+    .st-pusher::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 0;
+        height: 0;
+        background: rgba(0,0,0,0.2);
+        content: '';
+        opacity: 0;
+        -webkit-transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s;
+        transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s;
+    }
 
 .st-menu-open .st-pusher::after {
     width: 100%;
@@ -142,12 +142,4 @@ form,
 
 .st-effect-1.st-menu::after {
     display: none;
-}
-
-
-
-/* Fallback example for browsers that don't support 3D transforms (and no JS fallback) */
-.no-csstransforms3d .st-pusher,
-.no-js .st-pusher {
-    padding-left: 300px;
 }

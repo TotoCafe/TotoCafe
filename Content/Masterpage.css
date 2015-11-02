@@ -18,7 +18,7 @@
 #sideEndElements {
     position: fixed;
     bottom: 0;
-    width: 250px;
+    width: 200px;
 }
 
 #footer-ghost {
@@ -28,7 +28,7 @@
 footer {
     position: fixed;
     width: 100%;
-    height: 40px;
+    height: 30px;
     background-color: #35794B;
     bottom: 0;
     right: 0;
@@ -38,29 +38,25 @@ footer {
 header {
     position: fixed;
     top: 0;
-    height: 54px;
+    height: 41px;
     width: 100%;
     background-color: #35794B;
-    z-index: 2;
+    z-index: 999;
+    border-bottom: outset;
 }
 
 /*Sidebar*/
 #menu-1 {
     position: fixed;
+    width: 200px;
+    z-index: 9999;
 }
 
 #sideButton {
     position: fixed;
-    top: 9px;
-    left: 9px;
+    top: 0;
     border-style: none;
-}
-
-#iconSideButton {
-    position: fixed;
-    height: 36px;
-    top: 9px;
-    left: 9px;
+    background-color: #35794B;
 }
 
 #btnLogout {
@@ -69,30 +65,40 @@ header {
     padding: 1em 1em 1em 1.2em;
     outline: none;
     background-color: #35794B;
-    box-shadow: inset 0 -1px rgba(0,0,0,0.2);
     color: #f3efe0;
     text-transform: uppercase;
-    text-shadow: 0 0 1px rgba(255,255,255,0.1);
     letter-spacing: 1px;
-    -webkit-transition: background 0.3s, box-shadow 0.3s;
-    transition: background 0.3s, box-shadow 0.3s;
     border-style: none;
 }
 
-
 #st-trigger-effects {
     position: fixed;
+    bottom: 0;
     top: 0;
-    left: 0;
+}
+
+#sideButton :hover {
+    background: rgba(0,0,0,0.2);
+    box-shadow: inset 0 -1px rgba(0,0,0,0);
+    color: #fff;
+}
+
+#sideLogout :hover {
+    background: rgba(0,0,0,0.2);
+    box-shadow: inset 0 -1px rgba(0,0,0,0);
+    color: #fff;
+}
+
+#st-trigger-effects :focus {
+    outline: 0;
 }
 
 #headerTotoCafe {
     position: fixed;
+    top: 2px;
     padding-left: initial;
-    color: white;
-    font-size: 35px;
-    height: 50px;
-    left: 85px;
-    top: 3px;
+    color: #dddcdd;
+    font-size: 25px;
+    left: 65px;
     text-decoration: solid;
 }

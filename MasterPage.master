@@ -38,7 +38,7 @@
                 <!--SideBar-->
                 <div id="st-container">
                     <nav class="st-menu st-effect-1" id="menu-1" style="position: absolute; left: 0">
-                        <h2 class="icon icon-lab" id="sideHeader">Toto Cafe - Logo</h2>
+                        <h2 class="icon icon-lab" id="sideHeader">TotoCafé</h2>
                         <ul id="sideTopElements">
                             <li><a class="icon icon-data" href="Home.aspx">Home</a></li>
                             <li><a class="icon icon-location" href="Menu.aspx">Menu</a></li>
@@ -46,8 +46,8 @@
                         <ul id="sideEndElements">
                             <li><a class="icon icon-study" href="Settings.aspx">Settings</a></li>
                             <li><a class="icon icon-photo" href="AccountSettings.aspx">Account Settings</a></li>
-                            <li>
-                                <asp:Button Text="Logout" ID="btnLogout" Width="250px" runat="server" OnClick="btnLogout_Click" />
+                            <li id="sideLogout">
+                                <asp:Button Text="Logout" ID="btnLogout" Width="200px" runat="server" OnClick="btnLogout_Click" />
                             </li>
                         </ul>
                     </nav>

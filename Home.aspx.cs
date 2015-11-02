@@ -14,14 +14,14 @@ public partial class Home : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
-        FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
-        string encEmail = FormsAuthentication.HashPasswordForStoringInConfigFile(ticket.Name, "SHA1");
 
-        lblStatus.Text = encEmail;
         if (authCookie == null) 
             Response.Redirect("Index.aspx");
         else
         {
+            FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+            string encEmail = FormsAuthentication.HashPasswordForStoringInConfigFile(ticket.Name, "SHA1");
+            lblStatus.Text = encEmail;
             if (Authentication(encEmail))
             {
                 panelDefault.Visible = true;
@@ -30,12 +30,7 @@ public partial class Home : System.Web.UI.Page
             {
                 panelFirst.Visible = true;
             }
-
-
         }
-
-        
-
     }
 
     public bool Authentication(string Email)

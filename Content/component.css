@@ -1,15 +1,17 @@
 html,
 body,
+form,
 .st-container,
 .st-pusher,
 .st-content {
     height: 100%;
 }
 
-.st-container {
+/*.st-container {
     position: relative;
     overflow: hidden;
-}
+    min-height: 100%;
+}*/
 
 /*.st-pusher {
 	position: relative;

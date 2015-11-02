@@ -4,102 +4,85 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+
     <title></title>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
+
     <!-- Css -->
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
     <!-- SideBar-->
     <link href="Content/component.css" rel="stylesheet" />
-
-    <!--<link href="Content/Masterpage.css" rel="stylesheet" />-->
+    <link href="Content/Masterpage.css" rel="stylesheet" />
 
 </head>
 <body>
-    <form id="masterform" runat="server">
-        <div class="wrapper">
-            <!-- NavBar Header
-            <div id="header" class="st-container">
-                <nav class="navbar navbar-default navbar-fixed-top">
-                    <div class="container-fluid">
-                        
-                    </div>
-                </nav>
-            </div>-->
+    <form runat="server">
 
-            <div id="st-container" class="st-container">
+        <div id="wrapper">
+            <!--Header-->
 
-                <!--Sidebar animate butons
-                    it is gonna be in header-->
+            <header>
+                <!-- Side effect trigger button-->
                 <div id="st-trigger-effects">
-                    <button data-effect="st-effect-1">|||</button>
+                    <button id="sideButton" data-effect="st-effect-1">
+                        <img id="iconSideButton" src="Icons/btn-menu.png" alt="" />
+                    </button>
                 </div>
+                <p id="headerTotoCafe">TotoCafé</p>
+            </header>
+
+            <!-- Content between heade and footer-->
+            <div id="main">
 
                 <!--SideBar-->
-                <nav class="st-menu st-effect-1" id="menu-1" style="position: absolute; top: 0; left: 0">
-                    <h2 class="icon icon-lab" id="sideHeader">Toto Cafe - Logo</h2>
-                    <ul id="sideTopElements">
-                        <li><a class="icon icon-data" href="Home.aspx">Home</a></li>
-                        <li><a class="icon icon-location" href="Menu.aspx">Menu</a></li>
-                    </ul>
-                    <ul class="end" id="sideEndElements" style="padding-top: 300px">
-                        <li><a class="icon icon-study" href="Settings.aspx">Settings</a></li>
-                        <li><a class="icon icon-photo" href="AccountSettings.aspx">Account Settings</a></li>
-                        <li>
-                            <asp:Button Text="Logout" ID="btnLogout" runat="server" OnClick="btnLogout_Click" /></li>
-                    </ul>
-                </nav>
+                <div id="st-container">
+                    <nav class="st-menu st-effect-1" id="menu-1" style="position: absolute; left: 0">
+                        <h2 class="icon icon-lab" id="sideHeader">Toto Cafe - Logo</h2>
+                        <ul id="sideTopElements">
+                            <li><a class="icon icon-data" href="Home.aspx">Home</a></li>
+                            <li><a class="icon icon-location" href="Menu.aspx">Menu</a></li>
+                        </ul>
+                        <ul id="sideEndElements">
+                            <li><a class="icon icon-study" href="Settings.aspx">Settings</a></li>
+                            <li><a class="icon icon-photo" href="AccountSettings.aspx">Account Settings</a></li>
+                            <li>
+                                <asp:Button Text="Logout" ID="btnLogout" Width="250px" runat="server" OnClick="btnLogout_Click" />
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
 
-                <!-- 
-                    Here is the content of the page. 
-                     -->
-                <div class="st-content" id="content">
+                <!-- Content -->
+                <div id="content">
                     <asp:ScriptManager runat="server"></asp:ScriptManager>
                     <asp:ContentPlaceHolder ID="ContentPlaceHolder2" runat="server">
                     </asp:ContentPlaceHolder>
                 </div>
 
-            </div>
-
-            <!-- Footer must be sticked to the bottom of the page 
-                IT IS NOT YET!!-->
-            <div class="footer" style="background-color: blue">
-                <p>Copyright (c) 2008</p>
+                <div id="footer-ghost"></div>
             </div>
         </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+            </div>
+        </footer>
     </form>
 
     <!-- JS -->
     <script src="Scripts/jquery-2.1.4.min.js"></script>
+    <script src="Scripts/jquery.nicescroll.min.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
     <!-- Sidebar JS -->
     <script src="Scripts/sidebarEffects.js"></script>
     <script src="Scripts/classie.js"></script>
 
     <script>
-        /*
-        This script sticks side bar to left and equals
-        its height with window height.
-        */
         $(document).ready(function () {
-            sizeSideBar();
+            $('form').niceScroll({ cursorwidth: '5px', autohidemode: true, zindex: -1, /*scrollspeed: '60px'*/ });
         });
-        $(window).resize(function () {
-            sizeSideBar();
-        });
-        $(window).scroll(function () {
-            var scroll = $(window).scrollTop();
-
-            $('#menu-1').css({ 'top': scroll });
-        });
-
-        function sizeSideBar() {
-
-            var winheight = $(window).height();
-
-            $("#menu-1").css({ 'height': winheight });
-
-        }
     </script>
 </body>
 </html>

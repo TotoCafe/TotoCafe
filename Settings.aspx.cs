@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using ZXing;
+using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 public partial class Menu : System.Web.UI.Page
 {
@@ -22,7 +27,6 @@ public partial class Menu : System.Web.UI.Page
             lblStatus.Text = getCompanyID().ToString();
             lblNoTable.Visible = false;
 
-           
         }
     }
 
@@ -64,7 +68,7 @@ public partial class Menu : System.Web.UI.Page
         panelRemoveTable.Visible = false;
 
         labelGizle();
-        
+
     }
     protected void btnTriggerRemoveTable_Click(object sender, EventArgs e)
     {
@@ -285,7 +289,7 @@ public partial class Menu : System.Web.UI.Page
     #region Product Settings
     protected void btnAddProduct_Click(object sender, EventArgs e)
     {
-        if(
+        if (
             txtProductCredit.Text != "" &&
             txtProductDetails.Text != "" &&
             txtProductName.Text != "" &&
@@ -321,7 +325,7 @@ public partial class Menu : System.Web.UI.Page
                 txtProductPrice.Text = "";
             }
         }
-        
+
     }
     protected void btnRemoveProduct_Click(object sender, EventArgs e)
     {
@@ -345,7 +349,7 @@ public partial class Menu : System.Web.UI.Page
                 con.Close();
                 refreshDropdownLists();
                 settingUpdatePanel.DataBind();
-                
+
             }
         }
     }
@@ -399,13 +403,9 @@ public partial class Menu : System.Web.UI.Page
         FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
         return FormsAuthentication.HashPasswordForStoringInConfigFile(ticket.Name, "SHA1");
     }
-    public static string getConnectionString()
-    {
-        return ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString;
-    }
     public string generateQrString(string CompanyID, string TableName)
     {
-        return "(" + CompanyID + ")-QR-(" + TableName + ")";
+        return CompanyID + ":QR:" + TableName;
     }
     public void refreshDropdownLists()
     {
@@ -427,6 +427,112 @@ public partial class Menu : System.Web.UI.Page
     }
     #endregion
 
+    #region QR Code
+    public List<System.Drawing.Image> GenerateQrCodes(int ImgSize)
+    {
+        string query = "SELECT QrCode FROM [Table] WHERE (CompanyID = @CompanyID)";
 
+        SqlConnection conn = new SqlConnection(getConnectionString());
+        SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@CompanyID", 1);
+        SqlDataReader dr = null;
 
+        List<System.Drawing.Image> QrImagesList = new List<System.Drawing.Image>();
+
+        try
+        {
+            conn.Open();
+
+            dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                QrImagesList.Add(QrGenerator(ImgSize, dr["QrCode"].ToString()));
+            }
+        }
+        catch (Exception)
+        {
+            //Handle errors...
+        }
+        finally
+        {
+            conn.Close();
+        }
+        return QrImagesList;
+    }
+    public System.Drawing.Image QrGenerator(int ImgSize, string QrString)
+    {
+        System.Drawing.Image imgBarCode;
+        IBarcodeWriter writer = new BarcodeWriter
+        {
+            Format = BarcodeFormat.QR_CODE,
+            Options =
+            {
+                Width = QrImageSize(ImgSize) / 2,
+                Height = QrImageSize(ImgSize) / 2
+            }
+        };
+        var result = writer.Write(QrString);
+
+        using (Bitmap bitMap = new Bitmap(result))
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitMap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                //byte[] byteImage = ms.ToArray();
+                /*"data:image/png;base64," + Convert.ToBase64String(byteImage)*/
+                imgBarCode = System.Drawing.Image.FromStream(ms);
+            }
+        }
+        return imgBarCode;
+    }
+    public int QrImageSize(int choice)
+    {
+        switch (choice)
+        {
+            case 1: return 200;
+            case 2: return 300;
+            case 3: return 400;
+            case 4: return 500;
+            default: return 300;
+        }
+    }
+    public void QrImagesToPdf(string pdfpath, List<System.Drawing.Image> imageList)
+    {
+        Document doc = new Document(PageSize.A4, 0, 0, 0, 0);
+        try
+        {
+            PdfWriter.GetInstance(doc, new FileStream(pdfpath + "/Qr Codes.pdf", FileMode.Create));
+
+            doc.Open();
+
+            foreach (System.Drawing.Image img in imageList)
+            {
+                iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(img, System.Drawing.Imaging.ImageFormat.Png);
+                doc.Add(pdfImage);
+            }
+
+        }
+        catch (Exception)
+        {
+            //Handle errors..
+        }
+        finally
+        {
+            doc.Close();
+        }
+    }
+    #endregion
+
+    #region getConnectionString()
+    public static string getConnectionString()
+    {
+        return ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString;
+    }
+    #endregion
+
+    protected void qrButton_Click(object sender, EventArgs e)
+    {
+        QrImagesToPdf(Server.MapPath("~/Qr Codes"), GenerateQrCodes(1)); //For now..
+    }
 }

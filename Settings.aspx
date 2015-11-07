@@ -51,10 +51,10 @@
                 background-color: #00540A;
             }
 
-            /* panel Table */
-            .panel-settings {
-                border-color: #A6CE95;
-            }
+        /* panel Table */
+        .panel-settings {
+            border-color: #A6CE95;
+        }
 
             .panel-settings > .panel-heading {
                 color: #234214;
@@ -232,6 +232,9 @@
                                 </asp:UpdatePanel>
                             </div>
                         </div>
+                        <asp:Panel runat="server" ID="panelQrImages">
+                            <asp:Button Text="Save Qr" runat="server" ID="qrButton" OnClick="qrButton_Click" />
+                        </asp:Panel>
                     </asp:Panel>
                     <!-- END PanelTableSettings -->
 

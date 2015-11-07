@@ -15,13 +15,14 @@
     <!-- Css -->
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
     <link href="Content/bootstrap-theme.min.css" rel="stylesheet" />
-
     <!-- Scripts -->
     <script src="Scripts/bootstrap.min.js"></script>
-    <script src="Scripts/jquery-1.9.1.min.js"></script>
+    <script src="Scripts/jquery-2.1.4.min.js"></script>
+
 </head>
 <body>
     <form id="form" runat="server">
+
         <div>
             <div class="container">
                 <nav class="navbar navbar-default" id="defaultNavigation">
@@ -41,7 +42,7 @@
                                     AlternateText="TotoCafe"
                                     runat="server" /></a>
                         </div>
-                        <uc1:Login runat="server" id="Login" />
+                        <uc1:Login runat="server" ID="Login" />
                         <!-- /.navbar-collapse -->
                     </div>
                     <!-- /.container-fluid -->
@@ -70,7 +71,7 @@
                                 MaxLength="50"
                                 runat="server"
                                 TabIndex="4" />
-                          
+
                         </div>
                         <!-- Email -->
                         <div class="form-group has-feedback">
@@ -81,7 +82,7 @@
                                 TextMode="Email"
                                 MaxLength="50"
                                 TabIndex="5" />
-                          
+
                             <span class="form-control-feedback" id="feedback"></span>
                             <span id="inUse"></span>
                         </div>
@@ -96,7 +97,7 @@
                                         MaxLength="50"
                                         TabIndex="6"
                                         TextMode="Password" />
-                               
+
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-6 col-md-6">
@@ -107,7 +108,7 @@
                                         runat="server"
                                         TabIndex="7"
                                         TextMode="Password" />
-                                 
+
                                 </div>
                             </div>
                         </div>
@@ -120,7 +121,7 @@
                                 TabIndex="8"
                                 TextMode="MultiLine"
                                 MaxLength="50" />
-                           
+
                         </div>
                         <div class="row">
                             <!-- City -->
@@ -137,7 +138,7 @@
                                         <asp:ListItem Text="Select City"
                                             Value="0" />
                                     </asp:DropDownList>
-                                   
+
                                     <asp:SqlDataSource ID="sdsCity"
                                         runat="server"
                                         ConnectionString="<%$ ConnectionStrings:TotoCafeDB %>"
@@ -153,7 +154,7 @@
                                         MaxLength="50" runat="server"
                                         TabIndex="10"
                                         TextMode="Phone" />
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -185,9 +186,7 @@
             <!-- end div -->
         </div>
 
-        <!-- AJAX Scripti - Otomatik email veritabanında kayıtlı olup olmadığına bakar. -->
-        <script type="text/javascript">
-
+        <script>
             $(document).ready(function () {
                 $('#txtCompanyEmail').change(function () {
                     var CompanyEmail = $(this);
@@ -197,12 +196,11 @@
                         $.ajax({
                             type: "POST",
                             url: "Index.aspx/CheckCompanyEmail",
-                            data: "{'companyEmail':'" + CompanyEmail.val() + "'}",
+                            data: "{'CompanyEmail':'" + CompanyEmail.val() + "'}",
                             contentType: "application/json;charset=utf-8",
                             datatype: "json",
                             success: function (msg) {
                                 if (msg.d == "<font color='#cc0000'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></font>") {
-                                    $('#form').
                                     inUse.html("<font color='#cc0000' style=\"font-size:11px\">Sorry, it looks like <b>"
                                     + CompanyEmail.val() + "</b> belongs to an existing account.</font>")
                                     feedback.html(msg.d);
@@ -220,6 +218,7 @@
                 });
             })
         </script>
+
     </form>
 </body>
 </html>

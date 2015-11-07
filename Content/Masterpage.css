@@ -57,6 +57,7 @@ header {
     top: 0;
     border-style: none;
     background-color: #35794B;
+    width: auto;
 }
 
 #btnLogout {

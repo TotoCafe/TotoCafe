@@ -25,8 +25,10 @@ public partial class Index : System.Web.UI.Page
     }
     #endregion
 
+    #region Queries
     string insertQuery = "INSERT INTO Company (CompanyName, Email, Password, Address, Phone#, Grade, Location, CityID)" +
                                       "VALUES (@CompanyName, @Email, @Password, @Address, @Phone#, @Grade, @Location, @CityID)";
+    #endregion
 
     #region Sign Up
     protected void btnSignUp_Click(object sender, EventArgs e)
@@ -90,10 +92,10 @@ public partial class Index : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string CheckCompanyEmail(string companyEmail)
+    public static string CheckCompanyEmail(string CompanyEmail)
     {
         int result = 0;
-        string encEmail = FormsAuthentication.HashPasswordForStoringInConfigFile(companyEmail, "SHA1");
+        string encEmail = FormsAuthentication.HashPasswordForStoringInConfigFile(CompanyEmail, "SHA1");
         string query = "SELECT COUNT(Email) FROM Company WHERE Email = '" + encEmail + "'";
 
         SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString);
@@ -104,12 +106,12 @@ public partial class Index : System.Web.UI.Page
             conn.Open();
             result = int.Parse((cmd.ExecuteScalar().ToString()));
         }
-        catch (Exception) { }
+        catch (Exception) { /*Handle errors*/ }
         finally
         {
             conn.Close();
         }
-        return result == 0 ? "<font color='#cc0000'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></font>"
+        return result == 0 ? "<font color='#32CD32'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></font>"
                            : "<font color='#cc0000'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></font>";
     }
     #endregion

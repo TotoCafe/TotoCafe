@@ -27,6 +27,10 @@ public partial class Menu : System.Web.UI.Page
             lblStatus.Text = getCompanyID().ToString();
             lblNoTable.Visible = false;
 
+            ScriptManager scriptManager = ScriptManager.GetCurrent(this.Page);
+            scriptManager.RegisterPostBackControl(this.qrButton);
+
+            DeleteQrPdf();
         }
     }
 
@@ -403,10 +407,6 @@ public partial class Menu : System.Web.UI.Page
         FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
         return FormsAuthentication.HashPasswordForStoringInConfigFile(ticket.Name, "SHA1");
     }
-    public string generateQrString(string CompanyID, string TableName)
-    {
-        return CompanyID + ":QR:" + TableName;
-    }
     public void refreshDropdownLists()
     {
         var tempItem = ddlCategorySelect.Items[0];
@@ -428,16 +428,18 @@ public partial class Menu : System.Web.UI.Page
     #endregion
 
     #region QR Code
-    public List<System.Drawing.Image> GenerateQrCodes(int ImgSize)
+    public List<QrObject> GenerateQrCodes(int ImgSize)
     {
-        string query = "SELECT QrCode FROM [Table] WHERE (CompanyID = @CompanyID)";
+        string query = "SELECT [Table].TableName, [Table].QrCode, Company.CompanyName" +
+                       " FROM Company INNER JOIN [Table] ON Company.CompanyID = [Table].CompanyID" +
+                       " WHERE (Company.CompanyID = @CompanyID)";
 
         SqlConnection conn = new SqlConnection(getConnectionString());
         SqlCommand cmd = new SqlCommand(query, conn);
-        cmd.Parameters.AddWithValue("@CompanyID", 1);
+        cmd.Parameters.AddWithValue("@CompanyID", 1); //For now..
         SqlDataReader dr = null;
 
-        List<System.Drawing.Image> QrImagesList = new List<System.Drawing.Image>();
+        List<QrObject> QrImagesList = new List<QrObject>();
 
         try
         {
@@ -447,7 +449,12 @@ public partial class Menu : System.Web.UI.Page
 
             while (dr.Read())
             {
-                QrImagesList.Add(QrGenerator(ImgSize, dr["QrCode"].ToString()));
+                QrObject qrObject = new QrObject();
+                qrObject.QrImage = QrGenerator(ImgSize, dr["QrCode"].ToString());
+                qrObject.TableName = dr["TableName"].ToString();
+                qrObject.CompanyName = dr["CompanyName"].ToString();
+
+                QrImagesList.Add(qrObject);
             }
         }
         catch (Exception)
@@ -479,8 +486,6 @@ public partial class Menu : System.Web.UI.Page
             using (MemoryStream ms = new MemoryStream())
             {
                 bitMap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                //byte[] byteImage = ms.ToArray();
-                /*"data:image/png;base64," + Convert.ToBase64String(byteImage)*/
                 imgBarCode = System.Drawing.Image.FromStream(ms);
             }
         }
@@ -497,30 +502,110 @@ public partial class Menu : System.Web.UI.Page
             default: return 300;
         }
     }
-    public void QrImagesToPdf(string pdfpath, List<System.Drawing.Image> imageList)
+    public void QrImagesToPdf(string pdfpath, List<QrObject> qrObjectList)
     {
-        Document doc = new Document(PageSize.A4, 0, 0, 0, 0);
+        Document document = new Document(PageSize.A4, 0, 0, 25, 0);
+
+        Bitmap bitMap = new Bitmap(pdfpath + "/Empty Qr Image/emptyQr.png");
+        MemoryStream ms = new MemoryStream();
+        bitMap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+
+
+        for (int i = 3; i >= qrObjectList.Count % 3; i--)
+        {
+            QrObject qrObject = new QrObject();
+            qrObject.QrImage = System.Drawing.Image.FromStream(ms);
+            qrObject.TableName = "";
+            qrObject.CompanyName = "";
+
+            qrObjectList.Add(qrObject);
+        }
+
         try
         {
-            PdfWriter.GetInstance(doc, new FileStream(pdfpath + "/Qr Codes.pdf", FileMode.Create));
+            PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(pdfpath + "/" + GetQrPdfName(), FileMode.Create));
+            document.Open();
 
-            doc.Open();
+            //Create a master table with 3 columns
+            PdfPTable masterTable = new PdfPTable(3);
 
-            foreach (System.Drawing.Image img in imageList)
+            masterTable.PaddingTop = 3f;
+            masterTable.HorizontalAlignment = Element.ALIGN_CENTER;
+
+            PdfPTable table;
+            PdfPCell cell;
+
+            foreach (QrObject obj in qrObjectList)
             {
-                iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(img, System.Drawing.Imaging.ImageFormat.Png);
-                doc.Add(pdfImage);
+                table = new PdfPTable(1);
+                table.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                table.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                Phrase tableName = new Phrase(obj.TableName);
+                tableName.Font.Size = 16f;
+
+                cell = new PdfPCell(tableName);
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell.BorderColor = BaseColor.WHITE;
+                table.AddCell(cell);
+
+                Phrase companyName = new Phrase(obj.CompanyName);
+                companyName.Font.Size = 10f;
+
+                cell = new PdfPCell(companyName);
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell.BorderColor = BaseColor.WHITE;
+                table.AddCell(cell);
+
+                iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(obj.QrImage, System.Drawing.Imaging.ImageFormat.Png);
+                cell = new PdfPCell(pdfImage);
+                cell.BorderColor = BaseColor.WHITE;
+                table.AddCell(cell);
+
+                //Add the sub-table to our master table instead of the writer
+                masterTable.AddCell(table);
             }
 
+            //Add the master table to our document
+            document.Add(masterTable);
         }
+
         catch (Exception)
         {
-            //Handle errors..
+            //handle errors
         }
         finally
         {
-            doc.Close();
+            document.Close();
         }
+    }
+    public string GetQrPdfName()
+    {
+        return "QrCodes-" + lblStatus.Text;
+    }
+    public void DeleteQrPdf()
+    {
+        if (File.Exists(Server.MapPath("~/Qr Codes") + "/" + GetQrPdfName()))
+        {
+            File.Delete(Server.MapPath("~/Qr Codes") + "/" + GetQrPdfName());
+        }
+    }
+    public string generateQrString(string CompanyID, string TableName)
+    {
+        return CompanyID + ":QR:" + TableName;
+    }
+    protected void qrButton_Click(object sender, EventArgs e)
+    {
+        QrImagesToPdf(Server.MapPath("~/Qr Codes"), GenerateQrCodes(2)); //For now..
+
+        string path = MapPath("~/Qr Codes") + "/" + GetQrPdfName();
+        byte[] bts = System.IO.File.ReadAllBytes(path);
+        Response.AddHeader("Content-Type", "Application/octet-stream");
+        Response.AddHeader("Content-Length", bts.Length.ToString());
+        Response.AddHeader("Content-Disposition", "attachment; filename=QrCodes.pdf");
+        Response.BinaryWrite(bts);
+        Response.Flush();
+        Response.End();
     }
     #endregion
 
@@ -531,8 +616,10 @@ public partial class Menu : System.Web.UI.Page
     }
     #endregion
 
-    protected void qrButton_Click(object sender, EventArgs e)
-    {
-        QrImagesToPdf(Server.MapPath("~/Qr Codes"), GenerateQrCodes(1)); //For now..
-    }
+}
+public class QrObject
+{
+    public System.Drawing.Image QrImage { get; set; }
+    public string CompanyName { get; set; }
+    public string TableName { get; set; }
 }

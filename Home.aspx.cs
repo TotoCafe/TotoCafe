@@ -11,50 +11,17 @@ using System.Web.UI.WebControls;
 
 public partial class Home : System.Web.UI.Page
 {
+    Company cmp = null;
     protected void Page_Load(object sender, EventArgs e)
     {
-        HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
-
-        if (authCookie == null)
-            Response.Redirect("Index.aspx");
+        cmp = (Company)Session["Company"];
+        if (cmp == null) Response.Redirect("Index.aspx");
         else
         {
-            GetTables();
+            InitTableButtons();
         }
     }
-
-    #region DB Operations
-    public void GetTables()
-    {
-        SqlConnection conn = new SqlConnection(getConnectionString());
-
-        try
-        {
-            conn.Open();
-            InitTableButtons(ReadData(conn));
-        }
-        catch (Exception)
-        {
-            //Handle errors..
-        }
-        finally
-        {
-            conn.Close();
-        }
-    }
-    public SqlDataReader ReadData(SqlConnection conn)
-    {
-        string companyID = "1"; //For now.
-
-        string query = "SELECT TableID, TableName, IsReserved FROM [Table] WHERE CompanyID = " + companyID;
-
-        SqlCommand cmd = new SqlCommand(query, conn);
-
-        SqlDataReader dr = cmd.ExecuteReader();
-
-        return dr;
-    }
-    public void GetTableOrders(string ButtonID)
+   /* public void GetTableOrders(string ButtonID)
     {
 
         string query = "SELECT [Order].ProductName, [Order].ProductPrice," +
@@ -95,44 +62,39 @@ public partial class Home : System.Web.UI.Page
         {
             conn.Close();
         }
-    }
-    public int GetTableID(string ButtonID)
-    {
-        return int.Parse(ButtonID.Split('_')[1]);
-    }
-    #endregion
+    }*/
 
     #region Init Button
-    public void InitTableButtons(SqlDataReader dr)
+    public void InitTableButtons()
     {
-        if (dr.HasRows)
+        foreach (Table t in cmp.TableList)
         {
+            Button b = new Button();
+
+            b.Height = 100;
+            b.Width = 100;
+            b.Text = t.TableName;
+            b.ID = "btn_" + t.TableID;
+            b.Click += new EventHandler(TableButtonsClick);
+
+            switch (t.IsReserved.ToString())
+            {
+                case "1": b.Text += "\nreserved";
+                    break;
+                case "0": b.Text += "\n notreserved";
+                    break;
+                default:
+                    break;
+            }
+
+            panelTables.Controls.Add(b);
+            AsyncPostBackTrigger trigger = new AsyncPostBackTrigger();
+            trigger.ControlID = b.ID;
+            trigger.EventName = "";
+            upTables.Triggers.Add(trigger);
+
             panelNoTable.Visible = false;
             panelTables.Visible = true;
-            while (dr.Read())
-            {
-                Button b = new Button();
-
-                b.Height = 100;
-                b.Width = 100;
-                b.Text = dr["TableName"].ToString();
-                b.ID = "btn_" + dr["TableID"].ToString();
-                b.Click += new EventHandler(TableButtonsClick);
-                switch (dr["IsReserved"].ToString())
-                {
-                    case "1": b.Text += "\nreserved";
-                        break;
-                    case "0": b.Text += "\n notreserved";
-                        break;
-                    default:
-                        break;
-                }
-                panelTables.Controls.Add(b);
-                AsyncPostBackTrigger trigger = new AsyncPostBackTrigger();
-                trigger.ControlID = b.ID;
-                trigger.EventName = "";
-                upTables.Triggers.Add(trigger);
-            }
         }
     }
     #endregion
@@ -142,7 +104,7 @@ public partial class Home : System.Web.UI.Page
     {
         Button ClickedButton = (Button)sender;
 
-        GetTableOrders(ClickedButton.ID);
+        //GetTableOrders(ClickedButton.ID);
 
         panelTables.Visible = false;
         panelTableSummary.Visible = true;

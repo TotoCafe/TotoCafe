@@ -10,47 +10,34 @@ using System.Web.UI.WebControls;
 
 public partial class Login : System.Web.UI.UserControl
 {
-    string selectQuery = "SELECT COUNT(*) FROM Company WHERE Email = @Email AND Password = @Password";
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!Page.IsPostBack)
         {
-            HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+           Company cmp = (Company)Session["Company"];
 
-            if (authCookie != null)
+            if (cmp != null)
                 Response.Redirect("Home.aspx");
         }
     }
-    #region Login
+
     protected void btnLogin_Click(object sender, EventArgs e)
     {
         if (Authentication(txtLoginMail.Text, txtLoginPassword.Text))
         {
+            Company cmp = new Company();
 
-            FormsAuthentication.SetAuthCookie(txtLoginMail.Text, false);
-            FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
-                                                                            1,
-                                                                            txtLoginMail.Text,
-                                                                            DateTime.Now,
-                                                                            DateTime.Now.AddDays(7),
-                                                                            false,
-                                                                            "HR"
-                                                                            );
+            cmp.Initialize(txtLoginMail.Text);
 
-            HttpCookie cookie = new HttpCookie(
-                                               FormsAuthentication.FormsCookieName,
-                                               FormsAuthentication.Encrypt(ticket)
-                                               );
-            Response.Cookies.Add(cookie);
+            Session["Company"] = cmp;
+
             Response.Redirect("Home.aspx");
-
         }
         else
         {
             //IF USER AUTHAENTICATION RETURNS FALSE SHOW USER A MESSAGE THAT SAYS E-MAIL OR PASSWORD NOT CORRECT..
         }
     }
-    #endregion
 
     public bool Authentication(string Email, string Password)
     {
@@ -58,9 +45,13 @@ public partial class Login : System.Web.UI.UserControl
         string encPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(Password, "SHA1");
         string encEmail = FormsAuthentication.HashPasswordForStoringInConfigFile(Email, "SHA1");
 
-        SqlConnection conn = new SqlConnection(getConnectionString());
-        SqlCommand cmd = new SqlCommand(selectQuery, conn);
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
 
+        cmd.Connection = conn;
+        cmd.CommandText = "SELECT COUNT(*) FROM Company WHERE Email = @Email AND Password = @Password";
         cmd.Parameters.AddWithValue("@Email", encEmail);
         cmd.Parameters.AddWithValue("@Password", encPassword);
 
@@ -68,23 +59,14 @@ public partial class Login : System.Web.UI.UserControl
         {
             conn.Open();
 
-            if (Convert.ToInt32(cmd.ExecuteScalar().ToString()) == 0)
+            if (int.Parse(cmd.ExecuteScalar().ToString()) == 0)
                 result = false;
         }
-        catch (Exception) { }
+        catch (Exception) { result = false; }
         finally
         {
             conn.Close();
         }
         return result;
     }
-
-
-    #region getConnectionString()
-    public static string getConnectionString()
-    {
-        return ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString;
-    }
-    #endregion
-
 }

@@ -96,11 +96,11 @@
             <asp:UpdatePanel runat="server" ID="settingUpdatePanel" ChildrenAsTriggers="true">
                 <ContentTemplate>
 
-                    <asp:Panel runat="server" ID="panelTableSettings" Visible="false" CssClass="panel panel-settings">
+                    <asp:Panel runat="server" ID="panelTableSettings" Visible="true" CssClass="panel panel-settings">
                         <div class="panel-heading">Table Settings</div>
                         <div class="panel-body">
                             <div class="col-md-3">
-                                <asp:GridView runat="server" ID="gridTables" DataSourceID="getTables" AutoGenerateColumns="False" CssClass="form-group">
+                                <%--<asp:GridView runat="server" ID="gridTables" DataSourceID="getTables" AutoGenerateColumns="False" CssClass="form-group">
                                     <Columns>
                                         <asp:BoundField DataField="TableName" HeaderText="TableName" SortExpression="TableName" />
                                         <asp:BoundField DataField="IsReserved" HeaderText="IsReserved" SortExpression="IsReserved" />
@@ -114,7 +114,7 @@
                                     <SelectParameters>
                                         <asp:ControlParameter ControlID="lblStatus" Name="CompanyID" PropertyName="Text" Type="Int32" />
                                     </SelectParameters>
-                                </asp:SqlDataSource>
+                                </asp:SqlDataSource>--%>
                                 <asp:Label Text="There is no table yet.." ID="lblNoTable" runat="server" />
                             </div>
                             <div class="col-md-9">
@@ -176,7 +176,7 @@
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-md-3">
-                                                            <asp:DropDownList ID="dropDownListTables"
+                                                            <%--<asp:DropDownList ID="dropDownListTables"
                                                                 CssClass="form-control"
                                                                 runat="server"
                                                                 DataSourceID="SqlDataSourceGetTableS"
@@ -190,7 +190,7 @@
                                                                 <SelectParameters>
                                                                     <asp:ControlParameter ControlID="lblStatus" Name="CompanyID" PropertyName="Text" />
                                                                 </SelectParameters>
-                                                            </asp:SqlDataSource>
+                                                            </asp:SqlDataSource>--%>
                                                         </div>
                                                         <div class="col-md-2">
                                                             <asp:Button Text="Delete"

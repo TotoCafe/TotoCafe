@@ -11,20 +11,11 @@ using System.Web.UI.WebControls;
 
 public partial class Menu : System.Web.UI.Page
 {
+    Company cmp = null;
     protected void Page_Load(object sender, EventArgs e)
     {
-        HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
-        if (authCookie == null) Response.Redirect("Index.aspx");
-        else
-        {
-            FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
-            string encEmail = FormsAuthentication.HashPasswordForStoringInConfigFile(ticket.Name, "SHA1");
-            lblStatus.Text = getCompanyID().ToString();
-            /* gridview 1 gösterme */
-            bindgridview();
-
-        }
-       
+        cmp = (Company)Session["Company"];
+        if (cmp == null) Response.Redirect("Index.aspx");
     }
 
 

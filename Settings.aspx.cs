@@ -10,6 +10,7 @@ using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.IO;
+using System.Web.Services;
 
 public partial class Menu : System.Web.UI.Page
 {
@@ -160,17 +161,7 @@ public partial class Menu : System.Web.UI.Page
     }
     protected void btnRemoveTable_Click(object sender, EventArgs e)
     {
-        //if (dropDownListTables.SelectedIndex != 0)
-        //{
-        //    Table t = new Table();
-
-        //    t.TableID = int.Parse(dropDownListTables.SelectedValue);
-
-        //    t.Delete();
-
-        //    refreshDropdownLists();
-        //    settingUpdatePanel.DataBind();
-        //}
+       
     }
     #endregion
 
@@ -216,32 +207,7 @@ public partial class Menu : System.Web.UI.Page
     #region Product Settings
     protected void btnAddProduct_Click(object sender, EventArgs e)
     {
-        if (
-            txtProductCredit.Text != "" &&
-            txtProductDetails.Text != "" &&
-            txtProductName.Text != "" &&
-            txtProductPrice.Text != "" &&
-            ddlCategorySelect.SelectedIndex != 0
-        )
-        {
-            Product p = new Product();
-
-            p.ProductName = txtProductName.Text;
-            p.Detail = txtProductDetails.Text;
-            p.Price = float.Parse(txtProductPrice.Text);
-            p.Credit = float.Parse(txtProductCredit.Text);
-            p.CategoryID = int.Parse(ddlCategorySelect.SelectedValue);
-
-            p.Insert();
-
-            lblSaveProduct.Visible = true;
-            refreshDropdownLists();
-            settingUpdatePanel.DataBind();
-            txtProductCredit.Text = "";
-            txtProductDetails.Text = "";
-            txtProductName.Text = "";
-            txtProductPrice.Text = "";
-        }
+        
     }
     protected void btnRemoveProduct_Click(object sender, EventArgs e)
     {
@@ -310,4 +276,5 @@ public partial class Menu : System.Web.UI.Page
         Response.Flush();
         Response.End();
     }
+
 }

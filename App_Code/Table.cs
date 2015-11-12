@@ -35,7 +35,7 @@ public class Table
 
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "SELECT TableController.* FROM TableController WHERE (TableID = @TableID)";
+        cmd.CommandText = "SELECT TableController.* FROM TableController WHERE (TableID = @TableID) AND (FinishDateTime IS NULL)";
         cmd.Parameters.AddWithValue("@TableID", this.TableID);
 
         cmd.Connection = conn;
@@ -72,6 +72,19 @@ public class Table
             conn.Close();
         }
         this.Controller = Controller;
+    }
+    public void BreakController()
+    {
+        /**
+         * THIS METHOD BREAKS THE CONNECTION BETWEEN
+         * CURRENT TABLE AND ITS CONTROLLER AND SETS
+         * CONTROLLER's SETS FinishDateTime CURRENT
+         * TIME SO THAT THE TABLE OBJECT WILL BE FREE OR IN OTHER
+         * SAYING IT IS READY FOR NEW COSTUMERS AND ORDERS..
+         * */
+        this.Controller.FinishDateTime = DateTime.Now;
+        this.Controller.Update();
+        this.Controller = null;
     }
 
     public bool Insert()

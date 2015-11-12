@@ -121,6 +121,63 @@ public class Company
             this.TableList = TableList;
         }
     }
+    public List<TableController> GetTableControllerList()
+    {
+        /**
+         * HERE WE CAN GET CONTROLLERS WHICH RELATED TO COMPANY
+         * SO THAT WHEN A DELETION PROCESSED IN COMPANY TABLE
+         * WE ARE ALSO SUPPOSED TO DELETE CONTROLS AND ORDERS FROM DATABASE.
+         * BUT THE MAIN THING AS DOING THAT TO ENABLE COMPANY
+         * REACH HISTORY OF ORDERS IF THE RELATED TABLE OR TABLES
+         * ARE DELETED FROM DATABASE.
+         * **/
+
+        List<TableController> TableControllerList = null;
+
+        SqlConnection conn = new SqlConnection(
+           ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+           );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.Connection = conn;
+        cmd.CommandText = "SELECT TableController.* FROM TableController WHERE (CompanyID = @CompanyID)";
+
+        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+
+        try
+        {
+            TableControllerList = new List<TableController>();
+
+            conn.Open();
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                TableController tc = new TableController();
+
+                tc.ControllerID = int.Parse(dr["ControllerID"].ToString());
+
+                tc.InitOrderList();
+
+                /**
+                 * -->PAY ATTENTION!!!
+                 * THIS OPERATION DESIGNED FOR ONLY REACH
+                 * ORDERS AND CONTROLLERS BELONG TO COMPANY AND DELETE THEM
+                 * WHILE COMPANY BEING DELETED. THE CONTROLLER OBJECT IN THE LIST
+                 * CONTAINS JUST CONTROLLER ID's AND RELATED PRODUCT's.
+                 * **/
+
+                TableControllerList.Add(tc);
+            }
+        }
+        catch (Exception) { }
+        finally
+        {
+            conn.Close();
+        }
+        return TableControllerList;
+    }
 
     public string GetQrPdfName()
     {
@@ -298,6 +355,7 @@ public class Company
 
         foreach (Category c in this.CategoryList) c.Delete();
         foreach (Table t in this.TableList) t.Delete();
+        foreach (TableController tc in this.GetTableControllerList()) tc.Delete();
 
         return ExecuteNonQuery(cmd);
     }

@@ -17,6 +17,7 @@ public class TableController
     public DateTime StartDateTime { get; set; }
     public DateTime FinishDateTime { get; set; }
     public List<Order> OrderList { get; set; }
+    public int CompanyID { get; set; }
 
     public void InitOrderList()
     {
@@ -70,7 +71,71 @@ public class TableController
         //
     }
 
-    public bool Insert() { return true; }
-    public bool Delete() { return true; }
-    public bool Update() { return true; }
+    public bool Insert()
+    {
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "INSERT INTO TableController(CostumerID, TableID, StartDateTime, FinishDateTime, CompanyID) " +
+                                 "VALUES              (@CostumerID, @TableID, @StartDateTime, @FinishDateTime, @CompanyID)";
+
+        cmd.Parameters.AddWithValue("@CostumerID", this.CostumerID);
+        cmd.Parameters.AddWithValue("@TableID", this.TableID);
+        cmd.Parameters.AddWithValue("@StartDateTime", this.StartDateTime);
+        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+        // this.FinishDateTime will be set 'null' since the table is opened.
+
+        return ExecuteNonQuery(cmd);
+    }
+    public bool Delete()
+    {
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "DELETE FROM TableController WHERE (ControllerID = @ControllerID)";
+
+        cmd.Parameters.AddWithValue("@ControllerID", this.ControllerID);
+
+        foreach (Order o in this.OrderList) o.Delete();
+
+        return ExecuteNonQuery(cmd);
+    }
+    public bool Update()
+    {
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "UPDATE TableController SET CostumerID = @CostumerID, " +
+                                                     "TableID = @TableID, " +
+                                                     "StartDateTime = @StartDateTime, " +
+                                                     "FinishDateTime = @FinishDateTime" +
+                          "WHERE                     (ControllerID = @ControllerID)";
+
+        cmd.Parameters.AddWithValue("@CostumerID", this.CostumerID);
+        cmd.Parameters.AddWithValue("@TableID", this.TableID);
+        cmd.Parameters.AddWithValue("@StartDateTime", this.StartDateTime);
+        cmd.Parameters.AddWithValue("@FinishDateTime", this.FinishDateTime);
+        cmd.Parameters.AddWithValue("@ControllerID", this.ControllerID);
+
+        return ExecuteNonQuery(cmd);
+    }
+
+    private bool ExecuteNonQuery(SqlCommand cmd)
+    {
+        bool isSuccess = true;
+
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        cmd.Connection = conn;
+
+        try
+        {
+            conn.Open();
+            cmd.ExecuteNonQuery();
+        }
+        catch (Exception) { isSuccess = false; }
+        finally
+        {
+            conn.Close();
+        }
+        return isSuccess;
+    }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
@@ -24,14 +26,67 @@ public class Order
 
     public bool Insert()
     {
-        return true;
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "INSERT INTO [Order] (ProductName, ProductPrice, Amount#, OrderTime, ControllerID) " + 
+                                       "VALUES (@ProductName, @ProductPrice, @Amount#, @OrderTime, @ControlleID)";
+        cmd.Parameters.AddWithValue("@ProductName", this.ProductName);
+        cmd.Parameters.AddWithValue("@ProductPrice", this.ProductPrice);
+        cmd.Parameters.AddWithValue("@Amount#", this.Amount);
+        cmd.Parameters.AddWithValue("@OrderTime", this.OrderTime);
+        cmd.Parameters.AddWithValue("@ControllerID", this.ControllerID);
+
+        return ExecuteNonQuery(cmd);
     }
     public bool Delete()
     {
-        return true;
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "DELETE FROM [Order] WHERE (OrderID = @OrderID)";
+        cmd.Parameters.AddWithValue("@OrderID", this.OrderID);
+
+        return ExecuteNonQuery(cmd);
     }
     public bool Update()
     {
-        return true;
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "UPDATE [Order] SET ProductName = @ProductName, " +
+                                             "ProductPrice = @ProductPrice, " +
+                                             "Amount# = @Amount#, " +
+                                             "OrderTime = @OrderTime, " +
+                                             "ControllerID = @ControllerID" +
+                          "WHERE             (OrderID = @OrderID)";
+
+        cmd.Parameters.AddWithValue("@ProductName", this.ProductName);
+        cmd.Parameters.AddWithValue("@ProductPrice", this.ProductPrice);
+        cmd.Parameters.AddWithValue("@Amount#", this.Amount);
+        cmd.Parameters.AddWithValue("@OrderTime", this.OrderTime);
+        cmd.Parameters.AddWithValue("@ControllerID", this.ControllerID);
+        cmd.Parameters.AddWithValue("@OrderID", this.OrderID);
+
+        return ExecuteNonQuery(cmd);
+    }
+
+    private bool ExecuteNonQuery(SqlCommand cmd)
+    {
+        bool isSuccess = true;
+
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        cmd.Connection = conn;
+
+        try
+        {
+            conn.Open();
+            cmd.ExecuteNonQuery();
+        }
+        catch (Exception) { isSuccess = false; }
+        finally
+        {
+            conn.Close();
+        }
+        return isSuccess;
     }
 }

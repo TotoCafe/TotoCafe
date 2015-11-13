@@ -63,6 +63,44 @@ public class TableController
 
         this.OrderList = OrderList;
     }
+    private void SetControllerID()
+    {
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "SELECT ControllerID FROM TableController " +
+                                              "WHERE (CostumerID = @CostumerID) " +
+                                              "AND (TableID = @TableID) " +
+                                              "AND (StartDateTime = @StartDateTime) " +
+                                              "AND (CompanyID = @CompanyID)";
+
+        cmd.Parameters.AddWithValue("@CostumerID", this.CostumerID);
+        cmd.Parameters.AddWithValue("@TableID", this.TableID);
+        cmd.Parameters.AddWithValue("@StartDateTime", this.StartDateTime);
+        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+        cmd.Connection = conn;
+
+        int ControllerID = 0;
+
+        try
+        {
+            conn.Open();
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            dr.Read();//There should be only one record with a name in database..
+
+            ControllerID = int.Parse(dr["ControllerID"].ToString());
+        }
+        catch (Exception) { }
+        finally
+        {
+            conn.Close();
+            this.ControllerID = ControllerID;
+        }
+    }
 
     public TableController()
     {
@@ -75,8 +113,8 @@ public class TableController
     {
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "INSERT INTO TableController(CostumerID, TableID, StartDateTime, FinishDateTime, CompanyID) " +
-                                 "VALUES              (@CostumerID, @TableID, @StartDateTime, @FinishDateTime, @CompanyID)";
+        cmd.CommandText = "INSERT INTO TableController(CostumerID, TableID, StartDateTime, CompanyID) " +
+                                 "VALUES              (@CostumerID, @TableID, @StartDateTime, @CompanyID)";
 
         cmd.Parameters.AddWithValue("@CostumerID", this.CostumerID);
         cmd.Parameters.AddWithValue("@TableID", this.TableID);
@@ -84,7 +122,11 @@ public class TableController
         cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
         // this.FinishDateTime will be set 'null' since the table is opened.
 
-        return ExecuteNonQuery(cmd);
+        bool isDone = ExecuteNonQuery(cmd);
+
+        SetControllerID();
+
+        return isDone;
     }
     public bool Delete()
     {

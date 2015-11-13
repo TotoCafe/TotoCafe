@@ -70,6 +70,7 @@ public class Company
 
                 ctgry.CategoryID = int.Parse(dr["CategoryID"].ToString());
                 ctgry.CategoryName = dr["CategoryName"].ToString();
+                ctgry.InitProductList();
 
                 CategoryList.Add(ctgry);
             }
@@ -297,7 +298,7 @@ public class Company
         SqlCommand cmd = new SqlCommand();
 
         cmd.CommandText = "SELECT Company.* FROM Company WHERE (Email = @Email)";
-        cmd.Parameters.AddWithValue("@Email", FormsAuthentication.HashPasswordForStoringInConfigFile(Email, "SHA1"));
+        cmd.Parameters.AddWithValue("@Email", Email);
 
         cmd.Connection = conn;
 
@@ -311,6 +312,7 @@ public class Company
 
             this.CompanyID = int.Parse(dr["CompanyID"].ToString());
             this.CompanyName = dr["CompanyName"].ToString();
+            this.Email = dr["Email"].ToString();
             this.Pasword = dr["Password"].ToString();
             this.Address = dr["Address"].ToString();
             this.Phone = dr["Phone#"].ToString();
@@ -353,9 +355,13 @@ public class Company
         cmd.CommandText = "DELETE FROM Company WHERE (CompanyID = @CompanyID)";
         cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
 
-        foreach (Category c in this.CategoryList) c.Delete();
-        foreach (Table t in this.TableList) t.Delete();
-        foreach (TableController tc in this.GetTableControllerList()) tc.Delete();
+        try
+        {
+            foreach (Category c in this.CategoryList) c.Delete();
+            foreach (Table t in this.TableList) t.Delete();
+            foreach (TableController tc in this.GetTableControllerList()) tc.Delete();
+        }
+        catch (Exception) { return false; }
 
         return ExecuteNonQuery(cmd);
     }
@@ -363,16 +369,8 @@ public class Company
     {
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "UPDATE      Company" +
-                          "SET         CompanyName = @CompanyName, " +
-                                      "Email = @Email, " +
-                                      "Password = @Password, " +
-                                      "Address = @Address, " +
-                                      "Phone# = @Phone#, " +
-                                      "Grade = @Grade, " +
-                                      "Location = @Location, " +
-                                      "CityID = @CityID" +
-                          "WHERE      (CompanyID = @CompanyID)";
+        cmd.CommandText = "UPDATE Company SET CompanyName = @CompanyName, Email = @Email, Password = @Password, Address = @Address, Phone# = @Phone#, Grade = @Grade, Location = @Location, CityID = @CityID "
+                        + "WHERE (CompanyID = @CompanyID)";
 
         cmd.Parameters.AddWithValue("@CompanyName", this.CompanyName);
         cmd.Parameters.AddWithValue("@Email", this.Email);

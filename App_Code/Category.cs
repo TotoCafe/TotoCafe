@@ -15,6 +15,37 @@ public class Category
     public int CompanyID { get; set; }
     public List<Product> ProductList { get; set; }
 
+    private void SetCategoryID()
+    {
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "SELECT CategoryID FROM Category WHERE (CategoryName = @CategoryName AND CompanyID = @CompanyID)";
+        cmd.Parameters.AddWithValue("@CategoryName", this.CategoryName);
+        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+        cmd.Connection = conn;
+
+        int CategoryID = 0;
+
+        try
+        {
+            conn.Open();
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            dr.Read();//There should be only one record with a name in database..
+
+            CategoryID = int.Parse(dr["CategoryID"].ToString());
+        }
+        catch (Exception) { }
+        finally
+        {
+            conn.Close();
+            this.CategoryID = CategoryID;
+        }
+    }
     public void InitProductList()
     {
         List<Product> ProductList = new List<Product>();
@@ -72,7 +103,11 @@ public class Category
         cmd.Parameters.AddWithValue("@CategoryName", this.CategoryName);
         cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
 
-        return ExecuteNonQuery(cmd);
+        bool isDone = ExecuteNonQuery(cmd);//If it fails ID will be set '0'!! Handle it..
+
+        SetCategoryID();
+
+        return isDone;
     }
     public bool Delete()
     {

@@ -37,7 +37,7 @@ public partial class Index : System.Web.UI.Page
             int.Parse(ddlCity.SelectedValue))
             )
         {
-            cmp.Initialize(txtCompanyEmail.Text);
+            cmp.Initialize(FormsAuthentication.HashPasswordForStoringInConfigFile(txtCompanyEmail.Text, "SHA1"));
 
             Session["Company"] = cmp;
             Response.Redirect("Home.aspx");

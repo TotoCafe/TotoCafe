@@ -86,6 +86,37 @@ public class Table
         this.Controller.Update();
         this.Controller = null;
     }
+    private void SetTableID()
+    {
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "SELECT TableID FROM [Table] WHERE (TableName = @TableName AND CompanyID = @CompanyID)";
+        cmd.Parameters.AddWithValue("@TableName", this.TableName);
+        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+        cmd.Connection = conn;
+
+        int TableID = 0;
+
+        try
+        {
+            conn.Open();
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            dr.Read();//There should be only one record with a name in database..
+
+            TableID = int.Parse(dr["TableID"].ToString());
+        }
+        catch (Exception) { }
+        finally
+        {
+            conn.Close();
+            this.TableID = TableID;
+        }
+    }
 
     public bool Insert()
     {
@@ -100,7 +131,11 @@ public class Table
         cmd.Parameters.AddWithValue("@IsReserved", this.IsReserved);
         cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
 
-        return ExecuteNonQuery(cmd);
+        bool isDone = ExecuteNonQuery(cmd);//If it fails ID will be set '0'!! Handle it..
+
+        SetTableID();
+
+        return isDone;
     }
     public bool Delete()
     {
@@ -131,7 +166,7 @@ public class Table
 
     private void GenerateQrCode()
     {
-        this.QrCode = this.CompanyID + ":" + this.TableName;
+        this.QrCode = "TotoCafe:" + this.CompanyID + ":" + this.TableName;
     }
     private bool ExecuteNonQuery(SqlCommand cmd)
     {

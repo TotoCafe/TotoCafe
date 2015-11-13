@@ -21,48 +21,6 @@ public partial class Home : System.Web.UI.Page
             InitTableButtons();
         }
     }
-   /* public void GetTableOrders(string ButtonID)
-    {
-
-        string query = "SELECT [Order].ProductName, [Order].ProductPrice," +
-                       "[Order].Amount# FROM [Order] INNER JOIN TableController ON" +
-                       " [Order].ControllerID = TableController.ControllerID INNER JOIN" +
-                       " [Table] ON TableController.TableID = [Table].TableID WHERE" +
-                       " ([Table].TableID = @TableID) AND (TableController.FinishDateTime IS NULL)";
-
-        SqlConnection conn = new SqlConnection(getConnectionString());
-        SqlCommand cmd = new SqlCommand(query, conn);
-        SqlDataReader dr = null;
-
-        cmd.Parameters.AddWithValue("@TableID", GetTableID(ButtonID));
-
-        try
-        {
-            conn.Open();
-            dr = cmd.ExecuteReader();
-            if (!dr.HasRows)
-            {
-                Label lbl = new Label();
-                lbl.Text = "No orders..";
-                panelTableSummary.Controls.Add(lbl);
-            }
-            while (dr.Read())
-            {
-                //Code Here...
-                Label lbl = new Label();
-                lbl.Text = dr["ProductName"].ToString() + " - " + dr["ProductPrice"].ToString() + " - " + dr["Amount#"].ToString();
-                panelTableSummary.Controls.Add(lbl);
-            }
-        }
-        catch (Exception)
-        {
-            //Handle errors..
-        }
-        finally
-        {
-            conn.Close();
-        }
-    }*/
 
     #region Init Button
     public void InitTableButtons()

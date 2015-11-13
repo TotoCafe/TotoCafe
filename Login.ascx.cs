@@ -27,7 +27,7 @@ public partial class Login : System.Web.UI.UserControl
         {
             Company cmp = new Company();
 
-            cmp.Initialize(txtLoginMail.Text);
+            cmp.Initialize(FormsAuthentication.HashPasswordForStoringInConfigFile(txtLoginMail.Text, "SHA1"));
 
             Session["Company"] = cmp;
 

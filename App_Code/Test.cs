@@ -162,9 +162,9 @@ public class Test
             if (c.Delete()) testLog.Add("Successful.. " + DateTime.Now.ToString()); //Company deletion starts all deletion operation on related tables in the DB.
             else { testLog.Add("Failed.. " + DateTime.Now.ToString()); score--; }   //If any exception occurs while deleting any data from database it won't complete the deletion of current company object.
 
-            testLog.Add("Deletion test end..");
-            testLog.Add("-----------------------------------------------------------------------------------------------");
         }
+        testLog.Add("Deletion test end..");
+        testLog.Add("-----------------------------------------------------------------------------------------------");
 
         if (!(score < 0)) testLog.Add("Test Completed! Result: Passed!!");
         else testLog.Add("Test Completed! Result: Failed!!");
@@ -192,7 +192,6 @@ public class Test
                         "Password-" + i.ToString(),
                         "Address-" + i.ToString(),
                         "Phone-" + i.ToString(),
-                        float.Parse(i.ToString()),
                         "Location-" + i.ToString(), i))
             {
                 cList.Add(c);
@@ -229,7 +228,6 @@ public class Test
                     initLog.Add("Inserting Table-" + j.ToString() + " for Company-" + i.ToString() + " " + DateTime.Now.ToString());
                     //Add tables..
                     Table t = new Table();
-                    t.IsReserved = 1;
                     t.TableName = "Table-" + j.ToString();
                     t.CompanyID = c.CompanyID;
 

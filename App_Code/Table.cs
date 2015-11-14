@@ -14,7 +14,6 @@ public class Table
     public int TableID { get; set; }
     public string TableName { get; set; }
     public string QrCode { get; set; }
-    public int IsReserved { get; set; }
     public int CompanyID { get; set; }
     public TableController Controller { get; set; }
 
@@ -124,11 +123,10 @@ public class Table
 
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "INSERT INTO [Table] (TableName, QrCode, IsReserved, CompanyID) VALUES (@TableName, @QrCode, @IsReserved, @CompanyID)";
+        cmd.CommandText = "INSERT INTO [Table] (TableName, QrCode, CompanyID) VALUES (@TableName, @QrCode, @CompanyID)";
 
         cmd.Parameters.AddWithValue("@TableName", this.TableName);
         cmd.Parameters.AddWithValue("@QrCode", this.QrCode);
-        cmd.Parameters.AddWithValue("@IsReserved", this.IsReserved);
         cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
 
         bool isDone = ExecuteNonQuery(cmd);//If it fails ID will be set '0'!! Handle it..
@@ -152,13 +150,11 @@ public class Table
 
         cmd.CommandText = "UPDATE       [Table]" +
                           "SET          TableName = @TableName, " +
-                                        "QrCode = @QrCode, " +
-                                        "IsReserved = @IsReserved " +
+                                        "QrCode = @QrCode" +
                           "WHERE        (TableID = @TableID)";
 
         cmd.Parameters.AddWithValue("@TableName", this.TableName);
         cmd.Parameters.AddWithValue("@QrCode", this.QrCode);
-        cmd.Parameters.AddWithValue("@IsReserved", this.IsReserved);
         cmd.Parameters.AddWithValue("@TableID", this.TableID);
 
         return ExecuteNonQuery(cmd);

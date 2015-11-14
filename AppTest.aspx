@@ -3,9 +3,9 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" Runat="Server">
-    <div class="container">
+    <div class="container" style="top:50px">
         <asp:ListBox runat="server"
-        ID="lbTest" Height="650px" Width="800px" CssClass="lst">
+        ID="lbTest" Height="550px" Width="800px" CssClass="lst" Enabled="False" EnableTheming="False">
     </asp:ListBox>
     </div>
 </asp:Content>

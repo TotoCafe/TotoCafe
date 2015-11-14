@@ -35,15 +35,11 @@ public partial class Home : System.Web.UI.Page
             b.ID = "btn_" + t.TableID;
             b.Click += new EventHandler(TableButtonsClick);
 
-            switch (t.IsReserved.ToString())
-            {
-                case "1": b.Text += "\nreserved";
-                    break;
-                case "0": b.Text += "\n notreserved";
-                    break;
-                default:
-                    break;
-            }
+            t.InitController();
+
+            
+            if(t.Controller == null) b.Text += "\nreserved";
+            else b.Text += "\n notreserved";
 
             panelTables.Controls.Add(b);
             AsyncPostBackTrigger trigger = new AsyncPostBackTrigger();

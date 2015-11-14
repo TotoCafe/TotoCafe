@@ -30,7 +30,6 @@ public class Company
     public string Pasword { get; set; }
     public string Address { get; set; }
     public string Phone { get; set; }
-    public float Grade { get; set; }
     public string Location { get; set; }
     public int CityID { get; set; }
     public List<Category> CategoryList { get; set; }
@@ -92,7 +91,7 @@ public class Company
         SqlCommand cmd = new SqlCommand();
 
         cmd.Connection = conn;
-        cmd.CommandText = "SELECT TableID, TableName, QrCode, IsReserved FROM [Table] WHERE (CompanyID = @CompanyID)";
+        cmd.CommandText = "SELECT TableID, TableName, QrCode FROM [Table] WHERE (CompanyID = @CompanyID)";
 
         cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
 
@@ -109,7 +108,6 @@ public class Company
                 tbl.TableID = int.Parse(dr["TableID"].ToString());
                 tbl.TableName = dr["TableName"].ToString();
                 tbl.QrCode = dr["QrCode"].ToString();
-                tbl.IsReserved = int.Parse(dr["IsReserved"].ToString());
                 tbl.InitController();
 
                 TableList.Add(tbl);
@@ -297,7 +295,7 @@ public class Company
                                               );
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "SELECT Company.* FROM Company WHERE (Email = @Email)";
+        cmd.CommandText = "SELECT Company.* FROM Company WHERE (Email = @Email) AND (IsHidden = 0)";
         cmd.Parameters.AddWithValue("@Email", Email);
 
         cmd.Connection = conn;
@@ -316,7 +314,6 @@ public class Company
             this.Pasword = dr["Password"].ToString();
             this.Address = dr["Address"].ToString();
             this.Phone = dr["Phone#"].ToString();
-            this.Grade = float.Parse(dr["Grade"].ToString());
             this.Location = dr["Location"].ToString();
             this.CityID = int.Parse(dr["CityID"].ToString());
             this.GetCategoryList();
@@ -329,20 +326,23 @@ public class Company
             conn.Close();
         }
     }
+    public void Refresh()
+    {
+        this.Initialize(this.Email);
+    }
 
-    public bool Insert(string CompanyName, string Email, string Password, string Address, string Phone, float grade, string Location, int CityID)
+    public bool Insert(string CompanyName, string Email, string Password, string Address, string Phone, string Location, int CityID)
     {
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "INSERT INTO Company (CompanyName, Email, Password, Address, Phone#, Grade, Location, CityID)" +
-                                          "VALUES (@CompanyName, @Email, @Password, @Address, @Phone#, @Grade, @Location, @CityID)";
+        cmd.CommandText = "INSERT INTO Company (CompanyName, Email, Password, Address, Phone#, Location, CityID)" +
+                                          "VALUES (@CompanyName, @Email, @Password, @Address, @Phone#, @Location, @CityID)";
 
         cmd.Parameters.AddWithValue("@CompanyName", CompanyName);
         cmd.Parameters.AddWithValue("@Email", FormsAuthentication.HashPasswordForStoringInConfigFile(Email, "SHA1"));
         cmd.Parameters.AddWithValue("@Password", FormsAuthentication.HashPasswordForStoringInConfigFile(Password, "SHA1"));
         cmd.Parameters.AddWithValue("@Address", Address);
         cmd.Parameters.AddWithValue("@Phone#", FormsAuthentication.HashPasswordForStoringInConfigFile(Phone, "SHA1"));
-        cmd.Parameters.AddWithValue("@Grade", Grade);
         cmd.Parameters.AddWithValue("@Location", Location);
         cmd.Parameters.AddWithValue("@CityID", CityID);
 
@@ -369,7 +369,7 @@ public class Company
     {
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "UPDATE Company SET CompanyName = @CompanyName, Email = @Email, Password = @Password, Address = @Address, Phone# = @Phone#, Grade = @Grade, Location = @Location, CityID = @CityID "
+        cmd.CommandText = "UPDATE Company SET CompanyName = @CompanyName, Email = @Email, Password = @Password, Address = @Address, Phone# = @Phone#, Location = @Location, CityID = @CityID "
                         + "WHERE (CompanyID = @CompanyID)";
 
         cmd.Parameters.AddWithValue("@CompanyName", this.CompanyName);
@@ -377,9 +377,22 @@ public class Company
         cmd.Parameters.AddWithValue("@Password", this.Pasword);
         cmd.Parameters.AddWithValue("@Address", this.Address);
         cmd.Parameters.AddWithValue("@Phone#", this.Phone);
-        cmd.Parameters.AddWithValue("@Grade", this.Grade);
         cmd.Parameters.AddWithValue("@Location", this.Location);
         cmd.Parameters.AddWithValue("@CityID", this.CityID);
+        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+
+        return ExecuteNonQuery(cmd);
+    }
+    public bool CloseAndHide()
+    {
+        /*
+         * HERE WE HIDING THE DATA BLOCK IT INSTEAD OF DELETING TUPPLE.
+         * **/
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "UPTADE Company SET IsHidden = @IsHidden WHERE (CompanyID = @CompanyID)";
+
+        cmd.Parameters.AddWithValue("@IsHidden", 1);
         cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
 
         return ExecuteNonQuery(cmd);

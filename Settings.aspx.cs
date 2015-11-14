@@ -141,23 +141,7 @@ public partial class Menu : System.Web.UI.Page
     #region Table Settings
     protected void btnSaveTable_Click(object sender, EventArgs e)
     {
-        if (textBoxTableName.Text.Length != 0)
-        {
-            Table t = new Table();
-
-            t.TableName = textBoxTableName.Text;
-            t.IsReserved = 0;
-            t.CompanyID = cmp.CompanyID;
-
-
-            lblSaveTable.Visible = true;
-            lblSaveTable.CssClass = "alert alert-success ";
-
-
-            textBoxTableName.Text = "";
-            refreshDropdownLists();
-            settingUpdatePanel.DataBind();
-        }
+        
     }
     protected void btnRemoveTable_Click(object sender, EventArgs e)
     {
@@ -169,38 +153,11 @@ public partial class Menu : System.Web.UI.Page
     protected void btnSaveCategory_Click(object sender, EventArgs e)
     {
 
-        if (textBoxCategoryName.Text.Length != 0)
-        {
-            Category ctgry = new Category();
-
-            ctgry.CategoryName = textBoxCategoryName.Text;
-            ctgry.CompanyID = cmp.CompanyID;
-
-            ctgry.Insert();
-
-            lblSaveCategory.Visible = true;
-            lblSaveCategory.CssClass = "alert alert-success ";
-
-
-            textBoxCategoryName.Text = "";
-            refreshDropdownLists();
-            settingUpdatePanel.DataBind();
-        }
+       
     }
     protected void btnRemoveCategory_Click(object sender, EventArgs e)
     {
-        if (dropDownListShowCategory.SelectedIndex != 0)
-        {
-            Category ctgry = new Category();
-
-            ctgry.CategoryID = int.Parse(dropDownListShowCategory.SelectedValue);
-
-            ctgry.Delete();
-
-            refreshDropdownLists();
-            settingUpdatePanel.DataBind();
-            lblRemoveCategory.Visible = true;
-        }
+        
     }
     #endregion
 
@@ -211,14 +168,7 @@ public partial class Menu : System.Web.UI.Page
     }
     protected void btnRemoveProduct_Click(object sender, EventArgs e)
     {
-        Product p = new Product();
-        p.ProductID = int.Parse(ddlRemoveProduct.SelectedValue);
-        p.Delete();
-
-
-        lblRemoveProduct.Visible = true;
-        refreshDropdownLists();
-        settingUpdatePanel.DataBind();
+        
     }
     #endregion
 
@@ -255,9 +205,6 @@ public partial class Menu : System.Web.UI.Page
         dropDownListShowCategory.Items.Clear();
         dropDownListShowCategory.Items.Add(tempItem);
 
-        //tempItem = dropDownListTables.Items[0];
-        //dropDownListTables.Items.Clear();
-        //dropDownListTables.Items.Add(tempItem);
     }
     #endregion
 

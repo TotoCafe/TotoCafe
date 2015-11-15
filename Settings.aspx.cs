@@ -212,7 +212,7 @@ public partial class Menu : System.Web.UI.Page
     {
         cmp.SaveQrPdf(Server.MapPath("~/Qr Codes"));
 
-        string path = MapPath("~/Qr Codes") + "/" + cmp.GetQrPdfName();
+        string path = MapPath("~/Qr Codes") + "/" + cmp.QrPdfName;
 
         byte[] bts = System.IO.File.ReadAllBytes(path);
 

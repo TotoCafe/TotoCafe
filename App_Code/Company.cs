@@ -31,7 +31,13 @@ public class Company
     public string Address { get; set; }
     public string Phone { get; set; }
     public string Location { get; set; }
+    public string WirelessName { get; set; }
+    public string WirelessPassword { get; set; }
     public int CityID { get; set; }
+    public int AvailabilityID { get; set; }
+    public int PermissionID { get; set; }
+    public string QrPdfName { get; set; }
+
     public List<Category> CategoryList { get; set; }
     public List<Table> TableList { get; set; }
     public List<QrCode> QrCodeList { get; set; }
@@ -43,7 +49,7 @@ public class Company
         //
     }
 
-    private void GetCategoryList()
+    private void SetCategoryList()
     {
         List<Category> CategoryList = new List<Category>();
 
@@ -81,7 +87,7 @@ public class Company
             this.CategoryList = CategoryList;
         }
     }
-    private void GetTableList()
+    private void SetTableList()
     {
         List<Table> TableList = new List<Table>();
 
@@ -126,7 +132,7 @@ public class Company
          * HERE WE CAN GET CONTROLLERS WHICH RELATED TO COMPANY
          * SO THAT WHEN A DELETION PROCESSED IN COMPANY TABLE
          * WE ARE ALSO SUPPOSED TO DELETE CONTROLS AND ORDERS FROM DATABASE.
-         * BUT THE MAIN THING AS DOING THAT TO ENABLE COMPANY
+         * BUT THE MAIN THING HERE THAT TO ENABLE COMPANY
          * REACH HISTORY OF ORDERS IF THE RELATED TABLE OR TABLES
          * ARE DELETED FROM DATABASE.
          * **/
@@ -176,13 +182,13 @@ public class Company
             conn.Close();
         }
         return TableControllerList;
-    }
+    }//Maybe...
 
-    public string GetQrPdfName()
+    private void SetQrPdfName()
     {
-        return this.CompanyID + "-QrCodes";
+        this.QrPdfName = "QrCodes-" + this.CompanyID;
     }
-    private void GetQrCodeList()
+    private void SetQrCodeList()
     {
         List<QrCode> QrCodeList = new List<QrCode>();
 
@@ -192,7 +198,7 @@ public class Company
 
             qr.CompanyName = this.CompanyName;
             qr.TableName = t.TableName;
-            qr.QrString = t.QrCode;
+            qr.QrString = t.QrCode + "\t" + this.WirelessPassword;
             qr.GenerateQrImage();
 
             QrCodeList.Add(qr);
@@ -202,7 +208,7 @@ public class Company
     }
     public void SaveQrPdf(string path)
     {
-        this.GetQrCodeList();
+        this.SetQrCodeList();
 
         Document document = new Document(PageSize.A4, 0, 0, 25, 0);
 
@@ -224,7 +230,7 @@ public class Company
 
         try
         {
-            PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(path + "/" + GetQrPdfName(), FileMode.Create));
+            PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(path + "/" + this.QrPdfName, FileMode.Create));
             document.Open();
 
             //Create a master table with 3 columns
@@ -282,12 +288,16 @@ public class Company
     }
     public void DeleteQrPdf(string path)
     {
-        if (File.Exists(path + "/" + GetQrPdfName()))
+        if (File.Exists(path + "/" + this.QrPdfName))
         {
-            File.Delete(path + "/" + GetQrPdfName());
+            File.Delete(path + "/" + this.QrPdfName);
         }
     }
 
+    /// <summary>
+    /// Initializes company.
+    /// </summary>
+    /// <param name="Email"></param>
     public void Initialize(string Email)
     {
         SqlConnection conn = new SqlConnection(
@@ -295,7 +305,8 @@ public class Company
                                               );
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "SELECT Company.* FROM Company WHERE (Email = @Email) AND (IsHidden = 0)";
+        cmd.CommandText = "SELECT Company.* FROM Company WHERE (Email = @Email)";
+
         cmd.Parameters.AddWithValue("@Email", Email);
 
         cmd.Connection = conn;
@@ -315,39 +326,63 @@ public class Company
             this.Address = dr["Address"].ToString();
             this.Phone = dr["Phone#"].ToString();
             this.Location = dr["Location"].ToString();
+            this.WirelessName = dr["WirelessName"].ToString();
+            this.WirelessPassword = dr["WirelessPassword"].ToString();
             this.CityID = int.Parse(dr["CityID"].ToString());
-            this.GetCategoryList();
-            this.GetTableList();
-            this.GetQrCodeList();
+            this.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
+            this.PermissionID = int.Parse(dr["PermissionID"].ToString());
+            this.SetCategoryList();
+            this.SetTableList();
+            this.SetQrCodeList();
+            this.SetQrPdfName();
         }
-        catch (Exception ex) { Console.Write(ex.ToString()); }
+        catch (Exception) { }
         finally
         {
             conn.Close();
         }
     }
-    public void Refresh()
+
+    /// <summary>
+    /// Binds data of Company object.
+    /// </summary>
+    public void BindData()
     {
         this.Initialize(this.Email);
     }
 
-    public bool Insert(string CompanyName, string Email, string Password, string Address, string Phone, string Location, int CityID)
+    /// <summary>
+    /// Inserts current Company object into database.
+    /// </summary>
+    /// <param name="CompanyName"></param>
+    /// <param name="Email"></param>
+    /// <param name="Password"></param>
+    /// <param name="Address"></param>
+    /// <param name="Phone"></param>
+    /// <param name="CityID"></param>
+    /// <returns></returns>
+    public bool Insert(string CompanyName, string Email, string Password, string Address, string Phone, int CityID)
     {
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "INSERT INTO Company (CompanyName, Email, Password, Address, Phone#, Location, CityID)" +
-                                          "VALUES (@CompanyName, @Email, @Password, @Address, @Phone#, @Location, @CityID)";
+        cmd.CommandText = "INSERT INTO Company(CompanyName, Email, Password, Address, Phone#, CityID) " +
+                                 "VALUES (@CompanyName, @Email, @Password, @Address, @Phone#, @CityID)";
 
         cmd.Parameters.AddWithValue("@CompanyName", CompanyName);
         cmd.Parameters.AddWithValue("@Email", FormsAuthentication.HashPasswordForStoringInConfigFile(Email, "SHA1"));
         cmd.Parameters.AddWithValue("@Password", FormsAuthentication.HashPasswordForStoringInConfigFile(Password, "SHA1"));
         cmd.Parameters.AddWithValue("@Address", Address);
         cmd.Parameters.AddWithValue("@Phone#", FormsAuthentication.HashPasswordForStoringInConfigFile(Phone, "SHA1"));
-        cmd.Parameters.AddWithValue("@Location", Location);
         cmd.Parameters.AddWithValue("@CityID", CityID);
 
         return ExecuteNonQuery(cmd);
     }
+
+    /// <summary>
+    /// Deletes current Company object from database.
+    /// Instead of this Freeze() operation should be used.
+    /// </summary>
+    /// <returns></returns>
     public bool Delete()
     {
         SqlCommand cmd = new SqlCommand();
@@ -365,12 +400,28 @@ public class Company
 
         return ExecuteNonQuery(cmd);
     }
+
+    /// <summary>
+    /// Updates informations of current Company object.
+    /// </summary>
+    /// <returns></returns>
     public bool Update()
     {
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "UPDATE Company SET CompanyName = @CompanyName, Email = @Email, Password = @Password, Address = @Address, Phone# = @Phone#, Location = @Location, CityID = @CityID "
-                        + "WHERE (CompanyID = @CompanyID)";
+        cmd.CommandText = "UPDATE Company " +
+                             "SET CompanyName = @CompanyName, " +
+                                 "Email = @Email, " +
+                                 "Password = @Password, " +
+                                 "Address = @Address, " +
+                                 "Phone# = @Phone#, " +
+                                 "Location = @Location, " +
+                                 "WirelessName = @WirelessName, " +
+                                 "WirelessPassword = @WirelessPassword, " +
+                                 "CityID = @CityID, " +
+                                 "AvailabilityID = @AvailabilityID, " +
+                                 "PermissionID = @PermissionID " +
+                           "WHERE (CompanyID = @CompanyID)";
 
         cmd.Parameters.AddWithValue("@CompanyName", this.CompanyName);
         cmd.Parameters.AddWithValue("@Email", this.Email);
@@ -378,26 +429,59 @@ public class Company
         cmd.Parameters.AddWithValue("@Address", this.Address);
         cmd.Parameters.AddWithValue("@Phone#", this.Phone);
         cmd.Parameters.AddWithValue("@Location", this.Location);
+        cmd.Parameters.AddWithValue("@WirelessName", this.WirelessName);
+        cmd.Parameters.AddWithValue("@WirelessPassword", this.WirelessPassword);
         cmd.Parameters.AddWithValue("@CityID", this.CityID);
+        cmd.Parameters.AddWithValue("@AvailabilityID", this.AvailabilityID);
+        cmd.Parameters.AddWithValue("@PermissionID", this.PermissionID);
         cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
 
         return ExecuteNonQuery(cmd);
     }
-    public bool CloseAndHide()
+
+    /// <summary>
+    /// Freezes current Company objec and makes it unusable until the Company object becomes available again.
+    /// Our keywords = AVALIABLE/FROZEN
+    /// </summary>
+    /// <returns></returns>
+    public bool Freeze()
     {
-        /*
-         * HERE WE HIDING THE DATA BLOCK IT INSTEAD OF DELETING TUPPLE.
-         * **/
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "UPTADE Company SET IsHidden = @IsHidden WHERE (CompanyID = @CompanyID)";
-
-        cmd.Parameters.AddWithValue("@IsHidden", 1);
+        cmd.CommandText = "UPDATE Company " +
+                             "SET AvailabilityID = Availability.AvailabilityID " +
+                            "FROM Company " +
+                           "INNER JOIN Availability ON Company.AvailabilityID = Availability.AvailabilityID " +
+                           "WHERE (Company.CompanyID = @CompanyID) AND (Availability.Availability = 'FROZEN')";
         cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
 
         return ExecuteNonQuery(cmd);
     }
 
+    /// <summary>
+    /// Makes Company object usable.
+    /// Our keywords = AVALIABLE/FROZEN
+    /// </summary>
+    /// <returns></returns>
+    public bool Resume()
+    {
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "UPDATE Company " +
+                             "SET AvailabilityID = Availability.AvailabilityID " +
+                            "FROM Company " +
+                           "INNER JOIN Availability ON Company.AvailabilityID = Availability.AvailabilityID " +
+                           "WHERE (Company.CompanyID = @CompanyID) AND (Availability.Availability = 'AVAILABLE')";
+        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+
+        return ExecuteNonQuery(cmd);
+    }
+
+    /// <summary>
+    /// Executes NonQueries.
+    /// </summary>
+    /// <param name="cmd"></param>
+    /// <returns></returns>
     private bool ExecuteNonQuery(SqlCommand cmd)
     {
         bool isSuccess = true;
@@ -418,32 +502,5 @@ public class Company
             conn.Close();
         }
         return isSuccess;
-    }
-    private int ExecuteReader(SqlCommand cmd)
-    {
-        SqlConnection conn = new SqlConnection(
-            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
-                                              );
-
-        cmd.Connection = conn;
-
-        int temp = 0;
-
-        try
-        {
-            conn.Open();
-
-            SqlDataReader dr = cmd.ExecuteReader();
-
-            dr.Read();
-
-            temp = int.Parse(dr["CompanyID"].ToString());
-        }
-        catch (Exception) { }
-        finally
-        {
-            conn.Close();
-        }
-        return temp;
     }
 }

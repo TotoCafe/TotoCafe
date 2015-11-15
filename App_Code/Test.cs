@@ -155,14 +155,14 @@ public class Test
         testLog.Add("Query test AFTER UPDATES end.. " + DateTime.Now.ToString());
         testLog.Add("-----------------------------------------------------------------------------------------------");
 
-        foreach (Company c in testObjectList)
+        /*foreach (Company c in testObjectList)
         {
             testLog.Add(c.CompanyName + " is deleting..");
 
             if (c.Delete()) testLog.Add("Successful.. " + DateTime.Now.ToString()); //Company deletion starts all deletion operation on related tables in the DB.
             else { testLog.Add("Failed.. " + DateTime.Now.ToString()); score--; }   //If any exception occurs while deleting any data from database it won't complete the deletion of current company object.
 
-        }
+        }*/
         testLog.Add("Deletion test end..");
         testLog.Add("-----------------------------------------------------------------------------------------------");
 
@@ -191,8 +191,7 @@ public class Test
                         "Email-" + i.ToString(),
                         "Password-" + i.ToString(),
                         "Address-" + i.ToString(),
-                        "Phone-" + i.ToString(),
-                        "Location-" + i.ToString(), i))
+                        "Phone-" + i.ToString(), i))
             {
                 cList.Add(c);
                 initLog.Add("Successful.. " + DateTime.Now.ToString());

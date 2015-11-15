@@ -75,6 +75,7 @@ public class Category
                 p.Detail = dr["Detail"].ToString();
                 p.Price = float.Parse(dr["Price"].ToString());
                 p.Credit = float.Parse(dr["Credit"].ToString());
+                p.CategoryID = this.CategoryID;
 
                 ProductList.Add(p);
             }

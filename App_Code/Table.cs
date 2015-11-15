@@ -150,7 +150,7 @@ public class Table
 
         cmd.CommandText = "UPDATE       [Table]" +
                           "SET          TableName = @TableName, " +
-                                        "QrCode = @QrCode" +
+                                        "QrCode = @QrCode " +
                           "WHERE        (TableID = @TableID)";
 
         cmd.Parameters.AddWithValue("@TableName", this.TableName);
@@ -162,7 +162,7 @@ public class Table
 
     private void GenerateQrCode()
     {
-        this.QrCode = "TotoCafe:" + this.CompanyID + ":" + this.TableName;
+        this.QrCode = "TotoCafe\t" + this.CompanyID + "\t" + this.TableName;
     }
     private bool ExecuteNonQuery(SqlCommand cmd)
     {

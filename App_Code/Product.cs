@@ -15,6 +15,7 @@ public class Product
     public string Detail { get; set; }
     public float Price { get; set; }
     public float Credit { get; set; }
+    public int AvailabilityID { get; set; }
     public int CategoryID { get; set; }
 
 	public Product()
@@ -38,12 +39,22 @@ public class Product
 
         return ExecuteNonQuery(cmd);
     }
+
+    /// <summary>
+    /// Product objects will never be deleted they will be hidden from user when delete operation executed.
+    /// This gives us we can reach older orders even if related product be deleted.
+    /// </summary>
+    /// <returns></returns>
     public bool Delete()
     {
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "DELETE FROM Product WHERE (ProductID = @ProductID)";
-
+        cmd.CommandText = "UPDATE Product " +
+                             "SET AvailabilityID = Availability.AvailabilityID " +
+                            "FROM Product " +
+                      "INNER JOIN Availability ON Product.AvailabilityID = Availability.AvailabilityID " +
+                           "WHERE (Availability.Availability = N'FROZEN') AND (ProductID = @ProductID)";
+        cmd.Parameters.AddWithValue("@AvailabilityID", this.AvailabilityID);
         cmd.Parameters.AddWithValue("@ProductID", this.ProductID);
 
         return ExecuteNonQuery(cmd);

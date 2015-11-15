@@ -32,7 +32,6 @@ public partial class Index : System.Web.UI.Page
             txtCompanyPassword.Text,
             txtCompanyAddress.Text,
             txtCompanyPhone.Text,
-            "",
             int.Parse(ddlCity.SelectedValue))
             )
         {

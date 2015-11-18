@@ -25,31 +25,7 @@ public partial class Home : System.Web.UI.Page
     #region Init Button
     public void InitTableButtons()
     {
-        foreach (Table t in cmp.TableList)
-        {
-            Button b = new Button();
-
-            b.Height = 100;
-            b.Width = 100;
-            b.Text = t.TableName;
-            b.ID = "btn_" + t.TableID;
-            b.Click += new EventHandler(TableButtonsClick);
-
-            t.InitController();
-
-            
-            if(t.Controller == null) b.Text += "\nreserved";
-            else b.Text += "\n notreserved";
-
-            panelTables.Controls.Add(b);
-            AsyncPostBackTrigger trigger = new AsyncPostBackTrigger();
-            trigger.ControlID = b.ID;
-            trigger.EventName = "";
-            upTables.Triggers.Add(trigger);
-
-            panelNoTable.Visible = false;
-            panelTables.Visible = true;
-        }
+        
     }
     #endregion
 

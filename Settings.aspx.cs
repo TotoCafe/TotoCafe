@@ -18,15 +18,13 @@ public partial class Menu : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        ScriptManager scriptManager = ScriptManager.GetCurrent(this.Page);
-        scriptManager.RegisterPostBackControl(this.qrButton);
+        
         cmp = (Company)Session["Company"];
 
         if (cmp == null) Response.Redirect("Index.aspx");
         else
         {
 
-            cmp.DeleteQrPdf(Server.MapPath("~/Qr Codes"));
         }
     }
 
@@ -210,18 +208,7 @@ public partial class Menu : System.Web.UI.Page
 
     protected void qrButton_Click(object sender, EventArgs e)
     {
-        cmp.SaveQrPdf(Server.MapPath("~/Qr Codes"));
-
-        string path = MapPath("~/Qr Codes") + "/" + cmp.QrPdfName;
-
-        byte[] bts = System.IO.File.ReadAllBytes(path);
-
-        Response.AddHeader("Content-Type", "Application/octet-stream");
-        Response.AddHeader("Content-Length", bts.Length.ToString());
-        Response.AddHeader("Content-Disposition", "attachment; filename=QrCodes.pdf");
-        Response.BinaryWrite(bts);
-        Response.Flush();
-        Response.End();
+        
     }
 
 }

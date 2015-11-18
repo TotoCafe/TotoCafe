@@ -23,23 +23,7 @@ public partial class Index : System.Web.UI.Page
 
     protected void btnSignUp_Click(object sender, EventArgs e)
     {
-        cmp = new Company();
-
-        if (
-            cmp.Insert(
-            txtCompanyName.Text,
-            txtCompanyEmail.Text,
-            txtCompanyPassword.Text,
-            txtCompanyAddress.Text,
-            txtCompanyPhone.Text,
-            int.Parse(ddlCity.SelectedValue))
-            )
-        {
-            cmp.Initialize(FormsAuthentication.HashPasswordForStoringInConfigFile(txtCompanyEmail.Text, "SHA1"));
-
-            Session["Company"] = cmp;
-            Response.Redirect("Home.aspx");
-        }
+       
     }
 
     [WebMethod]

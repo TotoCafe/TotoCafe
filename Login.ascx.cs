@@ -23,20 +23,7 @@ public partial class Login : System.Web.UI.UserControl
 
     protected void btnLogin_Click(object sender, EventArgs e)
     {
-        if (Authentication(txtLoginMail.Text, txtLoginPassword.Text))
-        {
-            Company cmp = new Company();
-
-            cmp.Initialize(FormsAuthentication.HashPasswordForStoringInConfigFile(txtLoginMail.Text, "SHA1"));
-
-            Session["Company"] = cmp;
-
-            Response.Redirect("Home.aspx");
-        }
-        else
-        {
-            //IF USER AUTHAENTICATION RETURNS FALSE SHOW USER A MESSAGE THAT SAYS E-MAIL OR PASSWORD NOT CORRECT..
-        }
+        
     }
 
     public bool Authentication(string Email, string Password)

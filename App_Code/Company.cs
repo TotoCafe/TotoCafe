@@ -484,6 +484,8 @@ public class Company
     public int CityID { get; set; }
     public int AvailabilityID { get; set; }
     public int PermissionID { get; set; }
+    public List<Category> CategoryList { get; set; }
+    public List<Table> TableList { get; set; }
 
     public Company()
     {
@@ -498,7 +500,7 @@ public class Company
     /// ready for all operations.
     /// </summary>
     /// <returns></returns>
-    public bool Initialize()
+    private bool Initialize()
     {
         SqlConnection conn = new SqlConnection(
             ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
@@ -528,6 +530,9 @@ public class Company
             this.CityID = int.Parse(dr["CityID"].ToString());
             this.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
             this.PermissionID = int.Parse(dr["PermissionID"].ToString());
+
+            InitCategoryList();
+            InitTableList();
         }
         catch (Exception) { result = false; }
         finally
@@ -542,7 +547,7 @@ public class Company
     /// that we want user to enter while signing up. Other attributes have default values each.
     /// </summary>
     /// <returns></returns>
-    public bool Insert()
+    private bool Insert()
     {
         SqlCommand cmd = new SqlCommand();
 
@@ -550,7 +555,7 @@ public class Company
                                       "VALUES (@CompanyName, @Email, @Password, @Address, @Phone#, @CityID)";
         cmd.Parameters.AddWithValue("@CompanyName", this.CompanyName);
         cmd.Parameters.AddWithValue("@Email", this.Email);
-        cmd.Parameters.AddWithValue("@Password", this.Password);
+        cmd.Parameters.AddWithValue("@Password", FormsAuthentication.HashPasswordForStoringInConfigFile(this.Password, "SHA1"));
         cmd.Parameters.AddWithValue("@Address", this.Address);
         cmd.Parameters.AddWithValue("@Phone#", this.Phone);
         cmd.Parameters.AddWithValue("@CityID", this.CityID);
@@ -660,6 +665,133 @@ public class Company
         }
 
         return this.Update();
+    }
+
+    /// <summary>
+    /// Initializes Categories which belong to current Company and Available.
+    /// </summary>
+    private void InitCategoryList()
+    {
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "SELECT Category.* FROM Category " +
+                                      "INNER JOIN Availability ON Category.AvailabilityID = Availability.AvailabilityID " +
+                                      "WHERE (Category.CompanyID = @CompanyID) AND (Availability.Availability = @Availability)";
+        cmd.Parameters.AddWithValue("@Availability", "AVAILABLE");
+        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+
+        cmd.Connection = conn;
+
+        try
+        {
+            conn.Open();
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                Category c = new Category();
+
+                c.CategoryID = int.Parse(dr["CategoryID"].ToString());
+                c.CategoryName = dr["CategoryName"].ToString();
+                c.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
+                c.InitProductList();
+
+                this.CategoryList.Add(c);
+            }
+        }
+        catch (Exception) { }
+        finally { conn.Close(); }
+    }
+
+    /// <summary>
+    /// Initializes Tables of the Company and add them to TableList property.
+    /// </summary>
+    private void InitTableList()
+    {
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "SELECT [Table].TableID, [Table].TableName, [Table].AvailabilityID " +
+                            "FROM [Table] " +
+                            "INNER JOIN Availability ON [Table].AvailabilityID = Availability.AvailabilityID " +
+                            "WHERE ([Table].CompanyID = @CompanyID) AND (Availability.Availability = @Availability)";
+        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+        cmd.Parameters.AddWithValue("@Availability", "AVAILABLE");
+
+        cmd.Connection = conn;
+
+        try
+        {
+            conn.Open();
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                Table t = new Table();
+
+                t.TableID = int.Parse(dr["TableID"].ToString());
+                t.TableName = dr["TableName"].ToString();
+                t.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
+                t.CompanyID = this.CompanyID;
+                t.QrCode = "TotoCafe-" + this.CompanyID.ToString() + "-" + t.TableID;
+                t.InitActiveController();//Current open controller..
+
+                this.TableList.Add(t);
+            }
+        }
+        catch (Exception) { }
+        finally { conn.Close(); }
+
+    }
+
+    /// <summary>
+    /// Authenticates the company with Email and password and Initializes it.
+    /// </summary>
+    /// <returns></returns>
+    public bool Authenticate()
+    {
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.Connection = conn;
+        cmd.CommandText = "SELECT COUNT(*) FROM Company WHERE (Email = @Email) AND (Password = @Password)";
+        cmd.Parameters.AddWithValue("@Email", this.Email);
+        cmd.Parameters.AddWithValue("@Password", FormsAuthentication.HashPasswordForStoringInConfigFile(this.Password, "SHA1"));
+
+        bool result = true;
+        try
+        {
+            conn.Open();
+
+            if (int.Parse(cmd.ExecuteScalar().ToString()) == 0) result = false;
+            else this.Initialize();
+        }
+        catch (Exception) { result = false; }
+        finally { conn.Close(); }
+        return result;
+    }
+
+    /// <summary>
+    /// Executes Signup operation for a company object.
+    /// Inserts the object to database and initializes it.
+    /// </summary>
+    /// <returns></returns>
+    public bool SignUp()
+    {
+        bool result = this.Insert();
+
+        if (result) this.Initialize();
+
+        return result;
     }
 
     /// <summary>

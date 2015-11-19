@@ -16,20 +16,81 @@ public class TableController
     public int TableID { get; set; }
     public DateTime StartDateTime { get; set; }
     public DateTime FinishDateTime { get; set; }
-    public List<Order> OrderList { get; set; }
-    public int CompanyID { get; set; }
 
-    public void InitOrderList()
+    public TableController()
     {
-        List<Order> OrderList = new List<Order>();
+        //
+        // TODO: Add constructor logic here
+        //
+    }
+
+    public bool Insert()
+    {
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "INSERT INTO TableController(CostumerID, TableID, StartDateTime) VALUES (@CostumerID, @TableID, @StartDateTime)";
+
+        cmd.Parameters.AddWithValue("@CostumerID", this.CostumerID);
+        cmd.Parameters.AddWithValue("@TableID", this.TableID);
+        cmd.Parameters.AddWithValue("@StartDateTime", this.StartDateTime);
+
+        bool result = ExecuteNonQuery(cmd);
+
+        if (result)
+        {
+            SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                                  );
+            cmd.Parameters.Clear();
+
+            cmd.CommandText = "SELECT ControllerID FROM TableController " + 
+                               "WHERE (CostumerID = @CostumerID) AND (TableID = @TableID) AND (StartDateTime = @StartDateTime) AND (FinishDateTime IS NULL)";
+            cmd.Parameters.AddWithValue("@CostumerID", this.CostumerID);
+            cmd.Parameters.AddWithValue("@TableID", this.TableID);
+            cmd.Parameters.AddWithValue("@StartDateTime", this.StartDateTime);
+
+            cmd.Connection = conn;
+
+            try
+            {
+                conn.Open();
+
+                SqlDataReader dr = new SqlDataReader();
+
+                dr.Read();
+
+                this.ControllerID = int.Parse(dr["ControllerID"].ToString());
+            }
+            catch (Exception) { }
+            finally { conn.Close(); }
+        }
+        return result;
+    }
+
+    public bool Update()
+    {
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "UPDATE TableController SET TableID = @TableID, FinishDateTime = @FinishDateTime WHERE (ControllerID = @ControllerID)";
+
+        cmd.Parameters.AddWithValue("@TableID", this.TableID);
+        cmd.Parameters.AddWithValue("@FinishDateTime", this.FinishDateTime);
+        cmd.Parameters.AddWithValue("@ControllerID", this.ControllerID);
+
+        return ExecuteNonQuery(cmd);
+    }
+
+    public List<Order> getOrderList()
+    {
+        List<Order> orderList = new List<Order>();
 
         SqlConnection conn = new SqlConnection(
             ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
-            );
-
+                                              );
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "SELECT * FROM [Order] WHERE ([ControllerID] = @ControllerID)";
+        cmd.CommandText = "SELECT [Order].* FROM [Order] WHERE (ControllerID = @ControllerID)";
+
         cmd.Parameters.AddWithValue("@ControllerID", this.ControllerID);
 
         cmd.Connection = conn;
@@ -45,118 +106,19 @@ public class TableController
                 Order o = new Order();
 
                 o.OrderID = int.Parse(dr["OrderID"].ToString());
-                o.ProductName = dr["ProductName"].ToString();
-                o.ProductPrice = float.Parse(dr["ProductPrice"].ToString());
-                o.Amount = int.Parse(dr["Amount#"].ToString());
+                o.Amount = int.Parse(dr["Amount#"].ToString()); 
                 IFormatProvider culture = new CultureInfo("en-US", true);
-                o.OrderTime = DateTime.ParseExact(dr["StartDateTime"].ToString(), "dd/MM/yyyy HH:mm:ss.fff", culture);
-                o.ControllerID = this.ControllerID;
+                o.OrderTime = DateTime.ParseExact(dr["OrderTime"].ToString(), "dd/MM/yyyy HH:mm:ss.fff", culture);
+                o.ControllerID = int.Parse(dr["ControllerID"].ToString());
+                o.ProductID = int.Parse(dr["ProductID"].ToString());
+                o.OrderDetails = dr["OrderDetails"].ToString();
 
-                OrderList.Add(o);
+                orderList.Add(o);
             }
         }
-        catch (Exception) { /*Handle excepsions..*/ }
-        finally
-        {
-            conn.Close();
-        }
-
-        this.OrderList = OrderList;
-    }
-    private void SetControllerID()
-    {
-        SqlConnection conn = new SqlConnection(
-            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
-                                              );
-        SqlCommand cmd = new SqlCommand();
-
-        cmd.CommandText = "SELECT ControllerID FROM TableController " +
-                                              "WHERE (CostumerID = @CostumerID) " +
-                                              "AND (TableID = @TableID) " +
-                                              "AND (StartDateTime = @StartDateTime) " +
-                                              "AND (CompanyID = @CompanyID)";
-
-        cmd.Parameters.AddWithValue("@CostumerID", this.CostumerID);
-        cmd.Parameters.AddWithValue("@TableID", this.TableID);
-        cmd.Parameters.AddWithValue("@StartDateTime", this.StartDateTime);
-        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
-        cmd.Connection = conn;
-
-        int ControllerID = 0;
-
-        try
-        {
-            conn.Open();
-
-            SqlDataReader dr = cmd.ExecuteReader();
-
-            dr.Read();//There should be only one record with a name in database..
-
-            ControllerID = int.Parse(dr["ControllerID"].ToString());
-        }
         catch (Exception) { }
-        finally
-        {
-            conn.Close();
-            this.ControllerID = ControllerID;
-        }
-    }
-
-    public TableController()
-    {
-        //
-        // TODO: Add constructor logic here
-        //
-    }
-
-    public bool Insert()
-    {
-        SqlCommand cmd = new SqlCommand();
-
-        cmd.CommandText = "INSERT INTO TableController(CostumerID, TableID, StartDateTime, CompanyID) " +
-                                 "VALUES              (@CostumerID, @TableID, @StartDateTime, @CompanyID)";
-
-        cmd.Parameters.AddWithValue("@CostumerID", this.CostumerID);
-        cmd.Parameters.AddWithValue("@TableID", this.TableID);
-        cmd.Parameters.AddWithValue("@StartDateTime", this.StartDateTime);
-        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
-        // this.FinishDateTime will be set 'null' since the table is opened.
-
-        bool isDone = ExecuteNonQuery(cmd);
-
-        SetControllerID();
-
-        return isDone;
-    }
-    public bool Delete()
-    {
-        SqlCommand cmd = new SqlCommand();
-
-        cmd.CommandText = "DELETE FROM TableController WHERE (ControllerID = @ControllerID)";
-
-        cmd.Parameters.AddWithValue("@ControllerID", this.ControllerID);
-
-        foreach (Order o in this.OrderList) o.Delete();
-
-        return ExecuteNonQuery(cmd);
-    }
-    public bool Update()
-    {
-        SqlCommand cmd = new SqlCommand();
-
-        cmd.CommandText = "UPDATE TableController SET CostumerID = @CostumerID, " +
-                                                     "TableID = @TableID, " +
-                                                     "StartDateTime = @StartDateTime, " +
-                                                     "FinishDateTime = @FinishDateTime" +
-                          "WHERE                     (ControllerID = @ControllerID)";
-
-        cmd.Parameters.AddWithValue("@CostumerID", this.CostumerID);
-        cmd.Parameters.AddWithValue("@TableID", this.TableID);
-        cmd.Parameters.AddWithValue("@StartDateTime", this.StartDateTime);
-        cmd.Parameters.AddWithValue("@FinishDateTime", this.FinishDateTime);
-        cmd.Parameters.AddWithValue("@ControllerID", this.ControllerID);
-
-        return ExecuteNonQuery(cmd);
+        finally { conn.Close(); }
+        return orderList;
     }
 
     private bool ExecuteNonQuery(SqlCommand cmd)

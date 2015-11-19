@@ -11,11 +11,11 @@ using System.Web;
 public class Order
 {
     public int OrderID { get; set; }
-    public string ProductName { get; set; }
-    public float ProductPrice { get; set; }
     public int Amount { get; set; }
     public DateTime OrderTime { get; set; }
     public int ControllerID { get; set; }
+    public int ProductID { get; set; }
+    public string OrderDetails { get; set; }
 
 	public Order()
 	{
@@ -28,41 +28,53 @@ public class Order
     {
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "INSERT INTO [Order] (ProductName, ProductPrice, Amount#, OrderTime, ControllerID) " + 
-                                       "VALUES (@ProductName, @ProductPrice, @Amount#, @OrderTime, @ControlleID)";
-        cmd.Parameters.AddWithValue("@ProductName", this.ProductName);
-        cmd.Parameters.AddWithValue("@ProductPrice", this.ProductPrice);
+        cmd.CommandText = "INSERT INTO [Order] (Amount#, OrderTime, ControllerID, ProductID, OrderDetails) " + 
+                                       "VALUES (@Amount#, @OrderTime, @ControllerID, @ProductID, @OrderDetails)";
+
         cmd.Parameters.AddWithValue("@Amount#", this.Amount);
         cmd.Parameters.AddWithValue("@OrderTime", this.OrderTime);
         cmd.Parameters.AddWithValue("@ControllerID", this.ControllerID);
+        cmd.Parameters.AddWithValue("@ProductID", this.ProductID);
+        cmd.Parameters.AddWithValue("@OrderDetails", this.OrderDetails);
 
-        return ExecuteNonQuery(cmd);
-    }
-    public bool Delete()
-    {
-        SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "DELETE FROM [Order] WHERE (OrderID = @OrderID)";
-        cmd.Parameters.AddWithValue("@OrderID", this.OrderID);
+        bool result = ExecuteNonQuery(cmd);
 
-        return ExecuteNonQuery(cmd);
+        if (result)
+        {
+            SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                                  );
+            cmd.CommandText = "SELECT OrderID FROM [Order] " +
+                               "WHERE (Amount# = @Amount#) " +
+                                 "AND (OrderTime = @OrderTime) " +
+                                 "AND (ControllerID = @ControllerID) " +
+                                 "AND (ProductID = @ProductID) " +
+                                 "AND (OrderDetails = @OrderDetails)";
+            try
+            {
+                conn.Open();
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                dr.Read();
+
+                this.OrderID = int.Parse(dr["OrderID"].ToString());
+            }
+            catch (Exception) { result = false; }
+            finally { conn.Close(); }
+        }
+        return result;
     }
     public bool Update()
     {
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "UPDATE [Order] SET ProductName = @ProductName, " +
-                                             "ProductPrice = @ProductPrice, " +
-                                             "Amount# = @Amount#, " +
-                                             "OrderTime = @OrderTime, " +
-                                             "ControllerID = @ControllerID" +
-                          "WHERE             (OrderID = @OrderID)";
+        cmd.CommandText = "UPDATE [Order] SET Amount# = @Amount#, ControllerID = @ControllerID, ProductID = @ProductID WHERE (OrderID = @OrderID)";
 
-        cmd.Parameters.AddWithValue("@ProductName", this.ProductName);
-        cmd.Parameters.AddWithValue("@ProductPrice", this.ProductPrice);
         cmd.Parameters.AddWithValue("@Amount#", this.Amount);
-        cmd.Parameters.AddWithValue("@OrderTime", this.OrderTime);
         cmd.Parameters.AddWithValue("@ControllerID", this.ControllerID);
+        cmd.Parameters.AddWithValue("@ProductID", this.ProductID);
         cmd.Parameters.AddWithValue("@OrderID", this.OrderID);
 
         return ExecuteNonQuery(cmd);

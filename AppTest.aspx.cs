@@ -15,7 +15,7 @@ public partial class AppTest : System.Web.UI.Page
 
         cmp.CompanyName = "Sohos";
         cmp.Email = "sohos@sohos.com";
-        cmp.Password = FormsAuthentication.HashPasswordForStoringInConfigFile("ituolmazsaodtu", "SHA1");
+        cmp.Password = "ituolmazsaodtu";
         cmp.Address = "Şimşek sk. No: 64/4";
         cmp.Phone = "+90 542 822 4732";
         cmp.CityID = 26;

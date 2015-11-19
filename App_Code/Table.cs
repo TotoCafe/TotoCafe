@@ -15,7 +15,8 @@ public class Table
     public string TableName { get; set; }
     public string QrCode { get; set; }
     public int CompanyID { get; set; }
-    public TableController Controller { get; set; }
+    public int AvailabilityID { get; set; }
+    public TableController ActiveController { get; set; }
 
     public Table()
     {
@@ -24,146 +25,210 @@ public class Table
         //
     }
 
-    public void InitController()
+    public bool Insert()
     {
-        TableController Controller = null;
-
-        SqlConnection conn = new SqlConnection(
-            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
-            );
-
-        SqlCommand cmd = new SqlCommand();
-
-        cmd.CommandText = "SELECT TableController.* FROM TableController WHERE (TableID = @TableID) AND (FinishDateTime IS NULL)";
-        cmd.Parameters.AddWithValue("@TableID", this.TableID);
-
-        cmd.Connection = conn;
-
-        try
-        {
-            conn.Open();
-
-            SqlDataReader dr = cmd.ExecuteReader();
-
-            if (dr.HasRows)
-            {
-                dr.Read();//There must be only 1 record..
-
-                Controller = new TableController();
-
-                Controller.ControllerID = int.Parse(dr["ControllerID"].ToString());
-                Controller.CostumerID = int.Parse(dr["CostumerID"].ToString());
-                Controller.TableID = int.Parse(dr["TableID"].ToString());
-                IFormatProvider culture = new CultureInfo("en-US", true);
-                Controller.StartDateTime = DateTime.ParseExact(dr["StartDateTime"].ToString(), "dd/MM/yyyy HH:mm:ss.fff", culture);
-                Controller.InitOrderList();
-                /**
-                 * IN FACT, HERE WE ARE SUPPOSED TO BE READING 'FinishDateTime' ATRIBUTE TOO, BUT
-                 * IT DOES NOT NECESSARY FOR THIS STUATION BECAUSE WE ARE USING THIS 'Controller'
-                 * OBJECT JUST TO SPECIFY AND HANDLE THE TABLES WHICH ARE ALREADY TAKEN AND
-                 * ACTIVE 
-                 * */
-            }
-        }
-        catch (Exception) { /*Handle excepsions..*/ }
-        finally
-        {
-            conn.Close();
-        }
-        this.Controller = Controller;
-    }
-    public void BreakController()
-    {
-        /**
-         * THIS METHOD BREAKS THE CONNECTION BETWEEN
-         * CURRENT TABLE AND ITS CONTROLLER AND SETS
-         * CONTROLLER's SETS FinishDateTime CURRENT
-         * TIME SO THAT THE TABLE OBJECT WILL BE FREE OR IN OTHER
-         * SAYING IT IS READY FOR NEW COSTUMERS AND ORDERS..
-         * */
-        this.Controller.FinishDateTime = DateTime.Now;
-        this.Controller.Update();
-        this.Controller = null;
-    }
-    private void SetTableID()
-    {
+        this.AvailabilityID = 1;//Default..
         SqlConnection conn = new SqlConnection(
             ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
                                               );
         SqlCommand cmd = new SqlCommand();
+        SqlDataReader dr = null;
 
-        cmd.CommandText = "SELECT TableID FROM [Table] WHERE (TableName = @TableName AND CompanyID = @CompanyID)";
+        cmd.CommandText = "SELECT [Table].TableID FROM [Table] " +
+                                           "INNER JOIN Availability ON [Table].AvailabilityID = Availability.AvailabilityID " +
+                                           "WHERE ([Table].TableName = @TableName) AND (Availability.Availability = @Availability) AND ([Table].CompanyID = @CompanyID)";
         cmd.Parameters.AddWithValue("@TableName", this.TableName);
+        cmd.Parameters.AddWithValue("@Availability", "FROZEN");
         cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+
         cmd.Connection = conn;
 
-        int TableID = 0;
-
+        bool result;
         try
         {
             conn.Open();
 
-            SqlDataReader dr = cmd.ExecuteReader();
+            dr = cmd.ExecuteReader();
 
-            dr.Read();//There should be only one record with a name in database..
+            if (dr.HasRows)
+            {
+                dr.Read();//There should be just one record.
+                this.TableID = int.Parse(dr["TableID"].ToString());
+                result = this.Resume();//Frozen record will be resume..
+            }
+            else
+            {
+                cmd.Parameters.Clear();
 
-            TableID = int.Parse(dr["TableID"].ToString());
+                cmd.CommandText = "INSERT INTO [Table] (TableName, CompanyID) VALUES (@TableName, @CompanyID)";
+
+                cmd.Parameters.AddWithValue("@TableName", this.TableName);
+                cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+
+                result = ExecuteNonQuery(cmd);
+
+                if (result)
+                {
+                    cmd.Parameters.Clear();
+
+                    cmd.CommandText = "SELECT TableID FROM [Table] WHERE (TableName = @TableName) AND (CompanyID = @CompanyID)";
+
+                    cmd.Parameters.AddWithValue("@TableName", this.TableName);
+                    cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+
+                    conn.Open();
+
+                    dr = cmd.ExecuteReader();
+
+                    dr.Read();
+
+                    this.TableID = int.Parse(dr["TableID"].ToString());
+                }
+            }
         }
-        catch (Exception) { }
-        finally
-        {
-            conn.Close();
-            this.TableID = TableID;
-        }
+        catch (Exception) { result = false; }
+        finally { conn.Close(); }
+        return result;
     }
 
-    public bool Insert()
-    {
-        GenerateQrCode();
-
-        SqlCommand cmd = new SqlCommand();
-
-        cmd.CommandText = "INSERT INTO [Table] (TableName, QrCode, CompanyID) VALUES (@TableName, @QrCode, @CompanyID)";
-
-        cmd.Parameters.AddWithValue("@TableName", this.TableName);
-        cmd.Parameters.AddWithValue("@QrCode", this.QrCode);
-        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
-
-        bool isDone = ExecuteNonQuery(cmd);//If it fails ID will be set '0'!! Handle it..
-
-        SetTableID();
-
-        return isDone;
-    }
-    public bool Delete()
-    {
-        SqlCommand cmd = new SqlCommand();
-
-        cmd.CommandText = "DELETE FROM [Table] WHERE (TableID = @TableID)";
-        cmd.Parameters.AddWithValue("@TableID", this.TableID);
-
-        return ExecuteNonQuery(cmd);
-    }
     public bool Update()
     {
         SqlCommand cmd = new SqlCommand();
 
         cmd.CommandText = "UPDATE       [Table]" +
                           "SET          TableName = @TableName, " +
-                                        "QrCode = @QrCode " +
+                                        "AvailabilityID = @AvailabilityID " +
                           "WHERE        (TableID = @TableID)";
 
         cmd.Parameters.AddWithValue("@TableName", this.TableName);
-        cmd.Parameters.AddWithValue("@QrCode", this.QrCode);
+        cmd.Parameters.AddWithValue("@AvailabilityID", this.AvailabilityID);
         cmd.Parameters.AddWithValue("@TableID", this.TableID);
 
         return ExecuteNonQuery(cmd);
     }
 
-    private void GenerateQrCode()
+    public bool Freeze()
     {
-        this.QrCode = "TotoCafe\t" + this.CompanyID + "\t" + this.TableName;
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "SELECT AvailabilityID FROM Availability WHERE (Availability = @Availability)";
+
+        cmd.Parameters.AddWithValue("@Availability", "FROZEN");
+
+        cmd.Connection = conn;
+
+        try
+        {
+            conn.Open();
+            SqlDataReader dr = cmd.ExecuteReader();//Only one record.
+            dr.Read();//Only one record.
+            this.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
+        }
+        catch (Exception) { return false; }
+        finally
+        {
+            conn.Close();
+        }
+
+        return this.Update();
     }
+
+    public bool Resume()
+    {
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "SELECT AvailabilityID FROM Availability WHERE (Availability = @Availability)";
+
+        cmd.Parameters.AddWithValue("@Availability", "AVAILABLE");
+
+        cmd.Connection = conn;
+
+        try
+        {
+            conn.Open();
+            SqlDataReader dr = cmd.ExecuteReader();//Only one record.
+            dr.Read();//Only one record.
+            this.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
+        }
+        catch (Exception) { return false; }
+        finally
+        {
+            conn.Close();
+        }
+
+        return this.Update();
+    }
+
+    public void InitActiveController()
+    {
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "SELECT ControllerID, CostumerID, TableID, StartDateTime " +
+                            "FROM TableController " +
+                           "WHERE (TableID = @TableID) AND (FinishDateTime IS NULL)";
+        cmd.Parameters.AddWithValue("@TableID", this.TableID);
+
+        try
+        {
+            conn.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dr.Read();//Must be only one record.
+
+            TableController tc = new TableController();
+
+            tc.ControllerID = int.Parse(dr["ControllerID"].ToString());
+            tc.CostumerID = int.Parse(dr["CostumerID"].ToString());
+            tc.TableID = int.Parse(dr["TableID"].ToString());
+            IFormatProvider culture = new CultureInfo("en-US", true);
+            tc.StartDateTime = DateTime.ParseExact(dr["StartDateTime"].ToString(), "dd/MM/yyyy HH:mm:ss.fff", culture);
+
+            this.ActiveController = tc;
+        }
+        catch (Exception) { }
+        finally { conn.Close(); }
+    }
+
+    public void StartTableForCostumer(int CostumerID)
+    {
+        TableController tc = new TableController();
+
+        tc.TableID = this.TableID;
+        tc.CostumerID = CostumerID;
+        tc.StartDateTime = DateTime.Now;
+
+        tc.Insert();
+
+        this.ActiveController = tc;
+    }
+
+    public void CloseTable()
+    {
+        this.ActiveController.FinishDateTime = DateTime.Now;
+        this.ActiveController.Update();
+        this.ActiveController = null;
+    }
+
+    /// <summary>
+    /// Transfers the orders belong to a table to another table
+    /// </summary>
+    /// <param name="table"></param>
+    public void TransferTo(Table table)
+    {
+        this.ActiveController.TableID = table.TableID;
+        this.ActiveController.Update();
+        table.ActiveController = this.ActiveController;
+        this.ActiveController = null;
+    }
+
     private bool ExecuteNonQuery(SqlCommand cmd)
     {
         bool isSuccess = true;

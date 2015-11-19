@@ -36,49 +36,90 @@ public class Product
         cmd.Parameters.AddWithValue("@Price", this.Price);
         cmd.Parameters.AddWithValue("@Credit", this.Credit);
         cmd.Parameters.AddWithValue("@CategoryID", this.CategoryID);
+        this.AvailabilityID = 1;//Default value..
 
         return ExecuteNonQuery(cmd);
     }
 
-    /// <summary>
-    /// Product objects will never be deleted they will be hidden from user when delete operation executed.
-    /// This gives us we can reach older orders even if related product be deleted.
-    /// </summary>
-    /// <returns></returns>
-    public bool Delete()
-    {
-        SqlCommand cmd = new SqlCommand();
-
-        cmd.CommandText = "UPDATE Product " +
-                             "SET AvailabilityID = Availability.AvailabilityID " +
-                            "FROM Product " +
-                      "INNER JOIN Availability ON Product.AvailabilityID = Availability.AvailabilityID " +
-                           "WHERE (Availability.Availability = N'FROZEN') AND (ProductID = @ProductID)";
-        cmd.Parameters.AddWithValue("@AvailabilityID", this.AvailabilityID);
-        cmd.Parameters.AddWithValue("@ProductID", this.ProductID);
-
-        return ExecuteNonQuery(cmd);
-    }
     public bool Update()
     {
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "UPDATE           Product " +
-                          "SET              ProductName = @ProductName, " +
-                                            "Detail = @Detail, " +
-                                            "Price = @Price, " +
-                                            "Credit = @Credit, " +
-                                            "CategoryID = @CategoryID " +
-                          "WHERE            (ProductID = @ProductID)";
+        cmd.CommandText = "UPDATE Product SET ProductName = @ProductName, " +
+                                             "Detail = @Detail, " +
+                                             "Price = @Price, " +
+                                             "Credit = @Credit, " +
+                                             "CategoryID = @CategoryID, " +
+                                             "AvailabilityID = @AvailabilityID " +
+                                       "WHERE (ProductID = @ProductID)";
 
         cmd.Parameters.AddWithValue("@ProductName", this.ProductName);
         cmd.Parameters.AddWithValue("@Detail", this.Detail);
         cmd.Parameters.AddWithValue("@Price", this.Price);
         cmd.Parameters.AddWithValue("@Credit", this.Credit);
         cmd.Parameters.AddWithValue("@CategoryID", this.CategoryID);
+        cmd.Parameters.AddWithValue("@AvailabilityID", this.AvailabilityID);
         cmd.Parameters.AddWithValue("@ProductID", this.ProductID);
 
         return ExecuteNonQuery(cmd);
+    }
+
+    public bool Freeze()
+    {
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "SELECT AvailabilityID FROM Availability WHERE (Availability = @Availability)";
+
+        cmd.Parameters.AddWithValue("@Availability", "FROZEN");
+
+        cmd.Connection = conn;
+
+        try
+        {
+            conn.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dr.Read();//Only one record.
+            this.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
+        }
+        catch (Exception) {  }
+        finally
+        {
+            conn.Close();
+        }
+
+        return this.Update();
+    }
+
+    public bool Resume()
+    {
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "SELECT AvailabilityID FROM Availability WHERE (Availability = @Availability)";
+
+        cmd.Parameters.AddWithValue("@Availability", "AVAILABLE");
+
+        cmd.Connection = conn;
+
+        try
+        {
+            conn.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+            dr.Read();//Only one record.
+            this.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
+        }
+        catch (Exception) {  }
+        finally
+        {
+            conn.Close();
+        }
+
+        return this.Update();
     }
 
     private bool ExecuteNonQuery(SqlCommand cmd)

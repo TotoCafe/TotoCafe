@@ -69,20 +69,9 @@ public class Table
 
                 if (result)
                 {
-                    cmd.Parameters.Clear();
+                    this.TableID = getTableId();
 
-                    cmd.CommandText = "SELECT TableID FROM [Table] WHERE (TableName = @TableName) AND (CompanyID = @CompanyID)";
-
-                    cmd.Parameters.AddWithValue("@TableName", this.TableName);
-                    cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
-
-                    conn.Open();
-
-                    dr = cmd.ExecuteReader();
-
-                    dr.Read();
-
-                    this.TableID = int.Parse(dr["TableID"].ToString());
+                    this.QrCode = "TotoCafe:-" + this.CompanyID.ToString() + "-" + this.TableID.ToString();
                 }
             }
         }
@@ -165,6 +154,41 @@ public class Table
         return this.Update();
     }
 
+    private int getTableId()
+    {
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.Parameters.Clear();
+
+        cmd.CommandText = "SELECT TableID FROM [Table] WHERE (TableName = @TableName) AND (CompanyID = @CompanyID)";
+
+        cmd.Parameters.AddWithValue("@TableName", this.TableName);
+        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+        cmd.Connection = conn;
+
+        int id = 0;
+        try
+        {
+            conn.Open();
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            dr.Read();
+
+            id = int.Parse(dr["TableID"].ToString());
+        }
+        catch (Exception) { }
+        finally { conn.Close(); }
+        return id;
+    }
+
+    /// <summary>
+    /// Initializes active controller when company first login.
+    /// This gives us company can see the current view even it logs out and in again and again.
+    /// </summary>
     public void InitActiveController()
     {
         SqlConnection conn = new SqlConnection(
@@ -176,6 +200,7 @@ public class Table
                             "FROM TableController " +
                            "WHERE (TableID = @TableID) AND (FinishDateTime IS NULL)";
         cmd.Parameters.AddWithValue("@TableID", this.TableID);
+        cmd.Connection = conn;
 
         try
         {
@@ -188,15 +213,20 @@ public class Table
             tc.ControllerID = int.Parse(dr["ControllerID"].ToString());
             tc.CostumerID = int.Parse(dr["CostumerID"].ToString());
             tc.TableID = int.Parse(dr["TableID"].ToString());
-            IFormatProvider culture = new CultureInfo("en-US", true);
-            tc.StartDateTime = DateTime.ParseExact(dr["StartDateTime"].ToString(), "dd/MM/yyyy HH:mm:ss.fff", culture);
-
+            DateTime t;
+            DateTime.TryParse(dr["StartDateTime"].ToString(), out t);
+            tc.StartDateTime = t;
             this.ActiveController = tc;
         }
         catch (Exception) { }
         finally { conn.Close(); }
     }
 
+    /// <summary>
+    /// Inserts a record into TableController table and sets the controller object
+    /// to the table's active controller. This means this table is active until the payment
+    /// </summary>
+    /// <param name="CostumerID"></param>
     public void StartTableForCostumer(int CostumerID)
     {
         TableController tc = new TableController();

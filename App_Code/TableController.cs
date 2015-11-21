@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Web;
+using System.Data;
 
 /// <summary>
 /// Summary description for TableController
@@ -16,6 +18,7 @@ public class TableController
     public int TableID { get; set; }
     public DateTime StartDateTime { get; set; }
     public DateTime FinishDateTime { get; set; }
+    public string temp { get; set; }
 
     public TableController()
     {
@@ -47,7 +50,7 @@ public class TableController
                                "WHERE (CostumerID = @CostumerID) AND (TableID = @TableID) AND (StartDateTime = @StartDateTime) AND (FinishDateTime IS NULL)";
             cmd.Parameters.AddWithValue("@CostumerID", this.CostumerID);
             cmd.Parameters.AddWithValue("@TableID", this.TableID);
-            cmd.Parameters.AddWithValue("@StartDateTime", this.StartDateTime);
+            cmd.Parameters.AddWithValue("@StartDateTime", SqlDbType.DateTime).Value = this.StartDateTime;
 
             cmd.Connection = conn;
 
@@ -55,7 +58,7 @@ public class TableController
             {
                 conn.Open();
 
-                SqlDataReader dr = new SqlDataReader();
+                SqlDataReader dr = cmd.ExecuteReader();
 
                 dr.Read();
 
@@ -74,15 +77,19 @@ public class TableController
         cmd.CommandText = "UPDATE TableController SET TableID = @TableID, FinishDateTime = @FinishDateTime WHERE (ControllerID = @ControllerID)";
 
         cmd.Parameters.AddWithValue("@TableID", this.TableID);
-        cmd.Parameters.AddWithValue("@FinishDateTime", this.FinishDateTime);
+        cmd.Parameters.AddWithValue("@FinishDateTime", SqlDbType.DateTime).Value = this.FinishDateTime;
         cmd.Parameters.AddWithValue("@ControllerID", this.ControllerID);
 
         return ExecuteNonQuery(cmd);
     }
 
-    public List<Order> getOrderList()
+    /// <summary>
+    /// Returns a hashtable which contains orders of th controller.
+    /// </summary>
+    /// <returns>Hashtable</returns>
+    public Hashtable getOrders()
     {
-        List<Order> orderList = new List<Order>();
+        Hashtable ht = new Hashtable();
 
         SqlConnection conn = new SqlConnection(
             ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
@@ -106,19 +113,20 @@ public class TableController
                 Order o = new Order();
 
                 o.OrderID = int.Parse(dr["OrderID"].ToString());
-                o.Amount = int.Parse(dr["Amount#"].ToString()); 
-                IFormatProvider culture = new CultureInfo("en-US", true);
-                o.OrderTime = DateTime.ParseExact(dr["OrderTime"].ToString(), "dd/MM/yyyy HH:mm:ss.fff", culture);
+                o.Amount = int.Parse(dr["Amount#"].ToString());
+                DateTime t;
+                DateTime.TryParse(dr["OrderTime"].ToString(), out t);
+                o.OrderTime = t;
                 o.ControllerID = int.Parse(dr["ControllerID"].ToString());
                 o.ProductID = int.Parse(dr["ProductID"].ToString());
                 o.OrderDetails = dr["OrderDetails"].ToString();
 
-                orderList.Add(o);
+                ht[o.OrderID] = o;
             }
         }
         catch (Exception) { }
         finally { conn.Close(); }
-        return orderList;
+        return ht;
     }
 
     private bool ExecuteNonQuery(SqlCommand cmd)

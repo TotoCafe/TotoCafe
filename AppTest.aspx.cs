@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,18 +14,14 @@ public partial class AppTest : System.Web.UI.Page
         #region Company Insert Update Freeze Resume test
         Company cmp = new Company();
 
-        cmp.CompanyName = "Sohos";
         cmp.Email = "sohos@sohos.com";
         cmp.Password = "ituolmazsaodtu";
-        cmp.Address = "Şimşek sk. No: 64/4";
-        cmp.Phone = "+90 542 822 4732";
-        cmp.CityID = 26;
-
+        
         lbTest.Items.Add("Company inserting..");
         //lbTest.Items.Add(cmp.Insert().ToString());
 
         lbTest.Items.Add("Company initializing..");
-        lbTest.Items.Add(cmp.Initialize().ToString());
+        lbTest.Items.Add(cmp.Authenticate().ToString());
 
         lbTest.Items.Add("Company after initialize..");
 
@@ -65,14 +62,31 @@ public partial class AppTest : System.Web.UI.Page
         lbTest.Items.Add("PermissionID: " + cmp.PermissionID);
 
         lbTest.Items.Add("Company freezing..");
-        //lbTest.Items.Add(cmp.Freeze().ToString());
+        lbTest.Items.Add(cmp.Freeze().ToString());
 
         lbTest.Items.Add("AvailabilityID" + cmp.AvailabilityID);
 
         lbTest.Items.Add("Company resuming..");
-        //lbTest.Items.Add(cmp.Resume().ToString());
+        lbTest.Items.Add(cmp.Resume().ToString());
 
         lbTest.Items.Add("AvailabilityID" + cmp.AvailabilityID);
+
+        Category c = (Category)cmp.Categories[1];
+
+        lbTest.Items.Add(c.CategoryName);
+
+        Product p = (Product)c.Products[1];
+
+        lbTest.Items.Add(p.ProductName);
+
+        lbTest.Items.Add("Tables in database..");
+
+        List<Table> list = cmp.Tables.Values.Cast<Table>().ToList<Table>();
+
+        foreach (Table tbl in list)
+        {
+            lbTest.Items.Add(tbl.TableName);
+        }
         #endregion
     }
 }

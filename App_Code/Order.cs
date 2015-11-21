@@ -80,6 +80,21 @@ public class Order
         return ExecuteNonQuery(cmd);
     }
 
+    /// <summary>
+    /// Transfers the order to another table.
+    /// </summary>
+    /// <param name="table"></param>
+    /// <returns></returns>
+    public bool TransferTo(Table table)
+    {
+        if (table.ActiveController == null) return false;
+        else
+        {
+            this.ControllerID = table.ActiveController.ControllerID;
+            return true;
+        }
+    }
+
     private bool ExecuteNonQuery(SqlCommand cmd)
     {
         bool isSuccess = true;

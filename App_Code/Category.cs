@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Collections;
 
 /// <summary>
 /// Summary description for Category
@@ -137,7 +138,7 @@ public class Category
     public string CategoryName { get; set; }
     public int AvailabilityID { get; set; }
     private int CompanyID { get; set; }
-    public List<Product> ProductList { get; set; }
+    public Hashtable Products { get; set; }
 
     public Category()
     {
@@ -310,6 +311,7 @@ public class Category
 
         cmd.Connection = conn;
 
+        Hashtable ht = new Hashtable();
         try
         {
             conn.Open();
@@ -328,11 +330,12 @@ public class Category
                 p.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
                 p.CategoryID = this.CategoryID;
 
-                this.ProductList.Add(p);
+                ht[p.ProductID] = p;
             }
         }
         catch (Exception) { }
         finally { conn.Close(); }
+        this.Products = ht;
     }
 
     private bool ExecuteNonQuery(SqlCommand cmd)

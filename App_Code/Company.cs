@@ -20,7 +20,7 @@ using System.Collections;
 /// --Initialize()--
 /// Initialize method returns void.
 /// It sets informations that we need to the object.
-/// It must be invoke when the object created.
+/// It is invoked when the object created.
 /// 
 /// </summary>
 public class Company
@@ -38,8 +38,8 @@ public class Company
     public int CityID { get; set; }
     public int AvailabilityID { get; set; }
     public int PermissionID { get; set; }
-    public Hashtable Tables { get; set; }
-    public Hashtable Categories { get; set; }
+    private Hashtable Tables { get; set; }
+    private Hashtable Categories { get; set; }
     #endregion
 
     #region Constructor
@@ -312,6 +312,83 @@ public class Company
         catch (Exception) { }
         finally { conn.Close(); }
         this.Tables = ht;
+    }
+
+    /// <summary>
+    /// Returns the table according to given id.
+    /// </summary>
+    /// <param name="TableID"></param>
+    /// <returns></returns>
+    public Table GetTableWithId(int TableID)
+    {
+        return (Table)this.Tables[TableID];
+    }
+
+    /// <summary>
+    /// Adds the table to the Company's Hashtable.
+    /// </summary>
+    /// <param name="table"></param>
+    public void AddTable(Table table)
+    {
+        table.Insert();
+        this.Tables[table.TableID] = table;
+    }
+
+    /// <summary>
+    /// Updates Table in database and hashtable.
+    /// </summary>
+    /// <param name="table"></param>
+    public void UpdateTable(Table table)
+    {
+        table.Update();
+        this.Tables[table.TableID] = table;
+    }
+
+    /// <summary>
+    /// Freezes the table.
+    /// </summary>
+    /// <param name="table"></param>
+    public void FreezeTable(Table table)
+    {
+        table.Freeze();
+        this.Tables.Remove(table.TableID);
+    }
+
+    /// <summary>
+    /// Returns a list containing tables of company.
+    /// </summary>
+    /// <returns></returns>
+    public List<Table> GetTableList()
+    {
+        return this.Tables.Values.Cast<Table>().ToList<Table>();
+    }
+
+    /// <summary>
+    /// Returns category according to given id.
+    /// </summary>
+    /// <param name="CategoryID"></param>
+    /// <returns></returns>
+    public Category GetCategoryWithId(int CategoryID)
+    {
+        return (Category)this.Categories[CategoryID];
+    }
+
+    /// <summary>
+    /// Adds the category into the Hashtable with its id.
+    /// </summary>
+    /// <param name="category"></param>
+    public void AddCategoryToHashtable(Category category)
+    {
+        this.Categories[category.CategoryID] = category;
+    }
+
+    /// <summary>
+    /// Returns a list of categories.
+    /// </summary>
+    /// <returns></returns>
+    public List<Category> GetCategoryList()
+    {
+        return this.Categories.Values.Cast<Category>().ToList<Category>();
     }
 
     /// <summary>

@@ -71,17 +71,7 @@ public partial class AppTest : System.Web.UI.Page
 
         lbTest.Items.Add("AvailabilityID" + cmp.AvailabilityID);
 
-        Category c = (Category)cmp.Categories[1];
-
-        lbTest.Items.Add(c.CategoryName);
-
-        Product p = (Product)c.Products[1];
-
-        lbTest.Items.Add(p.ProductName);
-
-        lbTest.Items.Add("Tables in database..");
-
-        List<Table> list = cmp.Tables.Values.Cast<Table>().ToList<Table>();
+        List<Table> list = cmp.GetTableList();
 
         foreach (Table tbl in list)
         {

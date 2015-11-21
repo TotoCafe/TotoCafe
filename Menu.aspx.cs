@@ -14,8 +14,6 @@ public partial class Menu : System.Web.UI.Page
     Company cmp = null;
     protected void Page_Load(object sender, EventArgs e)
     {
-        cmp = (Company)Session["Company"];
-        if (cmp == null) Response.Redirect("Index.aspx");
     }
 
 

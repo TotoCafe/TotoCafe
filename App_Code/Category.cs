@@ -137,7 +137,7 @@ public class Category
     public int CategoryID { get; set; }
     public string CategoryName { get; set; }
     public int AvailabilityID { get; set; }
-    private int CompanyID { get; set; }
+    public int CompanyID { get; set; }
     public Hashtable Products { get; set; }
 
     public Category()

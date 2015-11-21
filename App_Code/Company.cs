@@ -51,7 +51,7 @@ public class Company
     }
     #endregion
 
-    #region Functions
+    #region Functions For Company
     /// <summary>
     /// Initializes Company object to use.
     /// After this method called the object is
@@ -226,46 +226,138 @@ public class Company
     }
 
     /// <summary>
-    /// Initializes Categories which belong to current Company and Available.
+    /// Sets the given object to hashtables according to their types.
     /// </summary>
-    private void InitCategoryList()
+    /// <param name="o"></param>
+    private void SetHashtableValue(Object o)
     {
-        Hashtable ht = new Hashtable();
+        int flag = o.GetType().Equals(typeof(Table)) ? 1 : 0;
+        switch (flag)
+        {
+            case 1:
+                Table t = (Table)o;
+                this.Tables[t.TableID] = t;
+                break;
+            case 0:
+                Category c = (Category)o;
+                this.Categories[c.CategoryID] = c;
+                break;
+            default:
+                break;
+        }
+    }
 
+    /// <summary>
+    /// Authenticates the company with Email and password and Initializes it.
+    /// </summary>
+    /// <returns></returns>
+    public bool Authenticate()
+    {
         SqlConnection conn = new SqlConnection(
             ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
                                               );
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "SELECT Category.* FROM Category " +
-                                      "INNER JOIN Availability ON Category.AvailabilityID = Availability.AvailabilityID " +
-                                      "WHERE (Category.CompanyID = @CompanyID) AND (Availability.Availability = @Availability)";
-        cmd.Parameters.AddWithValue("@Availability", "AVAILABLE");
-        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
-
         cmd.Connection = conn;
+        cmd.CommandText = "SELECT COUNT(*) FROM Company " +
+                                    "INNER JOIN Availability ON Company.AvailabilityID = Availability.AvailabilityID " +
+                                    "WHERE (Company.Email = @Email) AND (Company.Password = @Password) AND (Availability.Availability = 'AVAILABLE')";
+        cmd.Parameters.AddWithValue("@Email", this.Email);
+        cmd.Parameters.AddWithValue("@Password", FormsAuthentication.HashPasswordForStoringInConfigFile(this.Password, "SHA1"));
 
+        bool result = true;
         try
         {
             conn.Open();
 
-            SqlDataReader dr = cmd.ExecuteReader();
-
-            while (dr.Read())
-            {
-                Category c = new Category();
-
-                c.CategoryID = int.Parse(dr["CategoryID"].ToString());
-                c.CategoryName = dr["CategoryName"].ToString();
-                c.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
-                c.InitProductList();
-
-                ht[c.CategoryID] = c;
-            }
+            if (int.Parse(cmd.ExecuteScalar().ToString()) == 0) result = false;
+            else this.Initialize();
         }
-        catch (Exception) { }
+        catch (Exception) { result = false; }
         finally { conn.Close(); }
-        this.Categories = ht;
+        return result;
+    }
+
+    /// <summary>
+    /// Executes Signup operation for a company object.
+    /// Inserts the object to database and initializes it.
+    /// </summary>
+    /// <returns></returns>
+    public bool SignUp()
+    {
+        bool result = this.Insert();
+
+        if (result) this.Initialize();
+
+        return result;
+    }
+    #endregion
+
+    #region Functions For Tables
+    /// <summary>
+    /// Returns the table according to given id.
+    /// </summary>
+    /// <param name="TableID"></param>
+    /// <returns></returns>
+    public Table GetTableWithId(int TableID)
+    {
+        return (Table)this.Tables[TableID];
+    }
+
+    /// <summary>
+    /// Adds the table to the Company's Hashtable.
+    /// </summary>
+    /// <param name="t"></param>
+    public void AddTable(Table t)
+    {
+        t.CompanyID = this.CompanyID;
+        t.Insert();
+        this.SetHashtableValue(t);
+    }
+
+    /// <summary>
+    /// Updates Table in database and hashtable.
+    /// </summary>
+    /// <param name="t"></param>
+    public void UpdateTable(Table t)
+    {
+        t.Update();
+        this.SetHashtableValue(t);
+    }
+
+    /// <summary>
+    /// Freezes the table.
+    /// </summary>
+    /// <param name="t"></param>
+    public void FreezeTable(Table t)
+    {
+        t.Freeze();
+        this.Tables.Remove(t.TableID);
+    }
+
+    /// <summary>
+    /// Transefers a tablo to another table.
+    /// </summary>
+    /// <param name="FromTableID"></param>
+    /// <param name="ToTableID"></param>
+    public void TransferTable(int FromTableID, int ToTableID)
+    {
+        Table from = this.GetTableWithId(FromTableID);
+        Table to = this.GetTableWithId(ToTableID);
+
+        from.TransferTo(to);
+
+        this.SetHashtableValue(from);
+        this.SetHashtableValue(to);
+    }
+
+    /// <summary>
+    /// Returns a list containing tables of company.
+    /// </summary>
+    /// <returns></returns>
+    public List<Table> GetTableList()
+    {
+        return this.Tables.Values.Cast<Table>().ToList<Table>();
     }
 
     /// <summary>
@@ -313,56 +405,9 @@ public class Company
         finally { conn.Close(); }
         this.Tables = ht;
     }
+    #endregion
 
-    /// <summary>
-    /// Returns the table according to given id.
-    /// </summary>
-    /// <param name="TableID"></param>
-    /// <returns></returns>
-    public Table GetTableWithId(int TableID)
-    {
-        return (Table)this.Tables[TableID];
-    }
-
-    /// <summary>
-    /// Adds the table to the Company's Hashtable.
-    /// </summary>
-    /// <param name="table"></param>
-    public void AddTable(Table table)
-    {
-        table.Insert();
-        this.Tables[table.TableID] = table;
-    }
-
-    /// <summary>
-    /// Updates Table in database and hashtable.
-    /// </summary>
-    /// <param name="table"></param>
-    public void UpdateTable(Table table)
-    {
-        table.Update();
-        this.Tables[table.TableID] = table;
-    }
-
-    /// <summary>
-    /// Freezes the table.
-    /// </summary>
-    /// <param name="table"></param>
-    public void FreezeTable(Table table)
-    {
-        table.Freeze();
-        this.Tables.Remove(table.TableID);
-    }
-
-    /// <summary>
-    /// Returns a list containing tables of company.
-    /// </summary>
-    /// <returns></returns>
-    public List<Table> GetTableList()
-    {
-        return this.Tables.Values.Cast<Table>().ToList<Table>();
-    }
-
+    #region Functions For Categories
     /// <summary>
     /// Returns category according to given id.
     /// </summary>
@@ -374,12 +419,37 @@ public class Company
     }
 
     /// <summary>
-    /// Adds the category into the Hashtable with its id.
+    /// Adds category to database and 
     /// </summary>
-    /// <param name="category"></param>
-    public void AddCategoryToHashtable(Category category)
+    /// <param name="c"></param>
+    public void AddCategory(Category c)
     {
-        this.Categories[category.CategoryID] = category;
+        c.CompanyID = this.CompanyID;
+        c.Insert();
+        this.SetHashtableValue(c);
+    }
+
+    /// <summary>
+    /// Updates Category in database and hashtable.
+    /// </summary>
+    /// <param name="c"></param>
+    public void UpdateCategory(Category c)
+    {
+        c.Update();
+        this.SetHashtableValue(c);
+    }
+
+    /// <summary>
+    /// Freezes the category and removes from hashtable.
+    /// -->PAY ATTENTION
+    /// WHEN THE CATEGORY FREEZED THEN THE PRODUCTS HAS THE CategoryID AS THIS CATEGORY WILL BE INVISIBLE.
+    /// CREATE A DIOLOG WITH USER TO MAKE HIM/HER AWARE OF THIS.
+    /// </summary>
+    /// <param name="c"></param>
+    public void FreezeCategory(Category c)
+    {
+        c.Freeze();
+        this.Categories.Remove(c.CategoryID);
     }
 
     /// <summary>
@@ -392,48 +462,46 @@ public class Company
     }
 
     /// <summary>
-    /// Authenticates the company with Email and password and Initializes it.
+    /// Initializes Categories which belong to current Company and Available.
     /// </summary>
-    /// <returns></returns>
-    public bool Authenticate()
+    private void InitCategoryList()
     {
+        Hashtable ht = new Hashtable();
+
         SqlConnection conn = new SqlConnection(
             ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
                                               );
         SqlCommand cmd = new SqlCommand();
 
-        cmd.Connection = conn;
-        cmd.CommandText = "SELECT COUNT(*) FROM Company " +
-                                    "INNER JOIN Availability ON Company.AvailabilityID = Availability.AvailabilityID " +
-                                    "WHERE (Company.Email = @Email) AND (Company.Password = @Password) AND (Availability.Availability = 'AVAILABLE')";
-        cmd.Parameters.AddWithValue("@Email", this.Email);
-        cmd.Parameters.AddWithValue("@Password", FormsAuthentication.HashPasswordForStoringInConfigFile(this.Password, "SHA1"));
+        cmd.CommandText = "SELECT Category.* FROM Category " +
+                                      "INNER JOIN Availability ON Category.AvailabilityID = Availability.AvailabilityID " +
+                                      "WHERE (Category.CompanyID = @CompanyID) AND (Availability.Availability = @Availability)";
+        cmd.Parameters.AddWithValue("@Availability", "AVAILABLE");
+        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
 
-        bool result = true;
+        cmd.Connection = conn;
+
         try
         {
             conn.Open();
 
-            if (int.Parse(cmd.ExecuteScalar().ToString()) == 0) result = false;
-            else this.Initialize();
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                Category c = new Category();
+
+                c.CategoryID = int.Parse(dr["CategoryID"].ToString());
+                c.CategoryName = dr["CategoryName"].ToString();
+                c.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
+                c.InitProductList();
+
+                ht[c.CategoryID] = c;
+            }
         }
-        catch (Exception) { result = false; }
+        catch (Exception) { }
         finally { conn.Close(); }
-        return result;
-    }
-
-    /// <summary>
-    /// Executes Signup operation for a company object.
-    /// Inserts the object to database and initializes it.
-    /// </summary>
-    /// <returns></returns>
-    public bool SignUp()
-    {
-        bool result = this.Insert();
-
-        if (result) this.Initialize();
-
-        return result;
+        this.Categories = ht;
     }
     #endregion
 

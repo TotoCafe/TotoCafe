@@ -6,6 +6,8 @@ using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data.SqlClient;
+using System.Configuration;
 
 public partial class AppTest : System.Web.UI.Page
 {
@@ -16,7 +18,7 @@ public partial class AppTest : System.Web.UI.Page
 
         cmp.Email = "sohos@sohos.com";
         cmp.Password = "ituolmazsaodtu";
-        
+
         //lbTest.Items.Add("Company inserting..");
         ////lbTest.Items.Add(cmp.Insert().ToString());
 
@@ -86,7 +88,7 @@ public partial class AppTest : System.Web.UI.Page
         table.TableName = "mvbönvçnvm";
 
         cmp.UpdateTable(table);
-        
+
         lbTest.Items.Add("tables after update..");
 
         list = cmp.GetTableList();
@@ -110,7 +112,7 @@ public partial class AppTest : System.Web.UI.Page
 
         lbTest.Items.Add("Categories");
 
-        foreach(Category ctgry in cmp.GetCategoryList())
+        foreach (Category ctgry in cmp.GetCategoryList())
             lbTest.Items.Add(ctgry.CategoryName);
 
         lbTest.Items.Add("Categories after update..");

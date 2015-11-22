@@ -357,7 +357,46 @@ public class Company
     /// <returns></returns>
     public List<Table> GetTableList()
     {
-        return this.Tables.Values.Cast<Table>().ToList<Table>();
+        List<Table> tableList = new List<Table>();
+
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "SELECT [Table].TableID, [Table].TableName, [Table].AvailabilityID FROM [Table] " +
+                                "INNER JOIN Availability ON [Table].AvailabilityID = Availability.AvailabilityID " +
+                                "WHERE (Availability.Availability = @Availability) AND ([Table].CompanyID = @CompanyID) " +
+                                "ORDER BY [Table].TableName";
+
+        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+        cmd.Parameters.AddWithValue("@Availability", "AVAILABLE");
+
+        cmd.Connection = conn;
+
+        try
+        {
+            conn.Open();
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                Table t = new Table();
+
+                t.TableID = int.Parse(dr["TableID"].ToString());
+                t.TableName = dr["TableName"].ToString();
+                t.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
+                t.CompanyID = this.CompanyID;
+                t.QrCode = "TotoCafe-" + this.CompanyID.ToString() + "-" + t.TableID;
+                t.InitActiveController();//Current open controller..
+
+                tableList.Add(t);
+            }
+        }
+        catch (Exception) { }
+        finally { conn.Close(); }
+        return tableList;
     }
 
     /// <summary>
@@ -372,10 +411,11 @@ public class Company
                                               );
         SqlCommand cmd = new SqlCommand();
 
-        cmd.CommandText = "SELECT [Table].TableID, [Table].TableName, [Table].AvailabilityID " +
-                            "FROM [Table] " +
-                            "INNER JOIN Availability ON [Table].AvailabilityID = Availability.AvailabilityID " +
-                            "WHERE ([Table].CompanyID = @CompanyID) AND (Availability.Availability = @Availability)";
+        cmd.CommandText = "SELECT [Table].TableID, [Table].TableName, [Table].AvailabilityID FROM [Table] " +
+                                "INNER JOIN Availability ON [Table].AvailabilityID = Availability.AvailabilityID " +
+                                "WHERE (Availability.Availability = @Availability) AND ([Table].CompanyID = @CompanyID) " +
+                                "ORDER BY [Table].TableName";
+
         cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
         cmd.Parameters.AddWithValue("@Availability", "AVAILABLE");
 
@@ -458,7 +498,43 @@ public class Company
     /// <returns></returns>
     public List<Category> GetCategoryList()
     {
-        return this.Categories.Values.Cast<Category>().ToList<Category>();
+        List<Category> categoryList = new List<Category>();
+
+        SqlConnection conn = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
+                                              );
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "SELECT Category.* FROM Category " +
+                                      "INNER JOIN Availability ON Category.AvailabilityID = Availability.AvailabilityID " +
+                                      "WHERE (Category.CompanyID = @CompanyID) AND (Availability.Availability = @Availability) " +
+                                      "ORDER BY Category.CategoryName";
+        cmd.Parameters.AddWithValue("@Availability", "AVAILABLE");
+        cmd.Parameters.AddWithValue("@CompanyID", this.CompanyID);
+
+        cmd.Connection = conn;
+
+        try
+        {
+            conn.Open();
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                Category c = new Category();
+
+                c.CategoryID = int.Parse(dr["CategoryID"].ToString());
+                c.CategoryName = dr["CategoryName"].ToString();
+                c.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
+                c.InitProductList();
+
+                categoryList.Add(c);
+            }
+        }
+        catch (Exception) { }
+        finally { conn.Close(); }
+        return categoryList;
     }
 
     /// <summary>

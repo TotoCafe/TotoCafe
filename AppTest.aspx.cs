@@ -13,11 +13,7 @@ public partial class AppTest : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        #region Company Insert Update Freeze Resume test
-        Company cmp = new Company();
-
-        cmp.Email = "sohos@sohos.com";
-        cmp.Password = "ituolmazsaodtu";
+        #region asdasd
 
         //lbTest.Items.Add("Company inserting..");
         ////lbTest.Items.Add(cmp.Insert().ToString());
@@ -73,30 +69,30 @@ public partial class AppTest : System.Web.UI.Page
 
         //lbTest.Items.Add("AvailabilityID" + cmp.AvailabilityID);
 
-        cmp.Authenticate();
+        //cmp.Authenticate();
 
-        lbTest.Items.Add("Tables...");
-        List<Table> list = cmp.GetTableList();
+        //lbTest.Items.Add("Tables...");
+        //List<Table> list = cmp.GetTableList();
 
-        foreach (Table tbl in list)
-        {
-            lbTest.Items.Add(tbl.TableName);
-        }
+        //foreach (Table tbl in list)
+        //{
+        //    lbTest.Items.Add(tbl.TableName);
+        //}
 
-        Table table = cmp.GetTableWithId(39);
+        //Table table = cmp.GetTableWithId(39);
 
-        table.TableName = "mvbönvçnvm";
+        //table.TableName = "mvbönvçnvm";
 
-        cmp.UpdateTable(table);
+        //cmp.UpdateTable(table);
 
-        lbTest.Items.Add("tables after update..");
+        //lbTest.Items.Add("tables after update..");
 
-        list = cmp.GetTableList();
+        //list = cmp.GetTableList();
 
-        foreach (Table tbl in list)
-        {
-            lbTest.Items.Add(tbl.TableName);
-        }
+        //foreach (Table tbl in list)
+        //{
+        //    lbTest.Items.Add(tbl.TableName);
+        //}
 
         //lbTest.Items.Add("Category adding..");
 
@@ -108,25 +104,37 @@ public partial class AppTest : System.Web.UI.Page
 
         //c = new Category();
 
-        //c.CategoryName = "fhfghfgh
+        //c.CategoryName = "fhfghfgh";
 
-        lbTest.Items.Add("Categories");
+        //lbTest.Items.Add("Categories");
 
-        foreach (Category ctgry in cmp.GetCategoryList())
-            lbTest.Items.Add(ctgry.CategoryName);
+        //foreach (Category ctgry in cmp.GetCategoryList())
+        //    lbTest.Items.Add(ctgry.CategoryName);
 
-        lbTest.Items.Add("Categories after update..");
-        Category c;
+        //lbTest.Items.Add("Categories after update..");
+        //Category c;
 
-        c = cmp.GetCategoryWithId(3);
-        c.CategoryName = "ğpoyıouoıyoy";
-
-
-        cmp.UpdateCategory(c);
+        //c = cmp.GetCategoryWithId(3);
+        //c.CategoryName = "ğpoyıouoıyoy";
 
 
-        foreach (Category ctgry in cmp.GetCategoryList())
-            lbTest.Items.Add(ctgry.CategoryName);
+        //cmp.UpdateCategory(c);
+
+
+        //foreach (Category ctgry in cmp.GetCategoryList())
+        //    lbTest.Items.Add(ctgry.CategoryName);
         #endregion
+
+        Company cmp = new Company();
+
+        cmp.Email = "sohos@sohos.com";
+        cmp.Password = "ituolmazsaodtu";
+
+        cmp.Authenticate();
+
+        foreach (Table tbl in cmp.GetTableList())
+        {
+            lbTest.Items.Add(tbl.TableName);
+        }
     }
 }

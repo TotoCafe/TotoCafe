@@ -10,27 +10,13 @@ public partial class home2 : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        for (int i = 0; i < 100; i++)
+        for (int i = 1; i <= 100; i++)
         {
-            createDiv(i+1);
+            Table table = new Table();
+            table.TableID = i;
+            table.AvailabilityID = 1;
+            TableDiv request = new TableDiv(table);
+            upHome.ContentTemplateContainer.Controls.Add(request.ToContent());
         }
-    }
-    public void createDiv(int id)
-    {
-        HtmlGenericControl div = new HtmlGenericControl("div");
-        div.ID = id.ToString();
-        div.Attributes["class"] = "table";
-        Label lblText = new Label();
-        lblText.Text = "Table " + div.ID;
-        Button btnAccept = new Button();
-        Button btnDecline = new Button();
-        btnAccept.CssClass = "btnAccept";
-        btnDecline.CssClass = "btnDecline";
-        btnAccept.Text = "✔";
-        btnDecline.Text = "✘";
-        div.Controls.Add(lblText);
-        div.Controls.Add(btnAccept);
-        div.Controls.Add(btnDecline);
-        upHome.ContentTemplateContainer.Controls.Add(div);
     }
 }

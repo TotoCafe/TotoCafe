@@ -9,12 +9,10 @@
     </asp:ContentPlaceHolder>
     <link href="css/masterpage.css" rel="stylesheet" type="text/css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="js/MasterPage.js"></script>
+    <script src="js/Script.js"></script>
 </head>
 <body>
     <form id="form1" runat="server">
-        <asp:ScriptManager ID="smRequet" runat="server">
-        </asp:ScriptManager>
         <div id="wrapper">
             <div class="header">
                 <a href="home2.aspx">TotoCafe</a>
@@ -34,7 +32,9 @@
                     </ul>
                 </div>
                 <div id="request">
-                    <asp:UpdatePanel ID="upRequest" runat="server">
+                    <asp:ScriptManager ID="smRequet" runat="server">
+                    </asp:ScriptManager>
+                    <asp:UpdatePanel ID="upRequest" runat="server" UpdateMode="Conditional" RenderMode="Block">
                     </asp:UpdatePanel>
                 </div>
                 <div id="placeholder">

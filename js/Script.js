@@ -2,19 +2,19 @@
 var sidebar = true;
 
 $(document).ready(function () {
-    dividedWidth('#content_upHome', '.table');
+    dividedWidth('#content_upHome', '#content_upHome > .table');
 
     $(".sidebar-trigger").click(function () {
         slideObject('#sidebar', 200, sidebar, 'margin-left');
         slideObject('#upRequest', 200, sidebar, 'margin-left');
         slideObject('#placeholder', 200, sidebar, 'margin-left');
         sidebar ? $('#placeholder').css('width', '100vw') : $('#placeholder').css('width', 'calc(100vw - 200px)');
-        dividedWidth('#content_upHome', '.table');
+        dividedWidth('#content_upHome', '#content_upHome > .table');
         sidebar = !sidebar;
     });
 
     $(window).resize(function () {
-        dividedWidth('#content_upHome', '.table');
+        dividedWidth('#content_upHome', '#content_upHome > .table');
     });
 });
 
@@ -34,4 +34,12 @@ function slideObject(object, slideValue, bool, attr) {
     } else {
         $(object).animate({ 'margin-left': (attrValue + slideValue) }, 600);
     }
+}
+
+//Accept Table 
+function changeTableState(sourceID, bool) {
+    var destinationID = "#content_" + sourceID;
+    var color = bool ? 'green' : 'red';
+    $(destinationID).css('background-color', color);
+    $(destinationID).css('forecolor', 'white');
 }

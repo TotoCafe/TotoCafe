@@ -9,26 +9,25 @@ public partial class MasterPage2 : System.Web.UI.MasterPage
     {
         for (int i = 0; i < 5; i++)
         {
-            createDiv();
+            Table table = new Table();
+            table.TableID = rnd.Next(100);
+            TableDiv request = new TableDiv(table);
+            upRequest.ContentTemplateContainer.Controls.Add(request.ToRequest());
         }
     }
 
-    public void createDiv()
+
+    protected void addDiv(object sender, EventArgs e)
     {
-        HtmlGenericControl div = new HtmlGenericControl("div");
-        div.ID = rnd.Next(100).ToString();
-        div.Attributes["class"] = "table";
-        Label lblText = new Label();
-        lblText.Text = "Table " + div.ID;
-        Button btnAccept = new Button();
-        Button btnDecline = new Button();
-        btnAccept.CssClass = "btnAccept";
-        btnDecline.CssClass = "btnDecline";
-        btnAccept.Text = "✔";
-        btnDecline.Text = "✘";
-        div.Controls.Add(lblText);
-        div.Controls.Add(btnAccept);
-        div.Controls.Add(btnDecline);
-        upRequest.ContentTemplateContainer.Controls.Add(div);
+        Table table = new Table();
+        table.TableID = rnd.Next(100);
+        TableDiv request = new TableDiv(table);
+        upRequest.ContentTemplateContainer.Controls.Add(request.ToRequest());
+    }
+
+    protected void removeDiv(object sender, EventArgs e)
+    {
+        
     }
 }
+

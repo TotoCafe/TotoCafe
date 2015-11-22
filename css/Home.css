@@ -1,15 +1,4 @@
-﻿#placeholder {
-    position: absolute;
-    margin: 200px 0 0 200px;
-    width: calc(100vw - 200px);
-}
-
-    #placeholder > #content_upHome {
-        margin: auto;
-    }
-
-
-#content_upHome > .table {
+﻿#content_upHome > .table {
     float: left;
     width: 63px;
     height: 63px;

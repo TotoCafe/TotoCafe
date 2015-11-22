@@ -10,30 +10,13 @@ public partial class home2 : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
-
-
-        Company cmp = new Company();
-
-        cmp.Email = "sohos@sohos.com";
-        cmp.Password = "ituolmazsaodtu";
-
-        cmp.Authenticate();
-
-        foreach (Table t in cmp.GetTableList())
+        for (int i = 1; i <= 100; i++)
         {
-            TableDiv request = new TableDiv(t);
+            Table table = new Table();
+            table.TableID = i;
+            table.AvailabilityID = 1;
+            TableDiv request = new TableDiv(table);
             upHome.ContentTemplateContainer.Controls.Add(request.ToContent());
         }
-
-
-        //for (int i = 1; i <= 100; i++)
-        //{
-        //    Table table = new Table();
-        //    table.TableID = i;
-        //    table.AvailabilityID = 1;
-        //    TableDiv request = new TableDiv(table);
-        //    upHome.ContentTemplateContainer.Controls.Add(request.ToContent());
-        //}
     }
 }

@@ -81,8 +81,6 @@ main {
             text-transform: uppercase;
             text-decoration: none;
             display: block;
-            text-align: left;
-            padding-left: 10px;
         }
 
             #sidebar > ul > li > a:hover {
@@ -132,8 +130,8 @@ main {
 .table {
     position: relative;
     float: left;
-    width: 103px;
-    height: 103px;
+    width: 113px;
+    height: 113px;
     margin: 10px;
     border: 1px solid rgba(0, 0, 0, 0.20);
     border-radius: 10px;

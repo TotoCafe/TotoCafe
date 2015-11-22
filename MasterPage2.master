@@ -12,8 +12,8 @@
     <script src="js/Script.js"></script>
 </head>
 <body>
-    <form id="frmHome" runat="server">
-        <div id="wrapper">
+        <form id="frmHome" runat="server">
+    <div id="wrapper">
             <div class="header">
                 <a href="home2.aspx">TotoCafe</a>
                 <div class="sidebar-trigger">
@@ -34,6 +34,8 @@
                     </ul>
                 </div>
                 <div id="request">
+                    <asp:ScriptManager ID="smRequet" runat="server">
+                    </asp:ScriptManager>
                     <asp:UpdatePanel ID="upRequest" runat="server" UpdateMode="Conditional" RenderMode="Block">
                     </asp:UpdatePanel>
                 </div>
@@ -44,8 +46,7 @@
             </main>
             <footer>
             </footer>
-        </div>
-    </form>
-    <asp:ScriptManager ID="smRequet" runat="server"></asp:ScriptManager>
+    </div>
+        </form>
 </body>
 </html>

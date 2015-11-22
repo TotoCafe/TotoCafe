@@ -5,7 +5,6 @@ using System.Web.UI.WebControls;
 public class TableDiv : HtmlGenericControl
 {
     int state;
-    string lblText;
     Label lblTableName;
     Button btnAccept;
     Button btnDecline;
@@ -15,15 +14,13 @@ public class TableDiv : HtmlGenericControl
         this.ID = table.TableID.ToString();
         this.Attributes["class"] = "table";
 
-        this.lblText = table.TableName;
         this.lblTableName = new Label();
-        this.lblTableName.Attributes["style"] = "color: #72B1D4";
         this.Controls.Add(lblTableName);
     }
 
     public TableDiv ToRequest()
     {
-        this.lblTableName.Text = this.lblText;
+        this.lblTableName.Text = "Table " + this.ID;
 
         this.btnAccept = new Button();
         this.btnAccept.ID = this.ID + "_Accept";
@@ -44,9 +41,9 @@ public class TableDiv : HtmlGenericControl
 
     public TableDiv ToContent()
     {
-        this.lblTableName.Text = this.lblText;
+        this.lblTableName.Text = this.ID;
         if (state == 1)
-            this.Attributes["style"] = "background-color: white";
+            this.Attributes["style"] = "background-color: red";
         else
             this.Attributes["style"] = "background-color: green";
 

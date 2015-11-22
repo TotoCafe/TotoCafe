@@ -590,7 +590,7 @@ public class Company
     {
         List<QrCode> QrCodeList = new List<QrCode>();
 
-        List<Table> tableList = this.Tables.Values.Cast<Table>().ToList<Table>();
+        List<Table> tableList = this.GetTableList();
 
         foreach (Table t in tableList)
         {
@@ -598,7 +598,7 @@ public class Company
 
             qr.CompanyName = this.CompanyName;
             qr.TableName = t.TableName;
-            qr.QrString = t.QrCode + "-" + this.WirelessPassword;
+            qr.QrString = t.QrCode;
             qr.GenerateQrImage();
 
             QrCodeList.Add(qr);
@@ -692,7 +692,11 @@ public class Company
         }
     }
 
-    private string GetQrPdfName()
+    /// <summary>
+    /// Generates and return a pdf name that belongs to current company.
+    /// </summary>
+    /// <returns></returns>
+    public string GetQrPdfName()
     {
         return "QrCodes-" + this.CompanyID;
     }

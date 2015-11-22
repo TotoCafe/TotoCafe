@@ -11,8 +11,11 @@ using System.Configuration;
 
 public partial class AppTest : System.Web.UI.Page
 {
+    Company cmp = new Company();
     protected void Page_Load(object sender, EventArgs e)
     {
+        ScriptManager scriptManager = ScriptManager.GetCurrent(this.Page);
+        scriptManager.RegisterPostBackControl(this.qrBtn);
         #region asdasd
 
         //lbTest.Items.Add("Company inserting..");
@@ -125,7 +128,6 @@ public partial class AppTest : System.Web.UI.Page
         //    lbTest.Items.Add(ctgry.CategoryName);
         #endregion
 
-        Company cmp = new Company();
 
         cmp.Email = "sohos@sohos.com";
         cmp.Password = "ituolmazsaodtu";
@@ -136,5 +138,20 @@ public partial class AppTest : System.Web.UI.Page
         {
             lbTest.Items.Add(tbl.TableName);
         }
+    }
+    protected void qrBtn_Click(object sender, EventArgs e)
+    {
+        cmp.SaveQrPdf(Server.MapPath("~/Qr Codes"));
+
+        string path = MapPath("~/Qr Codes") + "/" + cmp.GetQrPdfName();
+
+        byte[] bts = System.IO.File.ReadAllBytes(path);
+
+        Response.AddHeader("Content-Type", "Application/octet-stream");
+        Response.AddHeader("Content-Length", bts.Length.ToString());
+        Response.AddHeader("Content-Disposition", "attachment; filename=QrCodes.pdf");
+        Response.BinaryWrite(bts);
+        Response.Flush();
+        Response.End();
     }
 }

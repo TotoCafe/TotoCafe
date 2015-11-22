@@ -4,6 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" Runat="Server">
     <div class="container" style="top:50px">
+    <asp:Button Text="qr" ID="qrBtn" runat="server" OnClick="qrBtn_Click" />
         <asp:ListBox runat="server"
         ID="lbTest" Height="550px" Width="800px" CssClass="lst" Enabled="False" EnableTheming="False">
     </asp:ListBox>

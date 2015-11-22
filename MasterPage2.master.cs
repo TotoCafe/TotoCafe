@@ -11,6 +11,7 @@ public partial class MasterPage2 : System.Web.UI.MasterPage
         {
             Table table = new Table();
             table.TableID = rnd.Next(100);
+            table.TableName = "Table-" + rnd.Next(100);
             TableDiv request = new TableDiv(table);
             upRequest.ContentTemplateContainer.Controls.Add(request.ToRequest());
         }

@@ -11,4 +11,18 @@ public partial class Login : System.Web.UI.Page
     {
 
     }
+    protected void btnLogin_Click(object sender, EventArgs e)
+    {
+        Company cmp = new Company();
+
+        cmp.Email = tbCompanyMail.Text;
+        cmp.Password = tbCompanyPassword.Text;
+
+        if (cmp.Authenticate())
+        {
+            Session["Company"] = cmp;
+
+            Response.Redirect("home2.aspx");
+        }
+    }
 }

@@ -1,7 +1,7 @@
 ﻿#content_upHome > .table {
     float: left;
-    width: 93px;
-    height: 93px;
+    width: 100px;
+    height: 100px;
     margin: 5px;
     border: 1px solid rgba(0, 0, 0, 0.20);
     border-radius: 10px;

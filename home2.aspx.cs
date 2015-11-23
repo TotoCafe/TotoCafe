@@ -8,12 +8,11 @@ using System.Web.UI.WebControls;
 
 public partial class home2 : System.Web.UI.Page
 {
+    Company cmp;
+
     protected void Page_Load(object sender, EventArgs e)
     {
-
-
-
-        Company cmp = new Company();
+        cmp = (Company)Session["Company"];
 
         cmp.Email = "sohos@sohos.com";
         cmp.Password = "ituolmazsaodtu";

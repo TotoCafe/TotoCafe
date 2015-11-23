@@ -24,6 +24,14 @@ $(document).ready(function () {
     $(window).resize(function () {
         dividedWidth('#content_upHome', '#content_upHome > .table');
     });
+
+    $('#tbCompanyMail').click(function () {
+        $('#tbCompanyMail').attr("value", "");
+    });
+    $('#tbCompanyPassword').click(function () {
+        $('#tbCompanyPassword').attr("value", "");
+        $('#tbCompanyPassword').attr("type", "password");
+    });
 });
 
 //Width Calculation

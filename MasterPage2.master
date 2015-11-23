@@ -34,7 +34,7 @@
                     </ul>
                 </div>
                 <div id="request">
-    <asp:ScriptManager ID="smRequet" runat="server"></asp:ScriptManager>
+                    <asp:ScriptManager ID="smRequet" runat="server"></asp:ScriptManager>
                     <asp:UpdatePanel ID="upRequest" runat="server" UpdateMode="Conditional" RenderMode="Block">
                     </asp:UpdatePanel>
                 </div>

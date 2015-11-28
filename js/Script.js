@@ -24,28 +24,4 @@ $(document).ready(function () {
     $(window).resize(function () {
         dividedWidth('#content_upHome', '#content_upHome > .table');
     });
-
-    $('#tbCompanyMail').click(function () {
-        $('#tbCompanyMail').attr("value", "");
-    });
-    $('#tbCompanyPassword').click(function () {
-        $('#tbCompanyPassword').attr("value", "");
-        $('#tbCompanyPassword').attr("type", "password");
-    });
 });
-
-//Width Calculation
-function dividedWidth(dividendObject, divisorObject) {
-    var dividendWidth = parseInt($(dividendObject).parent().css('width'));
-    var divisorWidth = parseInt($(divisorObject).outerWidth(true));
-    var division = (dividendWidth / divisorWidth) >> 0;
-    $(dividendObject).css('width', (division * divisorWidth));
-}
-
-//Accept Table 
-function changeTableState(sourceID, bool) {
-    var destinationID = "#content_" + sourceID;
-    var color = bool ? 'green' : 'red';
-    $(destinationID).css('background-color', color);
-    $(destinationID).css('forecolor', 'white');
-}

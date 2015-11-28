@@ -1,0 +1,46 @@
+﻿#container {
+    width: 700px;
+    height: 600px;
+    margin-top: 200px;
+    margin-left: calc(50vw - 350px);
+}
+
+#register {
+    position: absolute;
+    margin-top: 80px;
+    margin-left: 150px;
+}
+
+    #register > .inputText {
+        display: block;
+        font-size: 1.1rem;
+        width: 350px;
+        padding: 4px;
+        margin: 20px;
+        outline: 0;
+        color: #72B0D4;
+        background-color: #fff;
+        border: 1px solid #72B0D4;
+        border-radius: 3px;
+    }
+
+    #register > #btnRegister {
+        margin-left: 125px;
+        width: 150px;
+        font-size: 1.1rem;
+        color: #FEFEFE;
+        padding: 4px;
+        background-color: #72B1D4;
+        display: inline-block;
+        border: 1px solid #e1e8ed;
+        border-radius: 3px;
+    }
+
+#login > .remember {
+    padding-left: 20px;
+}
+
+    #login > .remember > * {
+        color: #0063ff;
+        font-size: small;
+    }

@@ -1,63 +1,6 @@
-﻿* {
-    font-family: 'Roboto', sans-serif;
-    color: #FEFEFE;
-    margin: 0px;
-    padding: 0px;
-}
-
-body {
-    margin: 0px;
-    padding: 0;
-    background-color: #FEFEFE;
-    overflow: scroll;
-}
-
-#wrapper {
-    min-width: 100vw;
-    min-height: 100%;
-    position: relative;
-}
-
-main {
-    position: fixed;
-    background-image: url('../images/login/cover.jpg');
-    min-width: 100vw;
-    min-height: 100%;
-}
-
-.header {
-    position: fixed;
-    background-color: #3D434F;
-    width: 100%;
-    height: 50px;
-    box-shadow: 0 0 6px 0 black;
-    z-index: 3;
-    text-align: initial;
-}
-
-    .header > a {
-        text-decoration: none;
-        line-height: 50px;
-        font-size: 1.5em;
-        width: 150px;
-        display: inline-block;
-    }
-
-#container {
-    background-color: #FEFEFE;
-    position: absolute;
-    width: 400px;
-    height: 300px;
-    margin-top: 300px;
-    margin-left: calc(50vw - 200px);
-    box-shadow: 0 0 6px 0 black;
-    border-radius: 20px;
-}
-
 #login {
     position: absolute;
-    height: 100px;
-    margin-top: 20px;
+    margin-top: 80px;
     margin-left: 75px;
 }
 
@@ -86,4 +29,11 @@ main {
         margin: 0;
         border: 1px solid #e1e8ed;
         border-radius: 3px;
+    }
+    #login > .remember{
+        padding-left: 20px;
+    }
+    #login > .remember > *{
+        color: #0063ff;
+        font-size: small;
     }

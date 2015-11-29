@@ -9,13 +9,16 @@ public partial class Login : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        tbCompanyEmail.Attributes["onfocus"] = "focusTextBox(this)";
+        tbCompanyEmail.Attributes["onblur"] = "blurTextBox(this)";
+        tbCompanyPassword.Attributes["onfocus"] = "focusTextBox(this)";
+        tbCompanyPassword.Attributes["onblur"] = "blurTextBox(this)";
     }
-    protected void Authenticate(object sender, EventArgs e)
+    protected void cmpLogin(object sender, EventArgs e)
     {
         Company cmp = new Company();
 
-        cmp.Email = tbCompanyMail.Text;
+        cmp.Email = tbCompanyEmail.Text;
         cmp.Password = tbCompanyPassword.Text;
 
         if (cmp.Authenticate())
@@ -23,6 +26,12 @@ public partial class Login : System.Web.UI.Page
             Session["Company"] = cmp;
 
             Response.Redirect("home2.aspx");
+        }
+        else
+        {
+            lblAuthenticate.Text = "Email ya da şifreyi yanlış girdiniz.";
+            tbCompanyEmail.Attributes["style"] = "border-color: red";
+            tbCompanyPassword.Attributes["style"] = "border-color: red";
         }
     }
 }

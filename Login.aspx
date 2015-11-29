@@ -20,9 +20,10 @@
             <main>
                 <div id="container">
                     <div id="login">
-                        <asp:TextBox ID="tbCompanyMail" CssClass="inputText" runat="server" Text="Username"></asp:TextBox>
-                        <asp:TextBox ID="tbCompanyPassword" CssClass="inputText" runat="server" Text="Password" ToolTip="Password" TextMode="Password"></asp:TextBox>
-                        <asp:Button ID="btnLogin" CssClass="inputButton" runat="server" Text="Login" OnClick="Authenticate" />
+                        <asp:Label ID="lblAuthenticate" runat="server"></asp:Label>
+                        <asp:TextBox ID="tbCompanyEmail" CssClass="inputText" runat="server" Text="Email" AutoCompleteType="Email" TextMode="Email"></asp:TextBox>
+                        <asp:TextBox ID="tbCompanyPassword" CssClass="inputText" runat="server" Text="Password" ToolTip="Password"></asp:TextBox>
+                        <asp:Button ID="btnLogin" CssClass="inputButton" runat="server" Text="Login" OnClick="cmpLogin" />
                         <div class="remember">
                             <asp:CheckBox ID="cbRemember" runat="server" />
                             <asp:Label ID="lblRemember" runat="server" Text="Remember Me"></asp:Label>

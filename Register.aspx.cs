@@ -9,16 +9,29 @@ public partial class Login : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        tbCompanyName.Attributes["onfocus"] = "focusTextBox(this)";
+        tbCompanyName.Attributes["onblur"] = "blurTextBox(this)";
+        tbCompanyEmail.Attributes["onfocus"] = "focusTextBox(this)";
+        tbCompanyEmail.Attributes["onblur"] = "blurTextBox(this)";
+        tbCompanyPassword.Attributes["onfocus"] = "focusTextBox(this)";
+        tbCompanyPassword.Attributes["onblur"] = "blurTextBox(this)";
+        tbCompanyAddress.Attributes["onfocus"] = "focusTextBox(this)";
+        tbCompanyAddress.Attributes["onblur"] = "blurTextBox(this)";
+        tbCompanyPhone.Attributes["onfocus"] = "focusTextBox(this)";
+        tbCompanyPhone.Attributes["onblur"] = "blurTextBox(this)";
     }
-    protected void btnLogin_Click(object sender, EventArgs e)
+    protected void cmpRegister(object sender, EventArgs e)
     {
         Company cmp = new Company();
 
-        cmp.Email = tbCompanyMail.Text;
+        cmp.CompanyName = tbCompanyName.Text;
+        cmp.Email = tbCompanyEmail.Text;
         cmp.Password = tbCompanyPassword.Text;
+        cmp.Address = tbCompanyAddress.Text;
+        cmp.Phone = tbCompanyPhone.Text;
+        cmp.CityID = int.Parse(ddlCity.SelectedValue);
 
-        if (cmp.Authenticate())
+        if (cmp.SignUp())
         {
             Session["Company"] = cmp;
 

@@ -20,11 +20,15 @@
             <main>
                 <div id="container">
                     <div id="register">
-                        <asp:TextBox ID="tbCompanyName" CssClass="inputText" runat="server" Text="Name"></asp:TextBox>
-                        <asp:TextBox ID="tbCompanySurname" CssClass="inputText" runat="server" Text="Surname"></asp:TextBox>
-                        <asp:TextBox ID="tbCompanyMail" CssClass="inputText" runat="server" Text="Email"></asp:TextBox>
-                        <asp:TextBox ID="tbCompanyPassword" CssClass="inputText" runat="server" Text="Password" ToolTip="Password"></asp:TextBox>
-                        <asp:Button ID="btnRegister" CssClass="inputButton" runat="server" Text="Sign Up" OnClick="btnLogin_Click" />
+                        <asp:TextBox ID="tbCompanyName" CssClass="inputText" runat="server" Text="Name" ></asp:TextBox>
+                        <asp:TextBox ID="tbCompanyEmail" CssClass="inputText" runat="server" Text="Email" TextMode="Email" ></asp:TextBox>
+                        <asp:TextBox ID="tbCompanyPassword" CssClass="inputText" runat="server" Text="Password" ToolTip="Password" TextMode="SingleLine"></asp:TextBox>
+                        <asp:TextBox ID="tbCompanyAddress" CssClass="inputText" runat="server" Text="Address"  TextMode="MultiLine" EnableTheming="False"></asp:TextBox>
+                        <asp:TextBox ID="tbCompanyPhone" CssClass="inputText" runat="server" Text="Phone" TextMode="Phone" ></asp:TextBox>
+                        <asp:DropDownList ID="ddlCity" CssClass="inputText" runat="server">
+                            <asp:ListItem Value="26">Eskişehir</asp:ListItem>
+                        </asp:DropDownList>
+                        <asp:Button ID="btnRegister" CssClass="inputButton" runat="server" Text="Sign Up" OnClick="cmpRegister" />
                     </div>
                 </div>
             </main>

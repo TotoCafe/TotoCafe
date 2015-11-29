@@ -4,6 +4,15 @@
     margin-left: 75px;
 }
 
+    #login > #lblAuthenticate {
+        color: red;
+        font-size: 0.9rem;
+        width: 220px;
+        text-align: center;
+        display: block;
+        margin: 0px 10px;
+    }
+
     #login > .inputText {
         display: block;
         width: 220px;
@@ -30,10 +39,12 @@
         border: 1px solid #e1e8ed;
         border-radius: 3px;
     }
-    #login > .remember{
+
+    #login > .remember {
         padding-left: 20px;
     }
-    #login > .remember > *{
-        color: #0063ff;
-        font-size: small;
-    }
+
+        #login > .remember > * {
+            color: #0063ff;
+            font-size: small;
+        }

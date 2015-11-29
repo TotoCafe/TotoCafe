@@ -249,6 +249,7 @@ public class Company
 
     /// <summary>
     /// Authenticates the company with Email and password and Initializes it.
+    /// It is needed to be set Email and Password to Company object.
     /// </summary>
     /// <returns></returns>
     public bool Authenticate()
@@ -281,6 +282,7 @@ public class Company
     /// <summary>
     /// Executes Signup operation for a company object.
     /// Inserts the object to database and initializes it.
+    /// It is needed to be set CompanyName, Email, Password, Address, City and Phone to the Company object.
     /// </summary>
     /// <returns></returns>
     public bool SignUp()

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Collections;
+using System.Web.Services;
 
 /// <summary>
 /// Summary description for Company
@@ -310,6 +311,7 @@ public class Company
     /// Adds the table to the Company's Hashtable.
     /// </summary>
     /// <param name="t"></param>
+    [WebMethod]
     public void AddTable(Table t)
     {
         t.CompanyID = this.CompanyID;
@@ -321,6 +323,7 @@ public class Company
     /// Updates Table in database and hashtable.
     /// </summary>
     /// <param name="t"></param>
+    [WebMethod]
     public void UpdateTable(Table t)
     {
         t.Update();
@@ -331,6 +334,7 @@ public class Company
     /// Freezes the table.
     /// </summary>
     /// <param name="t"></param>
+    [WebMethod]
     public void FreezeTable(Table t)
     {
         t.Freeze();
@@ -342,6 +346,7 @@ public class Company
     /// </summary>
     /// <param name="FromTableID"></param>
     /// <param name="ToTableID"></param>
+    [WebMethod]
     public void TransferTable(int FromTableID, int ToTableID)
     {
         Table from = this.GetTableWithId(FromTableID);
@@ -464,6 +469,7 @@ public class Company
     /// Adds category to database and 
     /// </summary>
     /// <param name="c"></param>
+    [WebMethod]
     public void AddCategory(Category c)
     {
         c.CompanyID = this.CompanyID;
@@ -475,6 +481,7 @@ public class Company
     /// Updates Category in database and hashtable.
     /// </summary>
     /// <param name="c"></param>
+    [WebMethod]
     public void UpdateCategory(Category c)
     {
         c.Update();
@@ -488,6 +495,7 @@ public class Company
     /// CREATE A DIOLOG WITH USER TO MAKE HIM/HER AWARE OF THIS.
     /// </summary>
     /// <param name="c"></param>
+    [WebMethod]
     public void FreezeCategory(Category c)
     {
         c.Freeze();

@@ -6,6 +6,7 @@
 
     #login > #lblAuthenticate {
         color: red;
+        min-height: 1rem;
         font-size: 0.9rem;
         width: 220px;
         text-align: center;

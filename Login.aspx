@@ -20,10 +20,9 @@
             <main>
                 <div id="container">
                     <div id="login">
+                        <asp:Label ID="lblAuthenticate" runat="server"></asp:Label>
                         <asp:TextBox ID="tbEmail" CssClass="inputText" runat="server" Text="Email"></asp:TextBox>
-                        <asp:CustomValidator ID="cvEmail" runat="server" OnServerValidate="validateEmail" ControlToValidate="tbEmail"></asp:CustomValidator>
                         <asp:TextBox ID="tbPassword" CssClass="inputText" runat="server" Text="Password"></asp:TextBox>
-                        <asp:CustomValidator ID="cvPassword" runat="server" OnServerValidate="validatePassword" ControlToValidate="tbPassword"></asp:CustomValidator>
                         <asp:Button ID="btnLogin" CssClass="inputButton" runat="server" Text="Login" OnClick="cmpLogin"/>
                         <div class="remember">
                             <asp:CheckBox ID="cbRemember" runat="server" />

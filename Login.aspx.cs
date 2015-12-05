@@ -1,61 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 public partial class Login : System.Web.UI.Page
 {
-    Boolean email = false, password = false;
+    bool confirm = true;
     protected void Page_Load(object sender, EventArgs e)
     {
-        tbEmail.Attributes["onfocus"] = "focusEmail(this)";
+        tbEmail.Attributes["onfocus"] = "focusTextBox(this)";
         tbPassword.Attributes["onfocus"] = "focusPassword(this)";
+        tbEmail.Attributes["onblur"] = "blurTextBox(this)";
+        tbPassword.Attributes["onblur"] = "blurTextBox(this)";
     }
     protected void cmpLogin(object sender, EventArgs e)
     {
+        validateFunction();
         Company cmp = new Company();
 
         cmp.Email = tbEmail.Text;
         cmp.Password = tbPassword.Text;
-
-        if (cmp.Authenticate() && email && password)
+        bool authentication = cmp.Authenticate();
+        if (authentication && confirm)
         {
             Session["Company"] = cmp;
 
             Response.Redirect("home2.aspx");
         }
-    }
-
-    protected void validateEmail(object source, ServerValidateEventArgs args)
-    {        
-        if (tbEmail.Text == "" || tbEmail.Text == "Email")
+        if (!authentication)
         {
-            args.IsValid = false;
-            tbEmail.Text = "Email is required";
-            tbEmail.ForeColor = Color.Red;
-        }
-        else
-        {
-            args.IsValid = true;
-            email= true;
+            lblAuthenticate.Text = "Wrong email or password.";
         }
     }
-    protected void validatePassword(object source, ServerValidateEventArgs args)
+    private void validateFunction()
     {
-        if (tbPassword.Text == "" || tbPassword.Text == "Password")
-        {
-            args.IsValid = false;
-            tbPassword.Text = "Password is required";
-            tbPassword.ForeColor = Color.Red;
-        }
-        else
-        {
-            tbPassword.Attributes.Add("type", "password");
-            args.IsValid = true;
-            password = true;
-        }
+        Validation validator = new Validation();
+        validator.validateEmail(tbEmail);
+        validator.validatePassword(tbPassword);
+        confirm = confirm && validator.Confirm;
     }
 }

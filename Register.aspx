@@ -8,7 +8,12 @@
     <link href="css/membership.css" rel="stylesheet" type="text/css" />
     <link href="css/register.css" rel="stylesheet" type="text/css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="js/Script.js"></script>
+    <script src="js/MasterPage.js"></script>
+    <script src="js/Validate.js"></script>
+    <style type="text/css">
+        .inputText {
+        }
+    </style>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -20,14 +25,14 @@
             <main>
                 <div id="container">
                     <div id="register">
-                        <asp:TextBox ID="tbCompanyName" CssClass="inputText" runat="server" Text="Name" ></asp:TextBox>
-                        <asp:TextBox ID="tbCompanyEmail" CssClass="inputText" runat="server" Text="Email" TextMode="Email" ></asp:TextBox>
-                        <asp:TextBox ID="tbCompanyPassword" CssClass="inputText" runat="server" Text="Password" ToolTip="Password" TextMode="SingleLine"></asp:TextBox>
-                        <asp:TextBox ID="tbCompanyAddress" CssClass="inputText" runat="server" Text="Address"  TextMode="MultiLine" EnableTheming="False"></asp:TextBox>
-                        <asp:TextBox ID="tbCompanyPhone" CssClass="inputText" runat="server" Text="Phone" TextMode="Phone" ></asp:TextBox>
-                        <asp:DropDownList ID="ddlCity" CssClass="inputText" runat="server">
-                            <asp:ListItem Value="26">Eskişehir</asp:ListItem>
-                        </asp:DropDownList>
+                        <asp:TextBox ID="tbName" CssClass="inputText" runat="server" Text="Name"></asp:TextBox>
+                        <asp:TextBox ID="tbEmail" CssClass="inputText" runat="server" Text="Email"></asp:TextBox>
+                        <asp:TextBox ID="tbPassword" CssClass="inputText" runat="server" Text="Password"></asp:TextBox>
+                        <asp:TextBox ID="tbRePassword" CssClass="inputText" runat="server" Text="Reenter password"></asp:TextBox>
+                        <asp:TextBox ID="tbAddress" CssClass="inputText" runat="server" Text="Address" TextMode="MultiLine" EnableTheming="False"></asp:TextBox>
+                        <asp:TextBox ID="tbPhone" CssClass="inputText" runat="server" Text="Phone"></asp:TextBox>
+                        <asp:DropDownList ID="ddlCity" CssClass="inputText" runat="server" DataSourceID="SqlDataSourceCity" DataTextField="CityName" DataValueField="CityID"></asp:DropDownList>
+                        <asp:SqlDataSource ID="SqlDataSourceCity" runat="server" ConnectionString="<%$ ConnectionStrings:TotoCafeDB %>" SelectCommand="SELECT * FROM [City]"></asp:SqlDataSource>
                         <asp:Button ID="btnRegister" CssClass="inputButton" runat="server" Text="Sign Up" OnClick="cmpRegister" />
                     </div>
                 </div>

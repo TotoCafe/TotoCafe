@@ -54,3 +54,11 @@ main {
     box-shadow: 0 0 6px 0 black;
     border-radius: 20px;
 }
+
+#lblError {
+    color: red;
+    max-height: 0.6rem;
+    font-size: 0.7rem;
+    display: block;
+    margin: 0px 10px;
+}

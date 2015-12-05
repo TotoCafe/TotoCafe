@@ -11,6 +11,8 @@ $(document).ready(function () {
             $('#upRequest').attr("class", "closedSidebar");
             dividedWidth('#content_upHome', '#content_upHome > .table');
             sidebar = !sidebar;
+            $('#opened').attr("display", "none");
+            $('#closed').removeAttr("display");
         }
         else {
             $('#sidebar').removeAttr("class");
@@ -18,6 +20,8 @@ $(document).ready(function () {
             $('#upRequest').removeAttr("class");
             dividedWidth('#content_upHome', '#content_upHome > .table');
             sidebar = !sidebar;
+            $('#closed').attr("display", "none");
+            $('#opened').removeAttr("display");
         }
     });
 

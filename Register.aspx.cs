@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class Login : Page
 {
+    Validation validator = new Validation();
     private List<TextBox> textBoxes = new List<TextBox>();
     private bool confirm = true;
 
@@ -18,17 +21,26 @@ public partial class Login : Page
     }
     protected void cmpRegister(object sender, EventArgs e)
     {
-        validateFunction();
         Company cmp = new Company();
+        bool signed = false;
+        if (validator.checkCompanyEmail(tbEmail))
+        {
+            lblError.Text = "This mail address is in use.";
+            return;
+        }
+        validateFunction();
+        if (confirm)
+        {
+            cmp.CompanyName = tbName.Text;
+            cmp.Email = tbEmail.Text;
+            cmp.Password = tbPassword.Text;
+            cmp.Address = tbAddress.Text;
+            cmp.Phone = tbPhone.Text;
+            cmp.CityID = int.Parse(ddlCity.SelectedValue);
+            signed = cmp.SignUp();
+        }
 
-        cmp.CompanyName = tbName.Text;
-        cmp.Email = tbEmail.Text;
-        cmp.Password = tbPassword.Text;
-        cmp.Address = tbAddress.Text;
-        cmp.Phone = tbPhone.Text;
-        cmp.CityID = int.Parse(ddlCity.SelectedValue);
-
-        if (cmp.SignUp() && confirm)
+        if (signed)
         {
             Session["Company"] = cmp;
 
@@ -38,7 +50,7 @@ public partial class Login : Page
 
     private void validateFunction()
     {
-        Validation validator = new Validation();
+
         foreach (TextBox tb in textBoxes)
         {
             if (tb.ID.Replace("tb", "") == "Email")
@@ -46,7 +58,7 @@ public partial class Login : Page
             else if (tb.ID.Replace("tb", "") == "Password" || tb.ID.Replace("tb", "") == "RePassword")
                 validator.validatePassword(tb);
             else
-            validator.validateTextBox(tb);
+                validator.validateTextBox(tb);
             confirm = confirm && validator.Confirm;
         }
     }
@@ -59,7 +71,7 @@ public partial class Login : Page
             {
                 tb = (TextBox)control;
                 tb.Attributes["onfocus"] = "focusTextBox(this)";
-                tb.Attributes["onblur"] = "blurTextBox(this)"; 
+                tb.Attributes["onblur"] = "blurTextBox(this)";
                 textBoxes.Add(tb);
             }
         }

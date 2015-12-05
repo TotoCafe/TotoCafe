@@ -46,17 +46,17 @@ main {
 
     .header > .sidebar-trigger {
         position: absolute;
-        width: 30px;
+        width: 12px;
         height: 20px;
-        padding: 15px 0;
+        padding: 15px 19px;
         display: inline-block;
         cursor: pointer;
     }
 
         .header > .sidebar-trigger > svg {
             fill: #FEFEFE;
-            height: 10px;
-            width: 24px;
+            height: inherit;
+            width: inherit;
         }
 
 #sidebar {

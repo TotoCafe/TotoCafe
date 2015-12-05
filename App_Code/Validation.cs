@@ -1,4 +1,7 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Web.UI.WebControls;
 
@@ -17,7 +20,7 @@ public class Validation
     {
         string defaultValue = tbTextBox.ID.Replace("tb", "");
 
-        if (string.IsNullOrEmpty(tbTextBox.Text) || tbTextBox.Text == defaultValue || tbTextBox.Text == defaultValue + " is required.")
+        if (string.IsNullOrEmpty(tbTextBox.Text) || tbTextBox.Text == defaultValue || tbTextBox.Text == defaultValue + " is required." || tbTextBox.Text == "Please enter a valid " + defaultValue + ".") 
         {
             tbTextBox.ForeColor = Color.Red;
             tbTextBox.Text = defaultValue + " is required.";
@@ -60,5 +63,31 @@ public class Validation
             tbEmail.ForeColor = defaultColor;
             confirm = true;
         }
+    }
+    public bool checkCompanyEmail(TextBox tbEmail)
+    {
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString);
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.CommandText = "SELECT COUNT(Email) FROM Company WHERE (Email = @Email)";
+        cmd.Parameters.AddWithValue("@Email", tbEmail.Text);
+        cmd.Connection = conn;
+
+        try
+        {
+            conn.Open();
+            int userCount = (int)cmd.ExecuteScalar();
+            if (userCount > 0)
+                return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+        finally
+        {
+            conn.Close();
+        }
+        return false; 
     }
 }

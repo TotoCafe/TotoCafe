@@ -23,9 +23,10 @@
         border: 1px solid #72B0D4;
         border-radius: 3px;
     }
-     #register > .inputText > #tbCompanyAddress {
-        overflow: auto;
-    }
+
+        #register > .inputText > #tbCompanyAddress {
+            overflow: auto;
+        }
 
     #register > #btnRegister {
         margin-left: 125px;

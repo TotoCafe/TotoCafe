@@ -18,7 +18,8 @@
                 <a href="home2.aspx">TotoCafe</a>
                 <div class="sidebar-trigger">
                     <svg>
-                        <polygon points="0,0 24,0 12,10" />
+                        <polygon id="opened" points="0,10 12,0 12,20" />
+                        <polygon id="closed" points="0,0 12,10 0,20" display="none" />
                     </svg>
                 </div>
             </div>

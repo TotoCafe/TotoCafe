@@ -2,6 +2,7 @@
 
 public partial class Login : System.Web.UI.Page
 {
+    Validation validator = new Validation();
     bool confirm = true;
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -12,6 +13,13 @@ public partial class Login : System.Web.UI.Page
     }
     protected void cmpLogin(object sender, EventArgs e)
     {
+        if (!validator.checkCompanyEmail(tbEmail))
+        {
+            lblError.Text = "There is no company with this email address.";
+            tbEmail.Text = "";
+            tbPassword.Text = "";
+            return;
+        }
         validateFunction();
         Company cmp = new Company();
 
@@ -24,14 +32,9 @@ public partial class Login : System.Web.UI.Page
 
             Response.Redirect("home2.aspx");
         }
-        if (!authentication)
-        {
-            lblAuthenticate.Text = "Wrong email or password.";
-        }
     }
     private void validateFunction()
     {
-        Validation validator = new Validation();
         validator.validateEmail(tbEmail);
         validator.validatePassword(tbPassword);
         confirm = confirm && validator.Confirm;

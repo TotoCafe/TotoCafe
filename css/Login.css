@@ -4,16 +4,6 @@
     margin-left: 75px;
 }
 
-    #login > #lblAuthenticate {
-        color: red;
-        min-height: 1rem;
-        font-size: 0.9rem;
-        width: 220px;
-        text-align: center;
-        display: block;
-        margin: 0px 10px;
-    }
-
     #login > .inputText {
         display: block;
         width: 220px;

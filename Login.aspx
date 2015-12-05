@@ -20,7 +20,7 @@
             <main>
                 <div id="container">
                     <div id="login">
-                        <asp:Label ID="lblAuthenticate" runat="server"></asp:Label>
+                        <asp:Label ID="lblError" runat="server"></asp:Label>
                         <asp:TextBox ID="tbEmail" CssClass="inputText" runat="server" Text="Email"></asp:TextBox>
                         <asp:TextBox ID="tbPassword" CssClass="inputText" runat="server" Text="Password"></asp:TextBox>
                         <asp:Button ID="btnLogin" CssClass="inputButton" runat="server" Text="Login" OnClick="cmpLogin"/>

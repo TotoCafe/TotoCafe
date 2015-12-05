@@ -10,10 +10,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="js/MasterPage.js"></script>
     <script src="js/Validate.js"></script>
-    <style type="text/css">
-        .inputText {
-        }
-    </style>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -25,6 +21,7 @@
             <main>
                 <div id="container">
                     <div id="register">
+                        <asp:Label ID="lblError" runat="server"></asp:Label>
                         <asp:TextBox ID="tbName" CssClass="inputText" runat="server" Text="Name"></asp:TextBox>
                         <asp:TextBox ID="tbEmail" CssClass="inputText" runat="server" Text="Email"></asp:TextBox>
                         <asp:TextBox ID="tbPassword" CssClass="inputText" runat="server" Text="Password"></asp:TextBox>

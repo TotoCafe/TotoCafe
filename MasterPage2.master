@@ -9,7 +9,7 @@
     </asp:ContentPlaceHolder>
     <link href="css/masterpage.css" rel="stylesheet" type="text/css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="js/Script.js"></script>
+    <script src="js/MasterPage.js"></script>
 </head>
 <body>
     <form id="frmHome" runat="server">

@@ -36,19 +36,3 @@ function dividedWidth(dividendObject, divisorObject) {
     var division = (dividendWidth / divisorWidth) >> 0;
     $(dividendObject).css('width', (division * divisorWidth));
 }
-function focusTextBox(textBox) {
-    if (textBox.value == textBox.defaultValue) {
-        textBox.value = '';
-    }
-    if (textBox.defaultValue == "Password" && textBox.value == "") {
-        textBox.setAttribute("type", "password");
-    }
-}
-function blurTextBox(textBox) {
-    if (textBox.value == '') {
-        textBox.value = textBox.defaultValue;
-    }
-    if (textBox.defaultValue == "Password" && textBox.value == "") {
-        textBox.setAttribute("type", "text");
-    }
-}

@@ -1,4 +1,4 @@
-﻿#content_upHome > .table {
+﻿#content_pHome > .table {
     float: left;
     width: 100px;
     height: 100px;
@@ -7,7 +7,7 @@
     border-radius: 10px;
 }
 
-    #content_upHome > .table > span {
+    #content_pHome > .table > span {
         line-height: 63px;
         font-size: 1em;
         display: block;

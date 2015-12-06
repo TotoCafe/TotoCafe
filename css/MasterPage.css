@@ -104,6 +104,9 @@ main {
 #placeholder.closedSidebar {
     width: 100vw;
 }
+#request.closedSidebar{
+    width: 100vw;
+}
 
 #request {
     position: fixed;
@@ -115,7 +118,7 @@ main {
     z-index: 1;
 }
 
-    #request > #upRequest {
+    #request > #pRequest {
         margin: auto;
         margin-left: 200px;
     }

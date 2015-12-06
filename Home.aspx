@@ -1,28 +1,9 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Home.aspx.cs" Inherits="Home" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Home.aspx.cs" Inherits="home2" %>
 
-
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
-    <div class="container-fluid">
-
-        <asp:UpdatePanel runat="server" ID="upTables" ChildrenAsTriggers="true">
-            <ContentTemplate>
-                <asp:Panel runat="server" ID="panelNoTable" Visible="true">
-                    <p id="noTable">You have NO Table yet click <a href="Settings.aspx">settings</a> to add..</p>
-                </asp:Panel>
-                <asp:Panel runat="server" ID="panelTables" Visible="false"></asp:Panel>
-                <asp:Panel runat="server" ID="panelTableSummary" Visible="false">
-                    <div id="orderSummary" class="col-lg-push-6">
-                        <asp:Panel runat="server" ID="panelOrderList">
-                            <asp:Button Text="back" OnClick="back" runat="server" />
-                        </asp:Panel>
-                    </div>
-                </asp:Panel>
-            </ContentTemplate>
-            <Triggers>
-            </Triggers>
-        </asp:UpdatePanel>
-
-    </div>
+<asp:Content ID="Content2" ContentPlaceHolderID="content" Runat="Server">
+    <asp:Panel ID="pHome" runat="server"></asp:Panel>
 </asp:Content>
+

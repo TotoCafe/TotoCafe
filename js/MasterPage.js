@@ -2,14 +2,14 @@
 var sidebar = true;
 
 $(document).ready(function () {
-    dividedWidth('#content_upHome', '#content_upHome > .table');
+    dividedWidth('#content_pHome', '#content_pHome > .table');
 
     $(".sidebar-trigger").click(function () {
         if (sidebar) {
             $('#sidebar').attr("class", "closedSidebar");
             $('#placeholder').attr("class", "closedSidebar");
-            $('#upRequest').attr("class", "closedSidebar");
-            dividedWidth('#content_upHome', '#content_upHome > .table');
+            $('#pRequest').attr("class", "closedSidebar");
+            dividedWidth('#content_pHome', '#content_pHome > .table');
             sidebar = !sidebar;
             $('#opened').attr("display", "none");
             $('#closed').removeAttr("display");
@@ -17,8 +17,8 @@ $(document).ready(function () {
         else {
             $('#sidebar').removeAttr("class");
             $('#placeholder').removeAttr("class");
-            $('#upRequest').removeAttr("class");
-            dividedWidth('#content_upHome', '#content_upHome > .table');
+            $('#pRequest').removeAttr("class");
+            dividedWidth('#content_pHome', '#content_pHome > .table');
             sidebar = !sidebar;
             $('#closed').attr("display", "none");
             $('#opened').removeAttr("display");
@@ -26,7 +26,7 @@ $(document).ready(function () {
     });
 
     $(window).resize(function () {
-        dividedWidth('#content_upHome', '#content_upHome > .table');
+        dividedWidth('#content_pHome', '#content_pHome > .table');
     });
 
     $("#searchField").focus(function () {

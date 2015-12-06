@@ -1,88 +1,50 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage2" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-
     <title></title>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
-
-    <!-- Css -->
-    <link href="Content/bootstrap.min.css" rel="stylesheet" />
-    <!-- SideBar-->
-    <link href="Content/component.css" rel="stylesheet" />
-    <link href="Content/Masterpage.css" rel="stylesheet" />
-
+    <link href="css/masterpage.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="js/MasterPage.js"></script>
 </head>
 <body>
-    <form runat="server">
-
+    <form id="frmHome" runat="server">
         <div id="wrapper">
-            <!--Header-->
-
-            <header>
-                <!-- Side effect trigger button-->
-                <div id="st-trigger-effects">
-                    <button id="sideButton" data-effect="st-effect-1">
-                        <img id="iconSideButton" src="Icons/btn-menu.png" alt="" />
-                    </button>
+            <div class="header">
+                <a href="home2.aspx">TotoCafe</a>
+                <div class="sidebar-trigger">
+                    <svg>
+                        <polygon id="opened" points="0,10 12,0 12,20" />
+                        <polygon id="closed" points="0,0 12,10 0,20" display="none" />
+                    </svg>
                 </div>
-                <p id="headerTotoCafe">TotoCafé</p>
-            </header>
-
-            <!-- Content between heade and footer-->
-            <div id="main">
-
-                <!--SideBar-->
-                <div id="st-container">
-                    <nav class="st-menu st-effect-1" id="menu-1" style="position: absolute; left: 0">
-                        <h2 class="icon icon-lab" id="sideHeader">TotoCafé</h2>
-                        <ul id="sideTopElements">
-                            <li><a class="icon icon-data" href="Home.aspx">Home</a></li>
-                            <li><a class="icon icon-location" href="Menu.aspx">Menu</a></li>
-                        </ul>
-                        <ul id="sideEndElements">
-                            <li><a class="icon icon-study" href="Settings.aspx">Settings</a></li>
-                            <li><a class="icon icon-photo" href="AccountSettings.aspx">Account Settings</a></li>
-                            <li id="sideLogout">
-                                <asp:Button Text="Logout" ID="btnLogout" Width="200px" runat="server" OnClick="btnLogout_Click" />
-                            </li>
-                        </ul>
-                    </nav>
+            </div>
+            <main>
+                <div id="sidebar">
+                    <ul>
+                        <li><a href="home2.aspx">Home</a></li>
+                        <li><a href="">Menu</a></li>
+                    </ul>
+                    <ul id="sidebarEnd">
+                        <li><a href="">Account Setting</a></li>
+                        <li><a href="">Logout</a></li>
+                    </ul>
                 </div>
-
-                <!-- Content -->
-                <div id="content">
-                    <asp:ScriptManager runat="server"></asp:ScriptManager>
-                    <asp:ContentPlaceHolder ID="ContentPlaceHolder2" runat="server">
+                <div id="request">
+                    <asp:Panel ID="pRequest" runat="server"></asp:Panel>
+                </div>
+                <div id="placeholder">
+                    <asp:ContentPlaceHolder ID="content" runat="server">
                     </asp:ContentPlaceHolder>
                 </div>
-
-                <div id="footer-ghost"></div>
-            </div>
+            </main>
+            <footer>
+            </footer>
         </div>
-
-        <!-- Footer -->
-        <footer>
-            <div class="container">
-            </div>
-        </footer>
     </form>
-
-    <!-- JS -->
-    <script src="Scripts/jquery-2.1.4.min.js"></script>
-    <script src="Scripts/jquery.nicescroll.min.js"></script>
-    <script src="Scripts/bootstrap.min.js"></script>
-    <!-- Sidebar JS -->
-    <script src="Scripts/sidebarEffects.js"></script>
-    <script src="Scripts/classie.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            $('form').niceScroll({ cursorwidth: '5px', autohidemode: true, zindex: -1, /*scrollspeed: '60px'*/ });
-        });
-    </script>
 </body>
 </html>

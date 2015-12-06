@@ -30,7 +30,7 @@ public partial class Login : System.Web.UI.Page
         {
             Session["Company"] = cmp;
 
-            Response.Redirect("home2.aspx");
+            Response.Redirect("Home.aspx");
         }
     }
     private void validateFunction()

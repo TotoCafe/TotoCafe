@@ -31,8 +31,7 @@ public partial class MasterPage2 : System.Web.UI.MasterPage
         {
             TableDiv requestDiv = new TableDiv(requestTable).ToRequest();
             requestDiv.ButtonAccept = btnAcceptClick;
-            requestDiv.ButtonAccept = btnDeclineClick;
-            //btnAccept.Click += new EventHandler(btnAcceptClick);
+            requestDiv.ButtonDecline = btnDeclineClick;
             pRequest.Controls.Add(requestDiv);
         }
     }
@@ -42,9 +41,9 @@ public partial class MasterPage2 : System.Web.UI.MasterPage
         int id = int.Parse(btn.ID.Replace("_Accept", ""));
         try
         {
+            TableController controller = new TableController();
             Table table = cmp.GetTableWithId(id);
-            table.AvailabilityID = 0;
-            table.Update();
+            table.ActiveController = controller;
         }
         catch (Exception)
         {
@@ -53,7 +52,16 @@ public partial class MasterPage2 : System.Web.UI.MasterPage
     }
     protected void btnDeclineClick(object sender, EventArgs e)
     {
-
+        Button btn = (Button)sender;
+        int id = int.Parse(btn.ID.Replace("_Decline", ""));
+        try
+        {
+            Table table = cmp.GetTableWithId(id);
+            table.ActiveController = null;
+        }
+        catch (Exception)
+        {
+        }
     }
 
 }

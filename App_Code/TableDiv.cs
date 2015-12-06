@@ -5,6 +5,7 @@ using System.Web.UI.WebControls;
 public class TableDiv : HtmlGenericControl
 {
     int availability;
+    bool active = false;
     Label lblTableName;
     Button btnAccept;
     Button btnDecline;
@@ -25,6 +26,7 @@ public class TableDiv : HtmlGenericControl
         this.lblTableName.Text = table.TableName;
         this.lblTableName.Attributes["style"] = "color: #72B1D4";
         this.Controls.Add(lblTableName);
+        this.active = table.ActiveController != null;
     }
 
     public TableDiv ToRequest()
@@ -46,10 +48,10 @@ public class TableDiv : HtmlGenericControl
 
     public TableDiv ToContent()
     {
-        if (this.availability == 1)
-            this.Attributes["style"] = "background-color: white";
+        if (this.active)
+            this.Attributes["style"] = "border-color: green";
         else
-            this.Attributes["style"] = "background-color: green";
+            this.Attributes["style"] = "border-color: red";
 
         return this;
     }

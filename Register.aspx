@@ -15,7 +15,7 @@
     <form id="form1" runat="server">
         <div id="wrapper">
             <div class="header">
-                <a href="home2.aspx">TotoCafe</a>
+                <a href="home.aspx">TotoCafe</a>
                 <a href="login.aspx" style="position: absolute; right: 0px;">Login</a>
             </div>
             <main>

@@ -15,7 +15,7 @@
     <form id="frmHome" runat="server">
         <div id="wrapper">
             <div class="header">
-                <a href="home2.aspx">TotoCafe</a>
+                <a href="Home.aspx">TotoCafe</a>
                 <div class="sidebar-trigger">
                     <svg>
                         <polygon id="opened" points="0,10 12,0 12,20" />
@@ -26,11 +26,12 @@
             <main>
                 <div id="sidebar">
                     <ul>
-                        <li><a href="home2.aspx">Home</a></li>
-                        <li><a href="">Menu</a></li>
+                        <li><a href="Home.aspx">Home</a></li>
+                        <li><a href="Menu.aspx">Menu</a></li>
                     </ul>
                     <ul id="sidebarEnd">
-                        <li><a href="">Account Setting</a></li>
+                        <li><a href="Settings.aspx">Setting</a></li>
+                        <li><a href="AccountSettings.aspx">Account Setting</a></li>
                         <li><a href="">Logout</a></li>
                     </ul>
                 </div>

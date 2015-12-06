@@ -44,7 +44,7 @@ public partial class Login : Page
         {
             Session["Company"] = cmp;
 
-            Response.Redirect("home2.aspx");
+            Response.Redirect("home.aspx");
         }
     }
 

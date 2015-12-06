@@ -1,0 +1,69 @@
+﻿.container {
+}
+
+.title {
+    box-shadow: 0 0 6px 0 black;
+    margin-bottom: 20px;
+}
+
+    .title > h3 {
+        line-height: 50px;
+        color: #72B1D4;
+    }
+
+#table {
+    width: 200px;
+    height: 200px;
+    margin: auto;
+    border: 1px solid #72B1D4;
+    border-radius: 20px;
+}
+
+    #table > #content_tbTableName {
+        display: block;
+        width: 160px;
+        padding: 10px 5px 10px 5px;
+        margin: auto;
+        margin-top: 20px;
+        outline: 0;
+        color: #72B1D4;
+        background-color: #fff;
+        border: 1px solid #72B1D4;
+        border-radius: 5px;
+        font-size: 1.5rem;
+    }
+
+    #table > #content_btnAddTable, #table > #content_btnRemoveTable {
+        color: white;
+        display: inline-block;
+        margin: 20px 10px;
+        width: 60px;
+        height: 60px;
+        border-radius: 30px;
+        cursor: pointer;
+    }
+
+    #table > #content_btnAddTable {
+        background-color: white;
+        color: green;
+        border: 1px solid green;
+    }
+
+        #table > #content_btnAddTable:hover {
+            background-color: green;
+            color: white;
+        }
+
+    #table > #content_btnRemoveTable {
+        background-color: white;
+        color: red;
+        border: 1px solid red;
+    }
+
+        #table > #content_btnRemoveTable:hover {
+            background-color: red;
+            color: white;
+        }
+        #table>#content_lblNotification{
+            color: red;
+        }

@@ -15,17 +15,16 @@ public partial class home2 : System.Web.UI.Page
     {
         this.cmp = (Company)Session["Company"];
         if (this.cmp == null)
-            Response.Redirect("login.aspx");
+            Response.Redirect("Login.aspx");
         else
             getCompanyTables();
     }
     private void getCompanyTables()
     {
         this.tableList = new List<Table>(cmp.GetTableList());
-        //tableRequests = new List<Table>(cmp.GetTableRequest())
-        //if (this.tableList.Count == 0)
-        //    Response.Redirect("AccSettings.aspx");
-        //else
+        if (this.tableList.Count == 0)
+            Response.Redirect("Settings.aspx");
+        else
             initializeContent();
     }
     private void initializeContent()

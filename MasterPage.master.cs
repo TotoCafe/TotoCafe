@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 public partial class MasterPage2 : System.Web.UI.MasterPage
@@ -20,7 +19,7 @@ public partial class MasterPage2 : System.Web.UI.MasterPage
         {
             Table table = new Table();
             table.TableID = i;
-            table.TableName = "Table-" + i+1;
+            table.TableName = "Table-" + (i + 1);
             temp.Add(table);
         }
         initializeRequest(temp);
@@ -39,7 +38,18 @@ public partial class MasterPage2 : System.Web.UI.MasterPage
     }
     protected void btnAcceptClick(object sender, EventArgs e)
     {
+        Button btn = (Button)sender;
+        int id = int.Parse(btn.ID.Replace("_Accept", ""));
+        try
+        {
+            Table table = cmp.GetTableWithId(id);
+            table.AvailabilityID = 0;
+            table.Update();
+        }
+        catch (Exception)
+        {
 
+        }
     }
     protected void btnDeclineClick(object sender, EventArgs e)
     {

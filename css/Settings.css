@@ -1,16 +1,20 @@
 ﻿.container {
+    min-height: 1000px;
 }
 
 .title {
+    position: sticky;
+    top: 200px;
     box-shadow: 0 0 6px 0 black;
     margin-bottom: 20px;
+    background-color: #fefefe;
 }
 
     .title > h3 {
         line-height: 50px;
+        margin: auto;
         color: #72B1D4;
     }
-
 #table {
     width: 200px;
     height: 200px;
@@ -64,6 +68,7 @@
             background-color: red;
             color: white;
         }
-        #table>#content_lblNotification{
-            color: red;
-        }
+
+    #table > #content_lblNotification {
+        color: red;
+    }

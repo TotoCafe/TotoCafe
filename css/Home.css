@@ -1,15 +1,6 @@
-﻿#content_pHome > .table {
-    float: left;
-    width: 100px;
-    height: 100px;
-    margin: 5px;
-    border: 1px solid rgba(0, 0, 0, 0.20);
-    border-radius: 10px;
+﻿#content_pHome > .table > span {
+    line-height: 70px;
+    font-size: 1em;
+    display: block;
+    color: #000000;
 }
-
-    #content_pHome > .table > span {
-        line-height: 63px;
-        font-size: 1em;
-        display: block;
-        color: #000000;
-    }

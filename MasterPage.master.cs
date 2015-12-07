@@ -14,12 +14,12 @@ public partial class MasterPage2 : System.Web.UI.MasterPage
         */
 
         //Test code
-        List<Table> temp = new List<Table>(5);
-        for (int i = 0; i < temp.Capacity; i++)
+        List<Table> temp = new List<Table>(20);
+        for (int i = 1; i <= temp.Capacity; i++)
         {
             Table table = new Table();
             table.TableID = i;
-            table.TableName = "Table-" + (i + 1);
+            table.TableName = "Table-" + i;
             temp.Add(table);
         }
         initializeRequest(temp);
@@ -62,6 +62,12 @@ public partial class MasterPage2 : System.Web.UI.MasterPage
         catch (Exception)
         {
         }
+    }
+    protected void btnLogOutClick (object sender, EventArgs e)
+    {
+        this.cmp = null;
+        Session.Abandon();
+        Response.Redirect(Request.RawUrl);
     }
 
 }

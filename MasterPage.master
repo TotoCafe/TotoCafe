@@ -8,6 +8,7 @@
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
     <link href="css/masterpage.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="js/MasterPage.js"></script>
 </head>
@@ -16,33 +17,25 @@
         <div id="wrapper">
             <div class="header">
                 <a href="Home.aspx">TotoCafe</a>
-                <div class="sidebar-trigger">
-                    <svg>
-                        <polygon id="opened" points="0,10 12,0 12,20" />
-                        <polygon id="closed" points="0,0 12,10 0,20" display="none" />
-                    </svg>
+                <div class="sidebar-trigger" onclick="triggerClicked()">
+                    <i id="trigger" class="fa fa-chevron-left" ></i>
                 </div>
             </div>
-            <main>
-                <div id="sidebar">
-                    <ul>
-                        <li><a href="Home.aspx">Home</a></li>
-                        <li><a href="Menu.aspx">Menu</a></li>
-                    </ul>
-                    <ul id="sidebarEnd">
-                        <li><a href="Settings.aspx">Setting</a></li>
-                        <li><a href="AccountSettings.aspx">Account Setting</a></li>
-                        <li><a href="">Logout</a></li>
-                    </ul>
+            <div id="sidebar">
+                <div class="upper-list-group">
+                    <a class="list-group-item" href="Home.aspx"><i class="fa fa-home fa-fw"></i>Home</a>
+                    <a class="list-group-item" href="Menu.aspx"><i class="fa fa-book fa-fw"></i>Menu</a>
                 </div>
-                <div id="request">
-                    <asp:Panel ID="pRequest" runat="server"></asp:Panel>
+                <div class="lower-list-group">
+                    <a class="list-group-item" href="Settings.aspx"><i class="fa fa-cog fa-fw"></i>Settings</a>
+                    <a class="list-group-item" href="AccountSettings.aspx"><i class="fa fa-user fa-fw"></i>Account Settings</a>
+                    <a class="list-group-item" runat="server" onserverclick="btnLogOutClick"><i class="fa fa-sign-out fa-fw"></i>Log Out</a>
                 </div>
-                <div id="placeholder">
-                    <asp:ContentPlaceHolder ID="content" runat="server">
-                    </asp:ContentPlaceHolder>
-                </div>
-            </main>
+            </div>
+            <asp:Panel ID="pRequest" runat="server"></asp:Panel>
+            <div id="placeholder">
+                <asp:ContentPlaceHolder ID="content" runat="server"></asp:ContentPlaceHolder>
+            </div>
             <footer>
             </footer>
         </div>

@@ -1,0 +1,77 @@
+﻿* {
+    font-family: 'Roboto', sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+#header {
+    width: 100vw;
+    height: 100px;
+    background-color: #202428;
+}
+
+#login {
+    color: #fefefe;
+    height: 80px;
+    float: right;
+    margin: 10px 20px 0 0;
+}
+
+    #login td {
+        width: 170px;
+        line-height: normal;
+    }
+
+    #login tr:nth-of-type(1) {
+        font-size: 0.9rem;
+    }
+
+    #login tr:nth-of-type(3) {
+        font-size: 0.8rem;
+    }
+
+#register {
+    position: absolute;
+    width: 30vw;
+    height: calc(100vh - 100px);
+    top: 100px;
+    right: 0px;
+    background-color: #282D32;
+}
+
+.register-input {
+    margin-left: calc(15vw - 100px);
+    margin-bottom: 10px;
+    display: block;
+    width: 200px;
+    height: 30px;
+    border-radius: 3px;
+    border: none;
+    padding-left: 15px;
+}
+
+#btnRegister {
+    margin: auto;
+    display: block;
+}
+
+.inputButton {
+    width: 100px;
+    height: 30px;
+    background-color: #007ACC;
+    color: #fefefe;
+    border: none;
+    border-radius: 10px;
+}
+
+    .inputButton:hover {
+        background-color: inherit;
+        border: solid;
+        border-color: #007ACC;
+        border-width: 1px;
+    }

@@ -20,7 +20,7 @@ public partial class Login : System.Web.UI.Page
             tbPassword.Text = "";
             return;
         }
-        validateFunction();
+        validateLogin();
         Company cmp = new Company();
 
         cmp.Email = tbEmail.Text;
@@ -33,7 +33,7 @@ public partial class Login : System.Web.UI.Page
             Response.Redirect("Home.aspx");
         }
     }
-    private void validateFunction()
+    private void validateLogin()
     {
         validator.validateEmail(tbEmail);
         validator.validatePassword(tbPassword);

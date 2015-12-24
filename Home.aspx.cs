@@ -15,7 +15,7 @@ public partial class home2 : System.Web.UI.Page
     {
         this.cmp = (Company)Session["Company"];
         if (this.cmp == null)
-            Response.Redirect("Login.aspx");
+            Response.Redirect("index.aspx");
         else
             getCompanyTables();
     }
@@ -31,7 +31,7 @@ public partial class home2 : System.Web.UI.Page
     {
         foreach (Table t in this.tableList)
         {
-            TableDiv content = new TableDiv(t).ToContent();
+            TableHtmlElement content = new TableHtmlElement(t).ToContent();
             pHome.Controls.Add(content);
         }
     }

@@ -8,9 +8,8 @@ using System.Web.UI.WebControls;
 /// <summary>
 /// Summary description for Validation
 /// </summary>
-public class Validation
+public class Validator
 {
-    private Color defaultColor = ColorTranslator.FromHtml("#72B0D4");
     private bool confirm;
     public bool Confirm
     {
@@ -18,17 +17,15 @@ public class Validation
     }
     public void validateTextBox(TextBox tbTextBox)
     {
-        string defaultValue = tbTextBox.ID.Replace("tb", "");
+        string defaultValue = tbTextBox.Attributes["placeholder"];
 
         if (string.IsNullOrEmpty(tbTextBox.Text) || tbTextBox.Text == defaultValue || tbTextBox.Text == defaultValue + " is required." || tbTextBox.Text == "Please enter a valid " + defaultValue + ".") 
         {
-            tbTextBox.ForeColor = Color.Red;
-            tbTextBox.Text = defaultValue + " is required.";
+            tbTextBox.Attributes["placeholder"] = defaultValue + " is required.";
             confirm = false;
         }
         else
         {
-            tbTextBox.ForeColor = defaultColor;
             confirm = true;
         }
     }
@@ -37,15 +34,11 @@ public class Validation
         string regPassword = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,16}$";
         if (!Regex.IsMatch(tbPassword.Text, regPassword))
         {
-            tbPassword.Text = "Please enter a valid password.";
-            tbPassword.ForeColor = Color.Red;
+            tbPassword.Attributes["placeholder"] = "Please enter a valid password.";
             confirm = false;
-            tbPassword.Attributes.Add("type", "text");
         }
         else
         {
-            tbPassword.Attributes.Add("type", "password");
-            tbPassword.ForeColor = defaultColor;
             confirm = true;
         }
     }
@@ -54,13 +47,11 @@ public class Validation
         string regEmail = @"[a-zA-Z0-9]+(?:(\.|_)[A-Za-z0-9!#$%&'*+/=?^`{|}~-]+)*@(?!([a-zA-Z0-9]*\.[a-zA-Z0-9]*\.[a-zA-Z0-9]*\.))(?:[A-Za-z0-9](?:[a-zA-Z0-9-]*[A-Za-z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?";
         if (!Regex.IsMatch(tbEmail.Text, regEmail))
         {
-            tbEmail.Text = "Please enter a valid email address.";
-            tbEmail.ForeColor = Color.Red;
+            tbEmail.Attributes["placeholder"] = "Invalid email address";
             confirm = false;
         }
         else
         {
-            tbEmail.ForeColor = defaultColor;
             confirm = true;
         }
     }

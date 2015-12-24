@@ -49,8 +49,7 @@
             <div id="register" runat="server">
                 <asp:Label ID="lblRegister" CssClass="register-input" runat="server" Text="Register"></asp:Label>
                 <asp:Label ID="lblError" CssClass="register-input" runat="server"></asp:Label>
-                <asp:TextBox ID="registerName" CssClass="register-input" runat="server" placeholder="Name"></asp:TextBox>
-                <asp:TextBox ID="registerSurname" CssClass="register-input" runat="server" placeholder="Surname"></asp:TextBox>
+                <asp:TextBox ID="registerCompanyName" CssClass="register-input" runat="server" placeholder="Company Name"></asp:TextBox>
                 <asp:TextBox ID="registerEmail" CssClass="register-input" runat="server" placeholder="Email"></asp:TextBox>
                 <asp:TextBox ID="registerPassword" CssClass="register-input" runat="server" placeholder="Password" TextMode="Password"></asp:TextBox>
                 <asp:TextBox ID="registerAddress" CssClass="register-input" runat="server" placeholder="Address" TextMode="MultiLine" Style="resize: none;" Height="75px"></asp:TextBox>

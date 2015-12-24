@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Web.UI.WebControls;
 
-public partial class MasterPage2 : System.Web.UI.MasterPage
+public partial class MasterPage : System.Web.UI.MasterPage
 {
     Company cmp;
     protected void Page_Load(object sender, EventArgs e)
@@ -29,7 +29,7 @@ public partial class MasterPage2 : System.Web.UI.MasterPage
     {
         foreach (Table requestTable in requestTables)
         {
-            TableDiv requestDiv = new TableDiv(requestTable).ToRequest();
+            TableHtmlElement requestDiv = new TableHtmlElement(requestTable).ToRequest();
             requestDiv.ButtonAccept = btnAcceptClick;
             requestDiv.ButtonDecline = btnDeclineClick;
             pRequest.Controls.Add(requestDiv);

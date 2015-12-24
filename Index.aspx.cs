@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 public partial class Index : System.Web.UI.Page
 {
-    Validation validator = new Validation();
+    Validator validator = new Validator();
     bool confirmLogin = true;
     bool confirmRegister = true;
     protected void Page_Load(object sender, EventArgs e)
@@ -42,13 +42,13 @@ public partial class Index : System.Web.UI.Page
         bool signed = false;
         if (validator.checkCompanyEmail(registerEmail))
         {
-            lblError.Text = "This mail address is in use.";
+            registerEmail.Attributes["placeholder"] = "This mail address is in use.";
             return;
         }
         validateRegister();
         if (confirmRegister)
         {
-            cmp.CompanyName = registerName.Text;
+            cmp.CompanyName = registerCompanyName.Text;
             cmp.Email = registerEmail.Text;
             cmp.Password = registerPassword.Text;
             cmp.Address = registerAddress.Text;
@@ -61,7 +61,7 @@ public partial class Index : System.Web.UI.Page
         {
             Session["Company"] = cmp;
 
-            Response.Redirect("home.aspx");
+            Response.Redirect("Home.aspx");
         }
     }
     private void validateLogin()

@@ -2,7 +2,7 @@
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
-public class TableDiv : HtmlGenericControl
+public class TableHtmlElement : HtmlGenericControl
 {
     int availability;
     bool active = false;
@@ -17,7 +17,7 @@ public class TableDiv : HtmlGenericControl
     {
         set { btnDecline.Click += value; }
     }
-    public TableDiv(Table table)
+    public TableHtmlElement(Table table)
     {
         this.ID = table.TableID.ToString();
         this.Attributes["class"] = "table";
@@ -29,7 +29,7 @@ public class TableDiv : HtmlGenericControl
         this.active = table.ActiveController != null;
     }
 
-    public TableDiv ToRequest()
+    public TableHtmlElement ToRequest()
     {
         this.btnAccept = new Button();
         this.btnAccept.ID = this.ID + "_Accept";
@@ -46,7 +46,7 @@ public class TableDiv : HtmlGenericControl
         return this;
     }
 
-    public TableDiv ToContent()
+    public TableHtmlElement ToContent()
     {
         if (this.active)
             this.Attributes["style"] = "border-color: green";

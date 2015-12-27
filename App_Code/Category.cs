@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Collections;
+using System.Collections.Concurrent;
 
 /// <summary>
 /// Summary description for Category
@@ -138,7 +139,11 @@ public class Category
     public string CategoryName { get; set; }
     public int AvailabilityID { get; set; }
     public int CompanyID { get; set; }
-    public Hashtable Products { get; set; }
+    private HashSet<Product> Products;
+    public HashSet<Product> GetProducts
+    {
+        get { return this.Products; }
+    }
 
     public Category()
     {
@@ -227,7 +232,7 @@ public class Category
             dr.Read();//Only one record.
             this.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
         }
-        catch (Exception) {  }
+        catch (Exception) { }
         finally
         {
             conn.Close();
@@ -256,7 +261,7 @@ public class Category
             dr.Read();//Only one record.
             this.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
         }
-        catch (Exception) {  }
+        catch (Exception) { }
         finally
         {
             conn.Close();
@@ -311,7 +316,7 @@ public class Category
 
         cmd.Connection = conn;
 
-        Hashtable ht = new Hashtable();
+        this.Products = new HashSet<Product>();
         try
         {
             conn.Open();
@@ -329,13 +334,11 @@ public class Category
                 p.Credit = float.Parse(dr["Credit"].ToString());
                 p.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
                 p.CategoryID = this.CategoryID;
-
-                ht[p.ProductID] = p;
+                Products.Add(p);
             }
         }
         catch (Exception) { }
         finally { conn.Close(); }
-        this.Products = ht;
     }
 
     private bool ExecuteNonQuery(SqlCommand cmd)

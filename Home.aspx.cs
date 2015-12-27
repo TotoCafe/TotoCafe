@@ -9,7 +9,7 @@ using System.Web.UI.WebControls;
 public partial class home2 : System.Web.UI.Page
 {
     Company cmp;
-    List<Table> tableList;
+    HashSet<Table> tableList;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -21,7 +21,7 @@ public partial class home2 : System.Web.UI.Page
     }
     private void getCompanyTables()
     {
-        this.tableList = new List<Table>(cmp.GetTableList());
+        this.tableList = new HashSet<Table>(cmp.GetTableList());
         if (this.tableList.Count == 0)
             Response.Redirect("Settings.aspx");
         else

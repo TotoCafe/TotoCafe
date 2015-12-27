@@ -1,0 +1,13 @@
+﻿#content_pMenu *{
+    color: black;
+    margin: 0;
+    padding: 0;
+}
+.category >p:first-of-type {
+    line-height: 50px;
+    border-bottom:1px solid grey;
+    border-top:1px solid grey;
+}
+.product{
+    display: flex;
+}

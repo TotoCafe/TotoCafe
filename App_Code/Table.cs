@@ -248,6 +248,17 @@ public class Table
     }
 
     /// <summary>
+    /// Adds order to table's current controller.
+    /// </summary>
+    /// <param name="o"></param>
+    /// <returns></returns>
+    public bool AddOrder(Order o)
+    {
+        o.ControllerID = this.ActiveController.ControllerID;
+        return o.Insert();    
+    }
+
+    /// <summary>
     /// Transfers the orders belong to a table to another table
     /// </summary>
     /// <param name="table"></param>

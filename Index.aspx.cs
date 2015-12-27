@@ -12,7 +12,10 @@ public partial class Index : System.Web.UI.Page
     bool confirmRegister = true;
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        if (this.Session["Company"] != null)
+        {
+            Response.Redirect("home.aspx");
+        }
     }
     protected void cmpLogin(object sender, EventArgs e)
     {

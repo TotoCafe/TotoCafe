@@ -9,6 +9,7 @@ public class TableHtmlElement : HtmlGenericControl
     Label lblTableName;
     Button btnAccept;
     Button btnDecline;
+    Button btnInformation;
     public EventHandler ButtonAccept
     {
         set { btnAccept.Click += value; }
@@ -16,6 +17,10 @@ public class TableHtmlElement : HtmlGenericControl
     public EventHandler ButtonDecline
     {
         set { btnDecline.Click += value; }
+    }
+    public EventHandler ButtonInformation
+    {
+        set { btnInformation.Click += value; }
     }
     public TableHtmlElement(Table table)
     {
@@ -26,7 +31,7 @@ public class TableHtmlElement : HtmlGenericControl
         this.lblTableName.Text = table.TableName;
         this.lblTableName.Attributes["style"] = "color: #72B1D4";
         this.Controls.Add(lblTableName);
-        this.active = table.ActiveController != null;
+        this.active = (table.ActiveController != null);
     }
 
     public TableHtmlElement ToRequest()
@@ -48,6 +53,11 @@ public class TableHtmlElement : HtmlGenericControl
 
     public TableHtmlElement ToContent()
     {
+        this.btnInformation = new Button();
+        this.btnInformation.ID = this.ID + "_Info";
+        this.btnInformation.Text = "Information";
+        this.Controls.Add(btnInformation);
+
         if (this.active)
             this.Attributes["style"] = "border-color: green";
         else

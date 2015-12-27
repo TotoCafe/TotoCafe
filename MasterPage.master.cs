@@ -47,7 +47,6 @@ public partial class MasterPage : System.Web.UI.MasterPage
         }
         catch (Exception)
         {
-
         }
     }
     protected void btnDeclineClick(object sender, EventArgs e)
@@ -63,7 +62,7 @@ public partial class MasterPage : System.Web.UI.MasterPage
         {
         }
     }
-    protected void btnLogOutClick (object sender, EventArgs e)
+    protected void btnLogOutClick(object sender, EventArgs e)
     {
         this.cmp = null;
         Session.Abandon();

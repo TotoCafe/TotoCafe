@@ -32,7 +32,13 @@ public partial class home2 : System.Web.UI.Page
         foreach (Table t in this.tableList)
         {
             TableHtmlElement content = new TableHtmlElement(t).ToContent();
+            content.ButtonInformation = btnInfoClicked;
             pHome.Controls.Add(content);
         }
+    }
+    protected void btnInfoClicked (object sender, EventArgs e)
+    {
+        //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "script", )
+
     }
 }

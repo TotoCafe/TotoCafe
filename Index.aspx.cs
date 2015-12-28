@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class Index : System.Web.UI.Page
@@ -71,7 +68,7 @@ public partial class Index : System.Web.UI.Page
     {
         validator.validateEmail(loginEmail);
         validator.validatePassword(loginPassword);
-        confirmLogin = confirmLogin && validator.Confirm;
+        confirmLogin = confirmLogin && validator.permission;
     }
     private void validateRegister()
     {
@@ -83,7 +80,7 @@ public partial class Index : System.Web.UI.Page
                 validator.validatePassword(tb);
             else
                 validator.validateTextBox(tb);
-            confirmRegister = confirmRegister && validator.Confirm;
+            confirmRegister = confirmRegister && validator.permission;
         }
     }
 }

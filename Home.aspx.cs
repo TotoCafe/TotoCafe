@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
 
-public partial class home2 : System.Web.UI.Page
+public partial class Home : System.Web.UI.Page
 {
     Company cmp;
     HashSet<Table> tableList;
@@ -31,12 +26,12 @@ public partial class home2 : System.Web.UI.Page
     {
         foreach (Table t in this.tableList)
         {
-            TableHtmlElement content = new TableHtmlElement(t).ToContent();
-            content.ButtonInformation = btnInfoClicked;
-            pHome.Controls.Add(content);
+            TablePanel contentTableDiv = new TablePanel(t).ToContent();
+            contentTableDiv.InformationClick = btnInformationClicked;
+            pHome.Controls.Add(contentTableDiv);
         }
     }
-    protected void btnInfoClicked (object sender, EventArgs e)
+    protected void btnInformationClicked (object sender, EventArgs e)
     {
         //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "script", )
 

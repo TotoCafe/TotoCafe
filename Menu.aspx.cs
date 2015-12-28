@@ -31,46 +31,8 @@ public partial class Menu : System.Web.UI.Page
     {
         foreach (Category c in this.categoryList)
         {
-            var container = new HtmlGenericControl("div");
-            container.ID = c.CategoryName;
-            container.Attributes["class"] = "category";
-
-            var categoryName = new HtmlGenericControl("p");
-            categoryName.InnerText = c.CategoryName;
-            container.Controls.Add(categoryName);
-
-            foreach (Product p in c.GetProducts)
-            {
-                var productPanel = new HtmlGenericControl("div");
-                productPanel.ID = p.CategoryID + "_" + p.ProductID;
-                productPanel.Attributes["class"] = "product";
-
-                TextBox tbProductName = new TextBox();
-                tbProductName.Text = p.ProductName;
-                productPanel.Controls.Add(tbProductName);
-
-                TextBox tbProductDetail = new TextBox();
-                tbProductDetail.Text = p.Detail;
-                productPanel.Controls.Add(tbProductDetail);
-
-                TextBox tbProductPrice = new TextBox();
-                tbProductPrice.Text = p.Price.ToString();
-                productPanel.Controls.Add(tbProductPrice);
-
-                Button btnProductUpdate = new Button();
-                btnProductUpdate.Text = "Update";
-                btnProductUpdate.Click += BtnProductUpdate_Click;
-                productPanel.Controls.Add(btnProductUpdate);
-                
-
-                container.Controls.Add(productPanel);
-            }
-            pMenu.Controls.Add(container);
+            Panel category = new CategoryPanel(c);
+            pMenu.Controls.Add(category);
         }
-    }
-
-    private void BtnProductUpdate_Click(object sender, EventArgs e)
-    {
-        throw new NotImplementedException();
     }
 }

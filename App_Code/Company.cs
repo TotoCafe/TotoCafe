@@ -1,15 +1,13 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Security;
-using System.Collections;
 using System.Web.Services;
 
 /// <summary>

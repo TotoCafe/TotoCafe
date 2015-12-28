@@ -25,42 +25,30 @@ public partial class MasterPage : System.Web.UI.MasterPage
         initializeRequest(temp);
         //End of Test Code
     }
-    private void initializeRequest(List<Table> requestTables)
+    private void initializeRequest(List<Table> tableList)
     {
-        foreach (Table requestTable in requestTables)
+        foreach (Table t in tableList)
         {
-            TableHtmlElement requestDiv = new TableHtmlElement(requestTable).ToRequest();
-            requestDiv.ButtonAccept = btnAcceptClick;
-            requestDiv.ButtonDecline = btnDeclineClick;
-            pRequest.Controls.Add(requestDiv);
+            TablePanel requestTableDiv = new TablePanel(t).ToRequest();
+            requestTableDiv.AcceptClick = btnAcceptClick;
+            requestTableDiv.DeclineClick = btnDeclineClick;
+            pRequest.Controls.Add(requestTableDiv);
         }
     }
     protected void btnAcceptClick(object sender, EventArgs e)
     {
         Button btn = (Button)sender;
-        int id = int.Parse(btn.ID.Replace("_Accept", ""));
-        try
-        {
-            TableController controller = new TableController();
-            Table table = cmp.GetTableWithId(id);
-            table.ActiveController = controller;
-        }
-        catch (Exception)
-        {
-        }
+        int id = int.Parse(btn.Parent.ID);
+        TableController controller = new TableController();
+        Table table = cmp.GetTableWithId(id);
+        table.ActiveController = controller;
     }
     protected void btnDeclineClick(object sender, EventArgs e)
     {
         Button btn = (Button)sender;
-        int id = int.Parse(btn.ID.Replace("_Decline", ""));
-        try
-        {
-            Table table = cmp.GetTableWithId(id);
-            table.ActiveController = null;
-        }
-        catch (Exception)
-        {
-        }
+        int id = int.Parse(btn.Parent.ID);
+        Table table = cmp.GetTableWithId(id);
+        table.ActiveController = null;
     }
     protected void btnLogOutClick(object sender, EventArgs e)
     {

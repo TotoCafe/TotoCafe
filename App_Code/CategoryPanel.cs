@@ -1,24 +1,35 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Web.UI.WebControls;
 public class CategoryPanel : Panel
 {
-    public EventHandler EditClick { private get; set; }
-    public EventHandler UpdateClick { private get; set; }
-    public EventHandler DeleteClick { private get; set; }
-    public CategoryPanel(Category c)
+    public Dictionary<int, Category> Categories { get; set; }
+
+    public CategoryPanel()
     {
-        this.ID = c.CategoryID.ToString();
-        this.CssClass = "category";
+        foreach (Category c in Categories.Values)
+        {
+            this.Controls.Add(CreateCategoryPanel(c));
+        }
+    }
+    private Panel CreateCategoryPanel(Category c)
+    {
+        Panel category = new Panel();
+        category.ID = c.CategoryID.ToString();
+        category.CssClass = "category";
         TextBox tbCategoryName = new TextBox();
         tbCategoryName.Text = c.CategoryName;
         tbCategoryName.CssClass = "product_textbox";
-        this.Controls.Add(tbCategoryName);
-        foreach (Product p in c.GetProducts)
+        category.Controls.Add(tbCategoryName);
+        foreach (Product p in c.Products.Values)
         {
-            this.Controls.Add(ProductPanel(p));
+            category.Controls.Add(CreateProductPanel(p));
         }
+        return category;
+
     }
-    private Panel ProductPanel(Product p)
+    private Panel CreateProductPanel(Product p)
     {
         Panel product = new Panel();
         product.ID = p.CategoryID + "_" + p.ProductID;
@@ -51,7 +62,7 @@ public class CategoryPanel : Panel
         Button btnProductUpdate = new Button();
         btnProductUpdate.Text = "✔";
         btnProductUpdate.CssClass = "product_button product_button_update";
-        btnProductUpdate.Click += UpdateClick;
+        btnProductUpdate.Click += UpdateClick ;
         product.Controls.Add(btnProductUpdate);
 
         Button btnProductDelete = new Button();
@@ -61,5 +72,24 @@ public class CategoryPanel : Panel
         product.Controls.Add(btnProductDelete);
 
         return product;
+    }
+
+    private void EditClick(object sender, EventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void DeleteClick(object sender, EventArgs e)
+    {
+        
+    }
+
+    private void UpdateClick(object sender, EventArgs e)
+    {
+        Button btn = (Button)sender;
+        MatchCollection mc = Regex.Matches(btn.Parent.ID, @"\d+");
+        Product p = Categories[int.Parse(mc[0].Value)].Products[int.Parse(mc[1].Value)];
+        p.Detail = "Test";
+        p.Update();
     }
 }

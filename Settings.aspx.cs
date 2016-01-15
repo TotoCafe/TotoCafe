@@ -35,23 +35,5 @@ public partial class Settings : System.Web.UI.Page
     }
     protected void removeTable(object sender, EventArgs e)
     {
-        if (!string.IsNullOrEmpty(tbTableName.Text))
-        {
-            List<Table> tableList = new List<Table>(cmp.GetTableList());
-            Table table = tableList.Find(p => p.TableName == tbTableName.Text && p.CompanyID == cmp.CompanyID);
-            try
-            {
-                cmp.FreezeTable(table);
-                lblNotification.Text = "Table removed.";
-            }
-            catch (Exception)
-            {
-                lblNotification.Text = "Table could not removed.";
-            }
-        }
-        else
-        {
-            lblNotification.Text = "Please enter table name.";
-        }
     }
 }

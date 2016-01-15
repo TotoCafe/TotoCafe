@@ -139,11 +139,7 @@ public class Category
     public string CategoryName { get; set; }
     public int AvailabilityID { get; set; }
     public int CompanyID { get; set; }
-    private HashSet<Product> Products;
-    public HashSet<Product> GetProducts
-    {
-        get { return this.Products; }
-    }
+    public Dictionary<int, Product> Products { get; private set; }
 
     public Category()
     {
@@ -303,20 +299,18 @@ public class Category
 
     public void InitProductList()
     {
-        SqlConnection conn = new SqlConnection(
-            ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
-                                              );
-        SqlCommand cmd = new SqlCommand();
+        Dictionary<int, Product> pc = new Dictionary<int, Product>();
 
+        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString);
+        SqlCommand cmd = new SqlCommand();
         cmd.CommandText = "SELECT Product.* FROM Product " +
-                                     "INNER JOIN Availability ON Product.AvailabilityID = Availability.AvailabilityID " +
-                                     "WHERE (Availability.Availability = @Availability) AND (Product.CategoryID = @CategoryID)";
+                             "INNER JOIN Availability ON Product.AvailabilityID = Availability.AvailabilityID " +
+                             "WHERE (Availability.Availability = @Availability) AND (Product.CategoryID = @CategoryID)";
         cmd.Parameters.AddWithValue("@Availability", "AVAILABLE");
         cmd.Parameters.AddWithValue("@CategoryID", this.CategoryID);
 
         cmd.Connection = conn;
 
-        this.Products = new HashSet<Product>();
         try
         {
             conn.Open();
@@ -334,11 +328,15 @@ public class Category
                 p.Credit = float.Parse(dr["Credit"].ToString());
                 p.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
                 p.CategoryID = this.CategoryID;
-                Products.Add(p);
+                pc.Add(p.ProductID, p);
             }
         }
         catch (Exception) { }
-        finally { conn.Close(); }
+        finally
+        {
+            this.Products = pc;
+            conn.Close();
+        }
     }
 
     private bool ExecuteNonQuery(SqlCommand cmd)

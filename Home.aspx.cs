@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public partial class Home : System.Web.UI.Page
 {
     Company cmp;
-    HashSet<Table> tableList;
+    Dictionary<int, Table> tableDictionary;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -16,22 +16,22 @@ public partial class Home : System.Web.UI.Page
     }
     private void getCompanyTables()
     {
-        this.tableList = new HashSet<Table>(cmp.GetTableList());
-        if (this.tableList.Count == 0)
+        this.tableDictionary = new Dictionary<int, Table>(cmp.GetTableDictionary());
+        if (this.tableDictionary.Count == 0)
             Response.Redirect("Settings.aspx");
         else
             initializeContent();
     }
     private void initializeContent()
     {
-        foreach (Table t in this.tableList)
+        foreach (Table t in this.tableDictionary.Values)
         {
             TablePanel contentTableDiv = new TablePanel(t).ToContent();
             contentTableDiv.InformationClick = btnInformationClicked;
             pHome.Controls.Add(contentTableDiv);
         }
     }
-    protected void btnInformationClicked (object sender, EventArgs e)
+    protected void btnInformationClicked(object sender, EventArgs e)
     {
         //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "script", )
 

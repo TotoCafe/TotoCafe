@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
 
-public partial class Settings : System.Web.UI.Page
+public partial class AccSettings : System.Web.UI.Page
 {
     Company cmp = new Company();
     protected void Page_Load(object sender, EventArgs e)
@@ -35,5 +40,23 @@ public partial class Settings : System.Web.UI.Page
     }
     protected void removeTable(object sender, EventArgs e)
     {
+        if (!string.IsNullOrEmpty(tbTableName.Text))
+        {
+            List<Table> tableList = new List<Table>(cmp.GetTableList());
+            Table table = tableList.Find(p => p.TableName == tbTableName.Text && p.CompanyID == cmp.CompanyID);
+            try
+            {
+                cmp.FreezeTable(table);
+                lblNotification.Text = "Table removed.";
+            }
+            catch (Exception)
+            {
+                lblNotification.Text = "Table could not removed.";
+            }
+        }
+        else
+        {
+            lblNotification.Text = "Please enter table name.";
+        }
     }
 }

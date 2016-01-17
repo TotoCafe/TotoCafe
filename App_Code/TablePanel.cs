@@ -1,54 +1,69 @@
 ﻿using System;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 public class TablePanel : Panel
 {
     int availability;
     bool active = false;
-    public EventHandler DeclineClick { private get; set; }
-    public EventHandler AcceptClick { private get; set; }
-    public EventHandler InformationClick { private get; set; }
-    public TablePanel(Table t)
+    Label lblTableName;
+    Button btnAccept;
+    Button btnDecline;
+    Button btnInformation;
+    public EventHandler ButtonAccept
     {
-        ID = t.TableID.ToString();
-        CssClass = "table";
-        availability = t.AvailabilityID;
-        Label lblTableName = new Label();
-        lblTableName.Text = t.TableName;
-        lblTableName.ForeColor = System.Drawing.Color.FromArgb(114, 177, 212);
-        Controls.Add(lblTableName);
-        active = (t.ActiveController != null);
+        set { btnAccept.Click += value; }
     }
+    public EventHandler ButtonDecline
+    {
+        set { btnDecline.Click += value; }
+    }
+    public EventHandler ButtonInformation
+    {
+        set { btnInformation.Click += value; }
+    }
+    public TablePanel(Table table)
+    {
+        this.ID = table.TableID.ToString();
+        this.Attributes["class"] = "table";
+        this.availability = table.AvailabilityID;
+        this.lblTableName = new Label();
+        this.lblTableName.Text = table.TableName;
+        this.lblTableName.Attributes["style"] = "color: #72B1D4";
+        this.Controls.Add(lblTableName);
+        this.active = (table.ActiveController != null);
+    }
+
     public TablePanel ToRequest()
     {
-        Button btnAccept = new Button();
-        btnAccept.CssClass = "btnAccept";
-        btnAccept.Text = "✓";
-        btnAccept.Click += AcceptClick;
-        Controls.Add(btnAccept);
+        this.btnAccept = new Button();
+        this.btnAccept.ID = this.ID + "_Accept";
+        this.btnAccept.CssClass = "btnAccept";
+        this.btnAccept.Text = "✓";
+        this.Controls.Add(btnAccept);
 
-
-        Button btnDecline = new Button();
-        btnDecline.CssClass = "btnDecline";
-        btnDecline.Text = "✗";
-        btnDecline.Click += DeclineClick;
-        Controls.Add(btnDecline);
+        this.btnDecline = new Button();
+        this.btnDecline.ID = this.ID + "_Decline";
+        this.btnDecline.CssClass = "btnDecline";
+        this.btnDecline.Text = "✗";
+        this.Controls.Add(btnDecline);
 
         return this;
     }
+
     public TablePanel ToContent()
     {
-        Button btnInformation = new Button();
-        btnInformation.ID = ID + "_Info";
-        btnInformation.Text = "Information";
-        btnInformation.Click += InformationClick;
-        Controls.Add(btnInformation);
+        this.btnInformation = new Button();
+        this.btnInformation.ID = this.ID + "_Info";
+        this.btnInformation.Text = "Information";
+        this.Controls.Add(btnInformation);
 
-        if (active)
-            Attributes["style"] = "border-color: green";
+        if (this.active)
+            this.Attributes["style"] = "border-color: green";
         else
-            Attributes["style"] = "border-color: red";
+            this.Attributes["style"] = "border-color: red";
 
         return this;
     }
+
 }

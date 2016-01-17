@@ -1,24 +1,32 @@
 ﻿using System;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Web.UI.WebControls;
 
+/// <summary>
+/// Summary description for Validation
+/// </summary>
 public class Validator
 {
-    public bool permission { get; private set; }
+    private bool confirm;
+    public bool Confirm
+    {
+        get { return confirm; }
+    }
     public void validateTextBox(TextBox tbTextBox)
     {
         string defaultValue = tbTextBox.Attributes["placeholder"];
 
-        if (string.IsNullOrEmpty(tbTextBox.Text) || tbTextBox.Text == defaultValue || tbTextBox.Text == defaultValue + " is required." || tbTextBox.Text == "Please enter a valid " + defaultValue + ".")
+        if (string.IsNullOrEmpty(tbTextBox.Text) || tbTextBox.Text == defaultValue || tbTextBox.Text == defaultValue + " is required." || tbTextBox.Text == "Please enter a valid " + defaultValue + ".") 
         {
             tbTextBox.Attributes["placeholder"] = defaultValue + " is required.";
-            permission = false;
+            confirm = false;
         }
         else
         {
-            permission = true;
+            confirm = true;
         }
     }
     public void validatePassword(TextBox tbPassword)
@@ -27,11 +35,11 @@ public class Validator
         if (!Regex.IsMatch(tbPassword.Text, regPassword))
         {
             tbPassword.Attributes["placeholder"] = "Please enter a valid password.";
-            permission = false;
+            confirm = false;
         }
         else
         {
-            permission = true;
+            confirm = true;
         }
     }
     public void validateEmail(TextBox tbEmail)
@@ -40,11 +48,11 @@ public class Validator
         if (!Regex.IsMatch(tbEmail.Text, regEmail))
         {
             tbEmail.Attributes["placeholder"] = "Invalid email address";
-            permission = false;
+            confirm = false;
         }
         else
         {
-            permission = true;
+            confirm = true;
         }
     }
     public bool checkCompanyEmail(TextBox tbEmail)
@@ -71,6 +79,6 @@ public class Validator
         {
             conn.Close();
         }
-        return false;
+        return false; 
     }
 }

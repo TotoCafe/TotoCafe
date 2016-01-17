@@ -46,7 +46,7 @@ public class TableController
                                                   );
             cmd.Parameters.Clear();
 
-            cmd.CommandText = "SELECT ControllerID FROM TableController " + 
+            cmd.CommandText = "SELECT ControllerID FROM TableController " +
                                "WHERE (CostumerID = @CostumerID) AND (TableID = @TableID) AND (StartDateTime = @StartDateTime) AND (FinishDateTime IS NULL)";
             cmd.Parameters.AddWithValue("@CostumerID", this.CostumerID);
             cmd.Parameters.AddWithValue("@TableID", this.TableID);
@@ -87,9 +87,9 @@ public class TableController
     /// Returns a hashtable which contains orders of th controller.
     /// </summary>
     /// <returns>Hashtable</returns>
-    public Hashtable getOrders()
+    public Dictionary<int, Order> getOrders()
     {
-        Hashtable ht = new Hashtable();
+        Dictionary<int, Order> dic = new Dictionary<int, Order>();
 
         SqlConnection conn = new SqlConnection(
             ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
@@ -121,12 +121,12 @@ public class TableController
                 o.ProductID = int.Parse(dr["ProductID"].ToString());
                 o.OrderDetails = dr["OrderDetails"].ToString();
 
-                ht[o.OrderID] = o;
+                dic.Add(o.OrderID, o);
             }
         }
         catch (Exception) { }
         finally { conn.Close(); }
-        return ht;
+        return dic;
     }
 
     private bool ExecuteNonQuery(SqlCommand cmd)

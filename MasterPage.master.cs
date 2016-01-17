@@ -25,30 +25,42 @@ public partial class MasterPage : System.Web.UI.MasterPage
         initializeRequest(temp);
         //End of Test Code
     }
-    private void initializeRequest(List<Table> tableList)
+    private void initializeRequest(List<Table> requestTables)
     {
-        foreach (Table t in tableList)
+        foreach (Table requestTable in requestTables)
         {
-            TablePanel requestTableDiv = new TablePanel(t).ToRequest();
-            requestTableDiv.AcceptClick = btnAcceptClick;
-            requestTableDiv.DeclineClick = btnDeclineClick;
-            pRequest.Controls.Add(requestTableDiv);
+            TablePanel requestDiv = new TablePanel(requestTable).ToRequest();
+            requestDiv.ButtonAccept = btnAcceptClick;
+            requestDiv.ButtonDecline = btnDeclineClick;
+            pRequest.Controls.Add(requestDiv);
         }
     }
     protected void btnAcceptClick(object sender, EventArgs e)
     {
         Button btn = (Button)sender;
-        int id = int.Parse(btn.Parent.ID);
-        TableController controller = new TableController();
-        Table table = cmp.GetTableWithId(id);
-        table.ActiveController = controller;
+        int id = int.Parse(btn.ID.Replace("_Accept", ""));
+        try
+        {
+            TableController controller = new TableController();
+            Table table = cmp.GetTableWithId(id);
+            table.ActiveController = controller;
+        }
+        catch (Exception)
+        {
+        }
     }
     protected void btnDeclineClick(object sender, EventArgs e)
     {
         Button btn = (Button)sender;
-        int id = int.Parse(btn.Parent.ID);
-        Table table = cmp.GetTableWithId(id);
-        table.ActiveController = null;
+        int id = int.Parse(btn.ID.Replace("_Decline", ""));
+        try
+        {
+            Table table = cmp.GetTableWithId(id);
+            table.ActiveController = null;
+        }
+        catch (Exception)
+        {
+        }
     }
     protected void btnLogOutClick(object sender, EventArgs e)
     {

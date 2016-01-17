@@ -1,7 +1,6 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -88,8 +87,8 @@ public class Company
             this.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
             this.PermissionID = int.Parse(dr["PermissionID"].ToString());
 
-            InitCategoryList();
-            InitTableList();
+            InitCategoryCollection();
+            InitTableCollection();
         }
         catch (Exception) { result = false; }
         finally
@@ -223,7 +222,29 @@ public class Company
 
         return this.Update();
     }
-    
+
+    /// <summary>
+    /// Sets the given object to hashtables according to their types.
+    /// </summary>
+    /// <param name="o"></param>
+    private void SetHashtableValue(Object o)
+    {
+        int flag = o.GetType().Equals(typeof(Table)) ? 1 : 0;
+        switch (flag)
+        {
+            case 1:
+                Table t = (Table)o;
+                this.Tables[t.TableID] = t;
+                break;
+            case 0:
+                Category c = (Category)o;
+                this.Categories[c.CategoryID] = c;
+                break;
+            default:
+                break;
+        }
+    }
+
     /// <summary>
     /// Authenticates the company with Email and password and Initializes it.
     /// It is needed to be set Email and Password to Company object.
@@ -278,6 +299,14 @@ public class Company
     /// </summary>
     /// <param name="TableID"></param>
     /// <returns></returns>
+    public void AddTable(Table t)
+    {
+        t.CompanyID = this.CompanyID;
+        t.Insert();
+        this.SetHashtableValue(t);
+        this.Tables.Add(t.TableID, t);
+    }
+
     public Table GetTableWithId(int TableID)
     {
         return (Table)this.Tables[TableID];
@@ -287,13 +316,6 @@ public class Company
     /// Adds the table to the Company's Hashtable.
     /// </summary>
     /// <param name="t"></param>
-    [WebMethod]
-    public void AddTable(Table t)
-    {
-        t.CompanyID = this.CompanyID;
-        t.Insert();
-        this.Tables.Add(t.TableID, t);
-    }
 
     /// <summary>
     /// Updates Table in database and hashtable.
@@ -303,7 +325,7 @@ public class Company
     public void UpdateTable(Table t)
     {
         t.Update();
-        this.Tables[t.TableID] = t;
+        this.SetHashtableValue(t);
     }
 
     /// <summary>
@@ -329,16 +351,18 @@ public class Company
         Table to = this.GetTableWithId(ToTableID);
 
         from.TransferTo(to);
-        this.Tables[to.TableID] = this.Tables[from.TableID];
+
+        this.SetHashtableValue(from);
+        this.SetHashtableValue(to);
     }
 
     /// <summary>
     /// Returns a list containing tables of company.
     /// </summary>
     /// <returns></returns>
-    public Dictionary<int, Table> GetTableDictionary()
+    public List<Table> GetTableList()
     {
-        Dictionary<int, Table> tableDictionary = new Dictionary<int, Table>();
+        List<Table> tableList = new List<Table>();
 
         SqlConnection conn = new SqlConnection(
             ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
@@ -372,18 +396,18 @@ public class Company
                 t.QrCode = "TotoCafe-" + this.CompanyID.ToString() + "-" + t.TableID;
                 t.InitActiveController();//Current open controller..
 
-                tableDictionary.Add(t.TableID,t);
+                tableList.Add(t);
             }
         }
         catch (Exception) { }
         finally { conn.Close(); }
-        return tableDictionary;
+        return tableList;
     }
 
     /// <summary>
     /// Initializes Tables of the Company and add them to TableList property.
     /// </summary>
-    private void InitTableList()
+    private void InitTableCollection()
     {
         Dictionary<int, Table> dt = new Dictionary<int, Table>();
 
@@ -440,29 +464,6 @@ public class Company
     }
 
     /// <summary>
-    /// Adds category to database and 
-    /// </summary>
-    /// <param name="c"></param>
-    [WebMethod]
-    public void AddCategory(Category c)
-    {
-        c.CompanyID = this.CompanyID;
-        c.Insert();
-        this.Categories.Add(c.CategoryID, c);
-    }
-
-    /// <summary>
-    /// Updates Category in database and hashtable.
-    /// </summary>
-    /// <param name="c"></param>
-    [WebMethod]
-    public void UpdateCategory(Category c)
-    {
-        c.Update();
-        this.Categories[c.CategoryID] = c;
-    }
-
-    /// <summary>
     /// Freezes the category and removes from hashtable.
     /// -->PAY ATTENTION
     /// WHEN THE CATEGORY FREEZED THEN THE PRODUCTS HAS THE CategoryID AS THIS CATEGORY WILL BE INVISIBLE.
@@ -480,9 +481,9 @@ public class Company
     /// Returns a list of categories.
     /// </summary>
     /// <returns></returns>
-    public Dictionary<int, Category> GetCategoryDictionary()
+    public Dictionary<int, Category> GetCategoryCollection()
     {
-        Dictionary<int, Category> categoryDictionary = new Dictionary<int, Category>();
+        Dictionary<int, Category> dc = new Dictionary<int, Category>();
 
         SqlConnection conn = new SqlConnection(
             ConfigurationManager.ConnectionStrings["TotoCafeDB"].ConnectionString
@@ -513,18 +514,18 @@ public class Company
                 c.AvailabilityID = int.Parse(dr["AvailabilityID"].ToString());
                 c.InitProductList();
 
-                categoryDictionary.Add(c.CategoryID,c);
+                dc.Add(c.CategoryID, c);
             }
         }
         catch (Exception) { }
         finally { conn.Close(); }
-        return categoryDictionary;
+        return dc;
     }
 
     /// <summary>
     /// Initializes Categories which belong to current Company and Available.
     /// </summary>
-    private void InitCategoryList()
+    private void InitCategoryCollection()
     {
         Dictionary<int, Category> dc = new Dictionary<int, Category>();
 
@@ -557,6 +558,7 @@ public class Company
                 c.InitProductList();
 
                 dc.Add(c.CategoryID, c);
+                
             }
         }
         catch (Exception) { }
@@ -574,9 +576,9 @@ public class Company
     {
         List<QrCode> QrCodeList = new List<QrCode>();
 
-        Dictionary<int, Table> tableDictionary = this.GetTableDictionary();
+        List<Table> tableList = this.GetTableList();
 
-        foreach (Table t in tableDictionary.Values)
+        foreach (Table t in tableList)
         {
             QrCode qr = new QrCode();
 

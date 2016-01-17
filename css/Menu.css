@@ -4,7 +4,7 @@
     padding: 0;
 }
 
-.category > input:first-of-type {
+.category > p:first-of-type {
     line-height: 50px;
     border-bottom: 1px solid grey;
     border-top: 1px solid grey;
@@ -13,12 +13,7 @@
 .product {
     display: flex;
 }
-.product_textbox{
-    border: none;
-}
-.product_textbox:hover{
-    cursor: auto;
-}
+
 .product_button {
     width: 30px;
     height: 30px;

@@ -59,4 +59,19 @@ public partial class AccSettings : System.Web.UI.Page
             lblNotification.Text = "Please enter table name.";
         }
     }
+    protected void downloadQR (object sender, EventArgs e)
+    {
+        cmp.SaveQrPdf(Server.MapPath("~/Qr Codes"));
+
+        string path = MapPath("~/Qr Codes") + "/" + cmp.GetQrPdfName();
+
+        byte[] bts = System.IO.File.ReadAllBytes(path);
+
+        Response.AddHeader("Content-Type", "Application/octet-stream");
+        Response.AddHeader("Content-Length", bts.Length.ToString());
+        Response.AddHeader("Content-Disposition", "attachment; filename=QrCodes.pdf");
+        Response.BinaryWrite(bts);
+        Response.Flush();
+        Response.End();
+    }
 }

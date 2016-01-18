@@ -15,7 +15,10 @@
             <asp:Label ID="lblNotification" runat="server"></asp:Label>
         </div>
         <div class="title">
-            <h3>Test</h3>
+            <h3>Download QR</h3>
+        </div>
+        <div class="settings" id="QR">
+            <asp:Button ID="btnQR" runat="server" Text="DownloadQR" OnClick="downloadQR" />
         </div>
     </div>
 </asp:Content>

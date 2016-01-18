@@ -4,3 +4,10 @@
     display: block;
     color: #000000;
 }
+
+.headRow > td {
+    color: red;
+}
+.contentRow > td{
+    color: black;
+}
